@@ -68,7 +68,7 @@ nginx -t
 systemctl reload nginx
 systemctl enable --quiet nginx
 
-step "6/7  자동 배포 타이머 등록 (2분마다 git 확인)"
+step "6/7  자동 배포 타이머 등록 (2시간마다 git 확인)"
 cp "$REPO_DIR/deploy/gmchurch-publish.service" /etc/systemd/system/
 cp "$REPO_DIR/deploy/gmchurch-publish.timer"   /etc/systemd/system/
 systemctl daemon-reload
@@ -100,9 +100,9 @@ cat <<EOF
   저장소     ${REPO_DIR}
   문서 루트  ${WEB_ROOT}
   서버 IP    ${SERVER_IP:-확인 실패}
-  자동 배포  2분마다 (systemctl status gmchurch-publish.timer)
+  자동 배포  2시간마다 (systemctl status gmchurch-publish.timer)
 
-앞으로는 GitHub main 에 push 만 하면 2분 안에 반영됩니다.
+앞으로는 GitHub main 에 push 하면 최대 2시간 안에 반영됩니다.
 바로 반영하고 싶으면:  ${REPO_DIR}/deploy/publish.sh
 
 배포 로그 보기:  journalctl -u gmchurch-publish.service -n 50

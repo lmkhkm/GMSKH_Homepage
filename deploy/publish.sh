@@ -12,7 +12,7 @@
 # 위험하기 때문에, 저장소와 문서 루트를 분리합니다.
 #
 # 수동 실행:  sudo /srv/gmchurch/deploy/publish.sh
-# 자동 실행:  systemd 타이머가 2분마다 호출합니다
+# 자동 실행:  systemd 타이머가 2시간마다 호출합니다
 
 set -euo pipefail
 
@@ -31,7 +31,7 @@ LOCAL="$(git rev-parse HEAD)"
 REMOTE="$(git rev-parse "origin/${BRANCH}")"
 
 if [ "$LOCAL" = "$REMOTE" ] && [ -f "${WEB_ROOT}/index.html" ]; then
-  # 변경 없음 — 조용히 종료 (타이머가 2분마다 도니 로그를 남기지 않습니다)
+  # 변경 없음 — 조용히 종료 (타이머가 자주 도니 로그를 남기지 않습니다)
   exit 0
 fi
 

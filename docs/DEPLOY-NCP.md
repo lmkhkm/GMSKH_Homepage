@@ -8,7 +8,7 @@ GitHub (lmkhkm/GMSKH_Homepage)
         │  push
         ▼
   [ main 브랜치 ]
-        │  서버가 2분마다 git fetch
+        │  서버가 2시간마다 git fetch
         ▼
 NCP 서버 /srv/gmchurch  ──rsync──▶  /var/www/gmchurch  ──▶  nginx  ──▶  방문자
 ```
@@ -136,7 +136,7 @@ chmod +x setup-server.sh
 2. 저장소를 `/srv/gmchurch` 에 clone
 3. nginx 설정 배치 (도메인 자동 치환)
 4. 웹에 공개할 파일만 골라 `/var/www/gmchurch` 로 복사
-5. **2분마다 git 을 확인해서 자동 배포하는 systemd 타이머 등록**
+5. **2시간마다 git 을 확인해서 자동 배포하는 systemd 타이머 등록**
 6. 도메인이 이미 서버를 가리키고 있으면 HTTPS 인증서까지 자동 발급
 
 여러 번 실행해도 안전합니다.
@@ -207,12 +207,20 @@ systemctl restart ssh
 ### 사이트 고치기
 
 지금까지 하던 것과 똑같습니다. `data.js` 를 고쳐서 `main` 에 push 하면
-2분 안에 사이트에 반영됩니다.
+서버가 **최대 2시간 안에** 알아서 받아갑니다.
 
 ### 바로 반영하고 싶을 때
 
+주보를 올린 주일 아침처럼 2시간을 기다릴 수 없을 때는 서버에 접속해서:
+
 ```bash
-/srv/gmchurch/deploy/publish.sh
+systemctl start gmchurch-publish.service
+```
+
+한 줄이면 즉시 배포됩니다. 로그까지 보려면:
+
+```bash
+systemctl start gmchurch-publish.service && journalctl -u gmchurch-publish.service -n 10
 ```
 
 ### 배포가 잘 됐는지 보기
@@ -286,7 +294,7 @@ deploy/
 ├── publish.sh                 git → 문서 루트 반영 (타이머가 호출)
 ├── nginx-gmchurch.conf        nginx 사이트 설정
 ├── gmchurch-publish.service   systemd 서비스
-└── gmchurch-publish.timer     systemd 타이머 (2분 간격)
+└── gmchurch-publish.timer     systemd 타이머 (2시간 간격)
 
 scripts/
 └── set-site-url.js            사이트 절대주소 일괄 변경
