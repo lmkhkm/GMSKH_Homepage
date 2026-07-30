@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://frpsy.github.io/gmchurch_web/sitemap.xml
+Sitemap: https://gmskh.or.kr/sitemap.xml
