@@ -38,7 +38,31 @@ esac
 step "1/7  패키지 설치"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y -qq nginx git rsync curl dnsutils certbot python3-certbot-nginx
+
+# 네이버 클라우드 서버에는 IPv6 가 없는 경우가 많습니다.
+# 그런데 우분투 nginx 패키지의 기본 사이트 설정에 listen [::]:80 이 들어 있어서
+# 설치 도중 nginx 기동이 실패하고 패키지가 '설정 안 됨' 상태로 남습니다.
+#   nginx: [emerg] socket() [::]:80 failed (97: Address family not supported by protocol)
+# 그래서 설치 실패를 일단 넘긴 뒤, 기본 사이트를 걷어내고 설정을 마무리합니다.
+apt-get install -y -qq nginx git rsync curl dnsutils certbot python3-certbot-nginx \
+  || echo "  패키지 설정이 중단됐습니다. 아래에서 이어서 처리합니다."
+
+# 우분투 기본 사이트는 쓰지 않습니다. IPv6 리스닝 줄도 주석 처리해 둡니다.
+rm -f /etc/nginx/sites-enabled/default
+if [ -f /etc/nginx/sites-available/default ]; then
+  sed -i 's/^\([[:space:]]*\)listen \[::\]:80/\1# listen [::]:80/' \
+    /etc/nginx/sites-available/default
+fi
+
+# 중단된 패키지 설정을 마무리합니다
+dpkg --configure -a >/dev/null 2>&1 || true
+apt-get install -y -qq -f >/dev/null 2>&1 || true
+
+# 필요한 것들이 실제로 갖춰졌는지 확인
+for cmd in nginx git rsync certbot; do
+  command -v "$cmd" >/dev/null 2>&1 \
+    || die "${cmd} 설치에 실패했습니다. 'apt-get install -f' 실행 후 다시 시도해 주세요."
+done
 
 step "2/7  저장소 준비 ($REPO_DIR)"
 if [ -d "$REPO_DIR/.git" ]; then
@@ -61,11 +85,12 @@ ln -sfn /etc/nginx/sites-available/gmchurch /etc/nginx/sites-enabled/gmchurch
 rm -f /etc/nginx/sites-enabled/default
 
 step "4/7  첫 배포"
-"$REPO_DIR/deploy/publish.sh"
+bash "$REPO_DIR/deploy/publish.sh"
 
 step "5/7  nginx 재시작"
 nginx -t
-systemctl reload nginx
+# 설치 중 기동에 실패해 멈춰 있을 수 있으므로 reload 가 아니라 restart 로 올립니다
+systemctl reload-or-restart nginx
 systemctl enable --quiet nginx
 
 step "6/7  자동 배포 타이머 등록 (2시간마다 git 확인)"

@@ -20,6 +20,12 @@ REPO_DIR="${REPO_DIR:-/srv/gmchurch}"
 WEB_ROOT="${WEB_ROOT:-/var/www/gmchurch}"
 BRANCH="${BRANCH:-main}"
 
+# 마지막으로 '실제 복사까지 성공한' 커밋을 적어둡니다.
+# git HEAD 만 보고 판단하면, 복사가 중간에 실패했거나 문서 루트가 망가져도
+# "이미 배포됨"으로 넘겨버립니다. 복사가 끝난 뒤에만 이 파일을 갱신해서
+# 실패한 배포는 다음 차례에 반드시 다시 시도되게 합니다.
+STATE_FILE="${STATE_FILE:-/var/lib/gmchurch/deployed-commit}"
+
 log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
 cd "$REPO_DIR"
@@ -29,9 +35,10 @@ git fetch --quiet origin "$BRANCH"
 
 LOCAL="$(git rev-parse HEAD)"
 REMOTE="$(git rev-parse "origin/${BRANCH}")"
+DEPLOYED="$(cat "$STATE_FILE" 2>/dev/null || true)"
 
-if [ "$LOCAL" = "$REMOTE" ] && [ -f "${WEB_ROOT}/index.html" ]; then
-  # 변경 없음 — 조용히 종료 (타이머가 자주 도니 로그를 남기지 않습니다)
+if [ "$REMOTE" = "$DEPLOYED" ] && [ -s "${WEB_ROOT}/index.html" ]; then
+  # 변경 없음 — 조용히 종료 (로그를 남기지 않습니다)
   exit 0
 fi
 
@@ -65,4 +72,8 @@ chown -R www-data:www-data "$WEB_ROOT"
 find "$WEB_ROOT" -type d -exec chmod 755 {} +
 find "$WEB_ROOT" -type f -exec chmod 644 {} +
 
-log "배포 완료: $(git log -1 --pretty='%h %s')"
+# 여기까지 왔으면 복사가 끝난 것이므로 기록을 갱신합니다.
+mkdir -p "$(dirname "$STATE_FILE")"
+printf '%s\n' "$REMOTE" > "$STATE_FILE"
+
+log "배포 완료: $(git log -1 --pretty='%h %s')  파일 $(find "$WEB_ROOT" -type f | wc -l)개"

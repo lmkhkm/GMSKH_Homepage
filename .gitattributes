@@ -5,3 +5,8 @@
 *.conf      text eol=lf
 *.service   text eol=lf
 *.timer     text eol=lf
+
+# 배치파일은 한글 Windows 기본 인코딩(CP949) + CRLF 로 저장돼 있습니다.
+# git 이 줄바꿈이나 인코딩을 건드리면 한글이 깨지고 goto 가 동작하지 않으므로
+# 아예 손대지 않도록 바이너리로 취급합니다.
+*.bat       -text
