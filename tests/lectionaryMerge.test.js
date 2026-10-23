@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { resolveReadings, nextSundayKey, isToggleWeek, koreanDate } from '../scripts/lib/lectionary.js';
+import { resolveReadings, nextSundayKey, isToggleWeek, koreanDate, STANDARD_FILES, mergeStandards } from '../scripts/lib/lectionary.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const read = f => JSON.parse(readFileSync(join(__dirname, '..', 'data', f), 'utf-8'));
-const std = read('lectionary-year-a.json').sundays;
+const std = mergeStandards(STANDARD_FILES.map(read));
 const ov  = read('lectionary-overrides.json').sundays;
 
 // 병합 로직이 실제 주보와 일치하는지 — 예배 순서면에서 확인한 ground truth
@@ -39,10 +39,12 @@ describe('resolveReadings: 표준+주보 병합', () => {
         expect(r.fromBulletin).toBe(true);
     });
 
-    it('기록이 없는 주간은 표준 짝 독서(B)를 기본으로 쓴다', () => {
+    it('기록이 없는 주간은 연속 독서(A)를 기본으로 쓰고 시편은 비운다', () => {
         const r = resolveReadings(std, ov, '2026-07-19'); // override 없음
         const s = std.find(x => x.date === '2026-07-19');
-        expect(r.first).toBe(s.readings.firstReadingB);
+        expect(r.first).toBe(s.readings.firstReadingA);
+        expect(r.track).toBe('A');
+        expect(r.psalm).toBeNull();   // 표준 시편은 짝 독서(B)값이라 A와 어긋남
         expect(r.fromBulletin).toBe(false);
     });
 

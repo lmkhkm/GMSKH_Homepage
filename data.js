@@ -42,14 +42,14 @@ const LiturgicalCalendar = (() => {
     }
 
     const SEASONS = {
-        advent:    { key: "advent",    name: "대림절",       colorName: "자색", color: "#6b4f8f", colorLight: "#f0eaf7", onColor: "#fff",     symbol: "🕯️", note: "주님의 오심을 기다리는 시간" },
-        christmas: { key: "christmas", name: "성탄절",       colorName: "백색", color: "#b8860b", colorLight: "#fbf3df", onColor: "#1a1a1a", symbol: "⭐",   note: "말씀이 사람이 되시다"   },
-        epiphany:  { key: "epiphany",  name: "공현절 후",    colorName: "녹색", color: "#3d6b4a", colorLight: "#eef2ec", onColor: "#fff",     symbol: "✨",   note: "주님이 세상에 드러나심" },
-        lent:      { key: "lent",      name: "사순절",       colorName: "자색", color: "#6b4f8f", colorLight: "#f0eaf7", onColor: "#fff",     symbol: "✝️",  note: "회개와 절제의 시간"     },
-        holyweek:  { key: "holyweek",  name: "성주간",       colorName: "적색", color: "#c0390f", colorLight: "#fdf2ee", onColor: "#fff",     symbol: "🌿",   note: "주님의 수난을 묵상"     },
-        easter:    { key: "easter",    name: "부활절",       colorName: "백색", color: "#b8860b", colorLight: "#fbf3df", onColor: "#1a1a1a", symbol: "🌅",   note: "다시 살아나신 주님"     },
-        pentecost: { key: "pentecost", name: "성령강림절",   colorName: "적색", color: "#c0390f", colorLight: "#fdf2ee", onColor: "#fff",     symbol: "🔥",   note: "성령께서 임하시다"      },
-        ordinary:  { key: "ordinary",  name: "성령강림 후",  colorName: "녹색", color: "#3d6b4a", colorLight: "#eef2ec", onColor: "#fff",     symbol: "🌿",   note: "그리스도인의 일상"      }
+        advent:    { key: "advent",    name: "대림절",       colorName: "자색", color: "#6b4f8f", colorLight: "#f0eaf7", onColor: "#fff",     symbol: "candle", note: "주님의 오심을 기다리는 시간" },
+        christmas: { key: "christmas", name: "성탄절",       colorName: "백색", color: "#b8860b", colorLight: "#fbf3df", ink: "#80600a", onColor: "#1a1a1a", symbol: "star",   note: "말씀이 사람이 되시다"   },
+        epiphany:  { key: "epiphany",  name: "공현절 후",    colorName: "녹색", color: "#285a47", colorLight: "#e7eee8", onColor: "#fff",     symbol: "sparkle",   note: "주님이 세상에 드러나심" },
+        lent:      { key: "lent",      name: "사순절",       colorName: "자색", color: "#6b4f8f", colorLight: "#f0eaf7", onColor: "#fff",     symbol: "cross",  note: "회개와 절제의 시간"     },
+        holyweek:  { key: "holyweek",  name: "성주간",       colorName: "적색", color: "#c0390f", colorLight: "#fdf2ee", onColor: "#fff",     symbol: "palm",   note: "주님의 수난을 묵상"     },
+        easter:    { key: "easter",    name: "부활절",       colorName: "백색", color: "#b8860b", colorLight: "#fbf3df", ink: "#80600a", onColor: "#1a1a1a", symbol: "sunrise",   note: "다시 살아나신 주님"     },
+        pentecost: { key: "pentecost", name: "성령강림절",   colorName: "적색", color: "#c0390f", colorLight: "#fdf2ee", onColor: "#fff",     symbol: "flame",   note: "성령께서 임하시다"      },
+        ordinary:  { key: "ordinary",  name: "성령강림 후",  colorName: "녹색", color: "#285a47", colorLight: "#e7eee8", onColor: "#fff",     symbol: "leaf",   note: "그리스도인의 일상"      }
     };
 
     function compute(today = new Date()) {
@@ -86,11 +86,12 @@ const CHURCH_DATA = {
     info: {
         name: "대한성공회 광명교회",
         subName: "성 디모테오 성당",
+        tagline: "녹색교회",          // 로고 워드마크 부제 (서체 서브셋 fonts/brand-serif.woff2에 포함된 글자만 사용)
         slogan: "모든 생명을 환대하는 교회",
         vision: "하느님 나라를 살아가는 사랑의 공동체",
         diocese: "대한성공회 서울교구 서부교무구",
-        aboutLead: "성공회 기도서를 따라 예배하며, 생태 보전을 신앙의 과제로 삼는 광명의 녹색 교회입니다.",
-        aboutDesc: "주일 애찬에는 비건 음식도 함께 마련합니다.",
+        aboutLead: "성공회 기도서를 따라 예배하며, 생태 보전을 신앙의 과제로 삼는 광명의 녹색교회입니다.",
+        aboutDesc: "주일 애찬(예배 후 함께 나누는 식사)에는 비건 음식도 함께 마련합니다.",
         award: { year: "2023", title: "녹색교회 선정", org: "기독교환경운동연대", href: "greenchurch.html#press", newsUrl: "https://www.newsis.com/view/NISX20230515_0002303502" },
         established: "1990년 2월 11일",
         address: "경기도 광명시 아방리 2길 10",
@@ -110,8 +111,163 @@ const CHURCH_DATA = {
         email: "bsyg2000@hanmail.net"
     },
 
+    childrenWorship: {
+        "eyebrow": "광명교회 어린이 예배",
+        "heroEyebrow": "Children's Worship",
+        "intro": "광명교회 어린이 예배는 주일학교 선생님들과 함께 드리는 예배입니다. 말씀을 듣고, 찬양하고, 기도합니다.",
+        "heroAlt": "팔을 벌린 예수님 곁에 모인 어린이들을 그린 그림",
+        "welcomeLabel": "시간·장소 보기",
+        "visitLabel": "오시는 길",
+        "rhythmTitle": "예배에서 하는 일",
+        "rhythm": [
+            {
+                "title": "말씀 듣기",
+                "desc": "주일학교 선생님들과 함께 성서 말씀을 읽고, 찬양과 활동으로 이야기를 나눕니다."
+            },
+            {
+                "title": "묻고 이야기하기",
+                "desc": "궁금한 것은 자유롭게 말하고, 서로 귀 기울여 듣습니다. 함께 노는 시간도 있습니다."
+            },
+            {
+                "title": "영성체",
+                "desc": "영성체 시간에는 어른들과 함께 성체를 모십니다. 세례받은 어린이는 모두 성체를 받을 수 있습니다."
+            }
+        ],
+        "storyEyebrow": "활동 모습",
+        "storyTitle": "아이들이 벽에 그린 그림",
+        "storyIntro": "아이들이 직접 색을 골라 붓으로 벽에 그림을 그렸습니다.",
+        "photos": [
+            {
+                "src": "painting-joy",
+                "alt": "붓을 들고 벽화 앞에서 두 팔을 펼친 어린이",
+                "caption": "붓을 들고 웃는 아이"
+            },
+            {
+                "src": "painting-together",
+                "alt": "여러 색으로 칠한 벽에 붓질하는 어린이",
+                "caption": "벽에 색을 칠하는 아이"
+            },
+            {
+                "src": "mural-church",
+                "alt": "푸른 하늘과 초록 들판 위에 그린 작은 교회 벽화",
+                "caption": "하늘과 들판 위의 교회 그림"
+            },
+            {
+                "src": "mural-angel",
+                "alt": "여러 색의 바탕 위에 천사와 교회를 그린 벽화",
+                "caption": "천사와 교회를 그린 벽화"
+            }
+        ],
+        "joinTitle": "참여 안내",
+        "placeLabel": "장소",
+        "place": "교육관",
+        "timeLabel": "시간",
+        "joinIntro": "처음 오시는 가족도 환영합니다. 궁금한 점은 교회로 문의해 주세요.",
+        "contactLabel": "어린이 예배 문의",
+        "backLabel": "전체 예배 안내",
+        "parentsIntro": "아이를 신앙 안에서 키우는 일은 부모 혼자 감당하기 어렵습니다. 주일학교 자녀를 둔 양육자들이 매월 모여 가정 안의 신앙 교육을 이야기하고 서로를 위해 기도합니다.",
+        "parentsScheduleLabel": "일정",
+        "parentsPlaceLabel": "장소",
+        "parentsPlace": "교회 내 소모임 공간",
+        "parentsAudienceLabel": "대상",
+        "parentsAudience": "주일학교에 아이가 다니고 있다면 누구나",
+        "parentsLinkLabel": "양육자모임 안내 보기"
+    },
+
+    // 광명 희망터(hopecenter.html) — 소개문은 교회 제공 원문(2026-10-21)
+    hopeCenter: {
+        // 사진을 같은 이름으로 교체하면 값을 바꿔 브라우저 캐시를 무효화한다
+        imageVersion: "20261021c",
+        heroEyebrow: "Community Ministry",
+        title: "광명 희망터",
+        summary: "지역의 소외된 이웃과 함께하는 나눔 사역",
+        intro: "광명교회는 2004년 3월, 하느님의 사랑을 실천하고 이웃의 필요에 귀 기울이기 위해 부설기관인 광명희망터를 설립하였습니다.",
+        heroImage: { src: "kitchen", alt: "희망터 주방에서 고개 숙여 기도하는 봉사자 세 사람", width: 1440, height: 665 },
+        facts: [
+            { label: "설립", value: "2004년 3월" },
+            { label: "지원", value: "10가정" },
+            { label: "활동", value: "매주 토요일" }
+        ],
+        weeklyEyebrow: "Every Saturday",
+        weeklyTitle: "토요일의 나눔",
+        weeklyIntro: "현재는 독거노인과 장애인 가정 등 총 10가정에 반찬을 지원하고 있습니다. 매주 토요일이면 봉사자들이 한자리에 모여 정성껏 반찬을 조리하고, 이를 각 가정에 직접 배달하며 따뜻한 마음을 전하고 있습니다.",
+        steps: [
+            { title: "한자리에 모입니다", desc: "매주 토요일, 봉사자들이 희망터 주방에 모입니다.", image: { src: "prayer", alt: "주방 조리대 앞에서 두 손을 모으고 기도하는 봉사자들" } },
+            { title: "반찬을 조리합니다", desc: "이웃 가정에 드릴 반찬을 정성껏 만듭니다.", image: { src: "dishes", alt: "용기에 나누어 담은 오이부추무침과 양념장에 담근 달걀" } },
+            { title: "가정에 전합니다", desc: "만든 반찬을 각 가정에 직접 배달합니다.", image: { src: "handoff", alt: "봉사자가 이웃에게 반찬 봉투를 건네는 모습" } }
+        ],
+        historyEyebrow: "Our Journey",
+        historyTitle: "걸어온 길",
+        historyIntro: "광명희망터는 그동안 노인 일자리 사업, 노숙인 급식 사업, 독거노인 반찬 지원 사업 등 다양한 나눔과 봉사 활동을 펼쳐 왔습니다.",
+        historyImage: { src: "delivery", alt: "나눔 물품 상자를 가득 실은 차량 앞에 선 봉사자 세 사람", caption: "나눔 물품을 싣고" },
+        programs: [
+            { title: "노인 일자리 사업", icon: "people" },
+            { title: "노숙인 급식 사업", icon: "bowl" },
+            { title: "독거노인 반찬 지원 사업", icon: "dish" }
+        ],
+        vision: "광명희망터는 앞으로도 도움이 필요한 이웃들의 목소리에 귀 기울이며, 나눔과 사랑을 통해 지역사회에 희망을 전하는 역할을 이어가고자 합니다.",
+        joinEyebrow: "Join Us",
+        joinTitle: "함께하기",
+        joinIntro: "희망터 봉사를 이어가기 위해서는 교우 여러분의 봉헌과 봉사가 필요합니다. 많은 관심과 기도를 바랍니다.",
+        officerRole: "희망터 총무",
+        contactLabel: "희망터 문의",
+        givingLabel: "헌금 안내",
+        communityLabel: "공동체 전체 보기"
+    },
+
+    ui: {
+        copyAddress: { success: "복사됨", failure: "주소를 선택했습니다. 길게 눌러 복사해 주세요." }
+    },
+
+    // 홈(index.html) 전용 문구 — 예배 시간·위치 등 사실 정보는 info/worship에서 파생
+    home: {
+        heroActions: [
+            { label: "처음 오셨나요?", href: "newcomer.html", primary: true },
+            { label: "예배 안내",    href: "worship.html" }
+        ],
+        stats: { established: "설립", worship: "주일 예배", location: "위치" },
+        about: {
+            eyebrow: "About",
+            title: "광명교회",
+            facts: [
+                { label: "성당", key: "subName" },
+                { label: "소속", key: "diocese" }
+            ],
+            more: "교회 소개 자세히 보기"
+        },
+        worship: {
+            eyebrow: "Worship",
+            title: "예배 안내",
+            sub: "성공회 전례를 중심으로 드리는 주일 예배입니다.",
+            more: "예배 자세히 보기"
+        },
+        thisSunday: {
+            title: "다가오는 주일",
+            labels: { season: "절기", first: "제1독서", second: "제2독서", gospel: "복음" }
+        },
+        guide: {
+            eyebrow: "Welcome",
+            title: "처음 오셨나요?",
+            sub: "방문 전에 많이 궁금해하시는 내용을 모았습니다.",
+            cards: [
+                { icon: "parking", title: "주차 안내",      desc: "교회 인근에 무료 주차가 가능합니다.",                     href: "visit.html#parking",       action: "주차 안내 보기" },
+                { icon: "chalice", title: "영성체 안내",    desc: "세례받은 모든 그리스도인이 성체를 모실 수 있습니다.",     href: "newcomer.html#communion",  action: "영성체 안내 보기" },
+                { icon: "question", title: "자주 묻는 질문", desc: "성공회와 예배에 관해 자주 받는 질문을 모았습니다.",       href: "faq.html",                 action: "질문 보기" },
+                { icon: "book", title: "주일 주보",      desc: "이번 주 주보를 이미지와 PDF로 보실 수 있습니다.", href: "bulletin.html",           action: "주보 보기" }
+            ]
+        },
+        visit: {
+            eyebrow: "Visit",
+            title: "오시는 길",
+            sub: "광명교회로 초대합니다.",
+            phoneLabel: "전화",
+            more: "자세히 보기"
+        }
+    },
+
     anglican: {
-        welcome: "광명교회를 찾아 주셔서 감사합니다. 성공회의 역사와 신앙, 광명교회가 걸어온 길을 소개합니다.",
+        welcome: "광명교회를 찾아 주셔서 감사합니다.",
+        welcomeSub: "성공회의 역사와 신앙, 광명교회가 걸어온 길을 소개합니다.",
         what: {
             eyebrow: "Anglican Church",
             title: "성공회란?",
@@ -120,9 +276,9 @@ const CHURCH_DATA = {
                 "오늘날 성공회는 전 세계 165개국, 약 8,500만 명의 신자가 함께하는 세계 공동체입니다. 특정 교리를 강요하지 않으며, 한 지도자에게 권위를 집중시키지도 않습니다. <strong>말씀과 성찬을 중심으로 하는 공동 신앙</strong>을 원칙으로 삼습니다."
             ],
             pillars: [
-                { icon: "📖", title: "성서", desc: "하느님의 말씀인 성서는 신앙과 삶의 최고 권위입니다. 예배마다 구약·서신서·복음서를 함께 봉독합니다." },
-                { icon: "💡", title: "이성", desc: "하느님이 주신 이성으로 말씀을 해석하고, 그 신앙을 일상에서 실천합니다." },
-                { icon: "🏛", title: "전통", desc: "초대교회로부터 이어진 사도적 전통과 2,000년 공동체의 지혜를 신앙의 안내자로 삼습니다." }
+                { icon: "book", title: "성서", desc: "하느님의 말씀인 성서는 신앙과 삶의 최고 권위입니다. 예배마다 구약·서신서·복음서를 함께 봉독합니다." },
+                { icon: "bulb", title: "이성", desc: "하느님이 주신 이성으로 말씀을 해석하고, 그 신앙을 일상에서 실천합니다." },
+                { icon: "pillar", title: "전통", desc: "초대교회로부터 이어진 사도적 전통과 2,000년 공동체의 지혜를 신앙의 안내자로 삼습니다." }
             ],
             pillarNote: "16세기 신학자 리처드 후커(Richard Hooker)가 정립한 '세 기둥'입니다. 성서·이성·전통이 균형을 이룰 때 신앙이 온전해진다는 가르침입니다.",
             mission: {
@@ -136,7 +292,7 @@ const CHURCH_DATA = {
                     { num: "04", ko: "불의한 사회를 변화시키기 위해 노력합니다.", en: "To seek to transform unjust structures of society" },
                     { num: "05", ko: "창조질서를 보존하며, 지구생명의 회복과 유지에 헌신합니다.", en: "To strive to safeguard the integrity of creation and sustain and renew the life of the earth" }
                 ],
-                note: "성공회선교정신(The Five Marks of Mission)은 세계성공회협의회(Anglican Consultative Council)와 람베스회의(Lambeth Conference)를 통해 확인된 세계성공회의 공통된 선교원칙입니다."
+                note: "성공회 선교정신(The Five Marks of Mission)은 세계성공회협의회(Anglican Consultative Council)와 람베스 회의(Lambeth Conference)를 통해 확인된 세계성공회의 공통된 선교원칙입니다."
             }
         },
         korea: {
@@ -144,14 +300,14 @@ const CHURCH_DATA = {
             title: "대한성공회",
             founded: "1890",
             paras: [
-                "1890년, 영국 성공회 선교사 찰스 존 코프(Charles John Corfe) 주교가 한국에 도착하면서 대한성공회의 역사가 시작되었습니다. 선교 초기부터 병원과 학교를 세워 의료와 교육 사역을 함께 펼쳐 왔습니다.",
+                "1890년, 영국 성공회 선교사 고요한(찰스 존 코프) 주교가 한국에 도착하면서 대한성공회의 역사가 시작되었습니다. 선교 초기부터 병원과 학교를 세워 의료와 교육 사역을 함께 펼쳐 왔습니다.",
                 "일제강점기와 민주화 시기에도 사회적 책임을 이어왔으며, 오늘날에도 선교·교육·사회복지 분야에서 활동을 계속하고 있습니다."
             ],
             highlights: [
-                { icon: "⛪", text: "서울·부산·대전 3개 교구, 전국 200여 교회" },
-                { icon: "🎓", text: "성공회대학교 등 교육·사회 사업 운영" },
-                { icon: "🌐", text: "세계성공회공동체(Anglican Communion) 정식 회원 교회" },
-                { icon: "⚖️", text: "2001년 여성 사제 서품 시작, 사회 정의와 인권 옹호" }
+                { icon: "church", text: "서울·부산·대전 3개 교구, 전국 200여 교회" },
+                { icon: "cap", text: "성공회대학교 등 교육·사회 사업 운영" },
+                { icon: "globe", text: "세계성공회공동체(Anglican Communion) 정식 회원 교회" },
+                { icon: "scales", text: "2001년 여성 사제 서품 시작, 사회 정의와 인권 옹호" }
             ],
             ionaLink: {
                 label: "강화 아이오나 순례길",
@@ -173,22 +329,46 @@ const CHURCH_DATA = {
 
     logo: {
         eyebrow: "Our Symbol",
-        title: "캔터베리 십자가",
-        subtitle: "Canterbury Cross",
-        desc: "세계성공회 공동체를 하나로 잇는 상징으로, 1867년 영국 캔터베리에서 발굴된 9세기 앵글로색슨 브로치에서 유래했습니다. 원형 디자인 안에 복음과 삼위일체, 세계 교회의 연대라는 성공회 신앙의 핵심이 담겨 있습니다.",
-        colors: "짙은 녹색 바탕은 생명과 성장을, 흰색 십자가는 그리스도의 부활과 빛을 상징합니다.",
-        history: "1867년 영국 캔터베리 성 어거스틴 수도원 터 발굴 당시 출토된 앵글로색슨 청동 브로치(9세기경 제작)를 원형으로 합니다.¹ 이 브로치는 현재 캔터베리 대성당 박물관에 소장되어 있으며, 세계성공회는 이를 전 세계 성공회 공동체의 공식 상징으로 채택했습니다.² 대한성공회 역시 이 십자가를 교단의 공식 상징으로 사용하며, 광명교회 또한 이를 교회 로고로 삼고 있습니다.³",
-        elements: [
-            { label: "십자가", desc: "그리스도의 구속과 부활. 성공회 신앙의 중심입니다." },
-            { label: "네 날개", desc: "마태·마가·누가·요한, 사복음서를 상징합니다." },
-            { label: "삼엽 문양", desc: "각 날개 끝의 세 잎은 성부·성자·성령, 삼위일체를 나타냅니다." },
-            { label: "중앙 원", desc: "하느님의 영원하심과 세계 성공회의 일치를 상징합니다." }
-        ],
-        refs: [
-            "Canterbury Cathedral Museum, <em>The Canterbury Cross</em>, Canterbury (1867년 발굴, 현 캔터베리 대성당 박물관 소장).",
-            "The Anglican Communion Office, <em>Symbols of Anglican Identity</em>, London.",
-            "대한성공회, 《성공회 예식서》, 성공회출판사, 2004."
-        ]
+        title: "교회 로고",
+        // 광명교회 로고 '열린 빛' — 마크는 app.js ARCH_MARK_PATH
+        church: {
+            name: "열린 빛",
+            subtitle: "Open Light",
+            desc: [
+                "광명교회의 로고 ‘열린 빛’은 예배당의 아치창 사이로 들어온 빛이 십자가를 이루는 모습을 담았습니다. 닫힌 벽이 아니라 열린 창으로, 세상의 빛이신 그리스도(요한 8:12)를 향해 누구에게나 열려 있는 교회를 나타냅니다.",
+                "교회 이름과 함께 ‘녹색교회’를 새겨, 모든 생명을 환대하고 하느님의 창조세계를 돌보는 광명교회의 부르심을 담았습니다."
+            ],
+            elements: [
+                { label: "아치창", desc: "예배당의 창이자 문입니다. 하느님께 나아가는 자리이며, 세상을 향해 열린 교회를 뜻합니다." },
+                { label: "십자가 모양의 빛", desc: "그려 넣은 십자가가 아니라 열린 틈으로 드러나는 십자가입니다. 어둠 속에 비치는 그리스도의 빛을 나타냅니다." },
+                { label: "아래로 넓어지는 빛줄기", desc: "위에서 내려온 빛이 아래로 갈수록 넓게 퍼집니다. 받은 은총이 세상으로 흘러감을 뜻합니다." },
+                { label: "녹색교회", desc: "2023년 녹색교회로 선정된 광명교회가 이어 가는 창조세계 돌봄의 사명입니다." }
+            ],
+            colors: [
+                { name: "숲 녹색", hex: "#1c4336", desc: "생명과 창조세계" },
+                { name: "세이지", hex: "#b1b883", desc: "새싹과 자람" },
+                { name: "크림", hex: "#f0ece4", desc: "빛과 환대" }
+            ]
+        },
+        // 세계성공회 상징
+        anglican: {
+            title: "캔터베리 십자가",
+            subtitle: "Canterbury Cross",
+            lead: "세계성공회의 상징",
+            desc: "세계성공회 공동체를 하나로 잇는 상징으로, 1867년 영국 캔터베리에서 발굴된 9세기 앵글로색슨 브로치에서 유래했습니다. 원형 디자인 안에 복음과 삼위일체, 세계 교회의 연대라는 성공회 신앙의 핵심이 담겨 있습니다.",
+            history: "1867년 영국 캔터베리 성 어거스틴 수도원 터 발굴 당시 출토된 앵글로색슨 청동 브로치(9세기경 제작)를 원형으로 합니다.¹ 이 브로치는 현재 캔터베리 대성당 박물관에 소장되어 있으며, 세계성공회는 이를 전 세계 성공회 공동체의 공식 상징으로 채택했습니다.² 대한성공회 역시 이 십자가를 교단의 공식 상징으로 사용합니다.³",
+            elements: [
+                { label: "십자가", desc: "그리스도의 구속과 부활. 성공회 신앙의 중심입니다." },
+                { label: "네 날개", desc: "마태오·마르코·루가·요한, 사복음서를 상징합니다." },
+                { label: "삼엽 문양", desc: "각 날개 끝의 세 잎은 성부·성자·성령, 삼위일체를 나타냅니다." },
+                { label: "중앙 원", desc: "하느님의 영원하심과 세계 성공회의 일치를 상징합니다." }
+            ],
+            refs: [
+                "Canterbury Cathedral Museum, <em>The Canterbury Cross</em>, Canterbury (1867년 발굴, 현 캔터베리 대성당 박물관 소장).",
+                "The Anglican Communion Office, <em>Symbols of Anglican Identity</em>, London.",
+                "대한성공회, 《성공회 예식서》, 성공회출판사, 2004."
+            ]
+        }
     },
 
     ministerSection: {
@@ -204,33 +384,35 @@ const CHURCH_DATA = {
             category: "성직자",
             name: "민숙희(마가렛)",
             title: "관할사제 · 서울교구 서부교무구 총사제",
-            photo: "priest-portrait.jpg",
+            photo: "images/clergy/priest-portrait.jpg",
+            photoThumb: "images/clergy/priest-portrait-450.jpg",
             ordained: "2005년 서품",
             quote: "교회는 모든 이를 위해 존재해야 하며, 그 누구도 소외되어서는 안 됩니다.",
-            desc: "성공회대학교 신학과(1988학번)를 졸업하고 2005년 사제로 서품되었습니다. 2025년 3월 서울교구 최초의 여성 총사제로 임명되었으며, 성평등과 생태 존중을 지향하며 광명교회를 섬기고 있습니다.",
+            desc: "성공회대학교 신학과(1988학번)를 졸업하고 2005년 사제로 서품되었습니다. 2025년 2월 서울교구 최초의 여성 총사제로 임명되었으며, 성평등과 생태 존중을 지향하며 광명교회를 섬기고 있습니다.",
             contact: "bsyg2000@hanmail.net",
             bio: {
                 milestones: [
                     { year: "1988", text: "성공회대학교 신학과 입학" },
-                    { year: "1998", text: "서울교구 신학대학원 성직과정 입학 — 교구 최초 여성 성직 과정생", first: true },
+                    { year: "1998", text: "서울교구 신학대학원 성직과정 입학 — 교구 여성 성직 과정생", first: true },
                     { year: "2005", text: "사제 서품" },
-                    { year: "2006", text: "동두천교회 보좌사제 — 서울교구 여성 사목자 최초 일반교회 단독 사목", first: true },
+                    { year: "2006", text: "동두천교회 보좌사제 — 서울교구 여성 사목자 일반교회 단독 사목", first: true },
                     { year: "—", text: "동두천·성북 나눔의집 원장 역임 — 서울교구 첫 여성 원장", first: true },
                     { year: "2014", text: "강화 송산교회 관할사제 부임 — 서울교구 첫 여성 관할사제", first: true },
-                    { year: "2025", text: "서울교구 서부교무구 총사제 임명 — 교구 최초 여성 총사제", first: true }
+                    { year: "2025", text: "서울교구 서부교무구 총사제 임명 — 교구 여성 총사제", first: true }
                 ],
                 roles: [
-                    "서울교구 청년연합회장(1996)",
-                    "대한성공회 제2대 여성국장",
-                    "관구 윤리위원회 위원",
+                    "서울교구 청년연합회장(전, 1996)",
+                    "대한성공회 제2대 여성국장(전)",
+                    "관구 윤리위원회 위원(전)",
                     "대한성공회 여성 성직자회 회장(전)",
                     "대한성공회 정의평화사제단 회장(현)",
                     "성공회대학교 동물권리 과정 수강(현)"
                 ],
                 externalRoles: [
-                    "한국기독청년연합회(EYCK) 서울지회장(1997)",
-                    "한국기독교교회협의회(NCCK) 여성위원장(67~68회기)",
-                    "NCCK 종교간대화위원회 위원장(현)"
+                    "한국기독청년연합회(EYCK) 서울지회장(전)",
+                    "한국기독교교회협의회(NCCK) 여성위원장(전)",
+                    "NCCK 종교간대화위원회 위원장(전)",
+                    "한국교회 인권센터 부이사장(현)"
                 ],
                 ministryNote: "대한성공회 최초로 반려동물 축복식을 시작해 오랫동안 이어오고 있으며, 유기견 보호소 봉사와 수의사 초청 강연 등 생명 사역을 함께 이어가고 있습니다. '경계 없는 교회, 모든 생명에게 열린 교회, 차별과 혐오에 맞서는 교회'가 민숙희 사제가 지향하는 사목 방향입니다.",
                 source: {
@@ -245,8 +427,9 @@ const CHURCH_DATA = {
             category: "성직자",
             name: "이남호(사도요한)",
             title: "협동사제",
-            photo: "priest-portrait-2.jpg",
-            ordained: "",
+            photo: "images/clergy/priest-portrait-2.jpg",
+            photoThumb: "images/clergy/priest-portrait-2-450.jpg",
+            ordained: "2013년 서품",
             quote: "목회와 상담의 공통 원칙은 공감이며, 타인의 아픔을 공감하는 것은 주님이 주시는 능력입니다.",
             desc: "문학, 신학, 상담심리, 동양철학을 두루 공부한 성공회 사제입니다. 35세에 늦깎이로 신학의 길에 들어서 사제 서품을 받았으며, 마포들음교회에서 상담센터를 운영하는 등 사목과 상담을 접목한 사역을 이어왔습니다. 현재 광명교회 협동사제로 섬기고 있습니다.",
             contact: "",
@@ -256,20 +439,26 @@ const CHURCH_DATA = {
                 milestones: [
                     { year: "—", text: "서울 출생, 서대문·은평 지역에서 성장 — 충암초·중학교, 명지고등학교 졸업" },
                     { year: "—", text: "연세대학교 불어불문학과 졸업, 직장인으로 생활" },
-                    { year: "37세", text: "성공회대학교 신학대학원 입학 — 늦깎이로 사제의 길을 선택" },
-                    { year: "—", text: "사제 서품" },
+                    { year: "1999", text: "성공회신학대학교 편입(만 35세) — 늦깎이로 사제의 길을 선택" },
+                    { year: "2001", text: "성공회신학대학교 졸업, 성공회신학대학원 입학(만 37세)" },
+                    { year: "2003", text: "성공회신학대학원 졸업" },
+                    { year: "2005", text: "부제 서품" },
+                    { year: "2007", text: "가톨릭상담심리대학원 입학" },
+                    { year: "2009", text: "가톨릭상담심리대학원 졸업(상담심리학 석사)" },
+                    { year: "2010", text: "상담심리사 자격 취득" },
+                    { year: "2011", text: "동방문화대학원대학교 입학" },
+                    { year: "2013", text: "사제 서품" },
+                    { year: "2020", text: "동방문화대학원대학교 졸업(주역·명리학 철학박사)" },
                     { year: "—", text: "성공회 살림터(노숙위기가정 보호시설) 소장" },
                     { year: "—", text: "마포들음교회 관할사제 — 교회 내 들음상담센터 개설·운영" },
-                    { year: "45세", text: "가톨릭대학교 상담심리대학원 상담심리학 석사, 상담심리사 자격 취득" },
-                    { year: "55세", text: "동방문화대학원대학교 주역·명리학 철학박사 취득" },
                     { year: "—", text: "성공회대학교·한겨레문화센터 강의" },
                     { year: "현재", text: "옹진 재가노인지원서비스센터장, 광명교회 협동사제" }
                 ],
                 roles: [
-                    "성공회 살림터 소장",
-                    "성공회대학교 강사",
-                    "한겨레문화센터 강사",
-                    "마포들음교회 들음상담센터 운영",
+                    "성공회 살림터 소장(전)",
+                    "성공회대학교 강사(전)",
+                    "한겨레문화센터 강사(전)",
+                    "마포들음교회 들음상담센터 운영(전)",
                     "옹진 재가노인지원서비스센터장(현)",
                     "광명교회 협동사제(현)"
                 ],
@@ -278,13 +467,13 @@ const CHURCH_DATA = {
         }
     ],
 
-    // 평신도 임원진 — 주보(제1844호) 기준. category는 ministerSection.categories와 매칭
+    // 평신도 임원진 — 이름(세례명) 형식, 교회위원은 가나다순. term은 선출직 임기(별정직·사역자는 생략). category는 ministerSection.categories와 매칭
     officers: [
-        { category: "교회위원", role: "신자회장",   members: ["이문희"] },
-        { category: "교회위원", role: "사제회장",   members: ["최명숙"] },
-        { category: "교회위원", role: "교회위원",   members: ["문운영", "박광식", "임경식", "나영숙", "박종미"] },
-        { category: "교회위원", role: "건축위원장", members: ["정순진"] },
-        { category: "교회위원", role: "희망터 총무", members: ["신효심"] },
+        { category: "교회위원", role: "신자회장",   term: "2026.9~2028.9", members: ["이문희(니콜라)"] },
+        { category: "교회위원", role: "사제회장",   term: "2026.9~2028.9", members: ["박종미(수산나)"] },
+        { category: "교회위원", role: "교회위원",   term: "2026.9~2028.9", members: ["나영숙(엘리사벳)", "박경준(프란시스)", "박광식(암브로스)", "윤상돈(베드로)"] },
+        { category: "교회위원", role: "건축위원장", members: ["정순진(디모데오)"] },
+        { category: "교회위원", role: "희망터 총무", members: ["신효심(베로니카)"] },
         { category: "사역자",   role: "신자 사역자", members: ["정동숙(엘리사벳)", "박종미(수산나)"] }
     ],
 
@@ -293,7 +482,8 @@ const CHURCH_DATA = {
         title: "제7대 서울교구장 주교",
         diocese: "대한성공회 서울교구",
         ordained: "2024년 9월 26일 성품 및 승좌",
-        photo: "bishop-portrait.jpg",
+        photo: "images/clergy/bishop-portrait.jpg",
+        photoThumb: "images/clergy/bishop-portrait-450.jpg",
         desc: "대한성공회 제7대 서울교구장 주교로, 2024년 9월 26일 서울주교좌성당에서 성품식과 승좌식을 거쳐 취임했습니다. 1964년생으로, 서강대 불어불문학과를 졸업한 뒤 1995년 성공회 사목신학연구원을 마쳤으며, 1998년 사제 서품을 받았습니다. 오산세마대교회 관할사제, 서울교구 선교교육훈련국장, 대학로교회 관할사제 등을 지냈습니다. 취임사에서는 '사도성을 회복하는 성공회'를 강조하며 세계성공회 선교정신에 따라 교회와 세상을 위해 기도하고 복음을 선포하는 데 전념하겠다고 밝혔습니다.",
         note: "광명교회는 대한성공회 서울교구 소속 교회입니다."
     },
@@ -306,29 +496,65 @@ const CHURCH_DATA = {
         ],
         values: [
             {
-                icon: "🌿",
+                icon: "leaf",
                 title: "녹색교회",
                 desc: "생태와 환경 보전을 신앙의 과제로 삼고 실천합니다. 녹색교회·동물복지·환경보호를 실천하며 생명을 돌봅니다. 주일 애찬에는 비건 음식도 함께 준비합니다.",
                 href: "greenchurch.html",
                 cta: "녹색교회 자세히 보기"
             },
             {
-                icon: "🤲",
+                icon: "hands-heart",
                 title: "열린 교회",
                 desc: "성소수자·장애인·이주노동자·어린이·노인·동물 등 사회적 소수자와 모든 생명에 열려 있습니다."
             },
             {
-                icon: "⚖️",
+                icon: "scales",
                 title: "평등한 교회",
                 desc: "성별·나이·지위에 관계없이 누구나 동등하게 예배에 참여하고 봉사합니다."
             },
             {
-                icon: "✝️",
+                icon: "cross",
                 title: "전례 중심",
                 desc: "성공회 기도서에 따른 전례와 성찬을 예배의 중심에 둡니다."
             }
         ],
         closing: "광명교회는 신앙과 일상, 사람과 이웃이 연결되는 열린 공동체입니다."
+    },
+
+    // 교회 연혁 — 출처: 교회 제공 「대한성공회 광명교회 연혁」 PDF(2026-10-21). 인쇄된 문구 그대로(띄어쓰기만 교정)
+    history: {
+        eyebrow: "Our History",
+        title: "교회 연혁",
+        sub: "1989년 개척을 다짐한 때부터 오늘까지 광명교회가 걸어온 길입니다.",
+        // key: true 항목만 먼저 보이고, 버튼으로 전체 연혁을 펼친다
+        moreLabel: "전체 연혁 보기",
+        lessLabel: "핵심만 보기",
+        items: [
+            { year: "1989", date: "4월 2일", text: "영등포교회 위원회에서 교회개척기금 1천만 원을 마련하여 광명지역에 개척 의지 다짐", key: true },
+            { year: "1989", date: "8월 11일", text: "매주 금요일 광명지역에 거주하는 영등포, 베다교회 교우를 중심으로 각 가정과 연합 구역예배를 철산13단지 이은혜 교우 댁에서 드림" },
+            { year: "1989", date: "8월 14일", text: "황주익 베드로, 김정순 요안나 가정에서 매일 저녁 10시에 교회 설립을 위한 작정기도 드림" },
+            { year: "1989", date: "9월 27일", text: "광명시 철산3동 463-92 동원빌딩 지하(보증금 1천만 원, 월세 2십만 원) 교회로 계약" },
+            { year: "1989", date: "9월 29일", text: "첫 구역예배 9명 참석(인도: 윤병학 마가)", key: true },
+            { year: "1990", date: "1월 15일", text: "장창경 베레기아 전도사 부임" },
+            { year: "1990", date: "1월 18일", text: "영등포교회 김준배 사무엘 사제와 광명지역 교우 30여 명이 목요 만도(저녁기도)를 드리고 축복식 관련 토의" },
+            { year: "1990", date: "2월 10일", text: "관할사제 김근상 바우로 사제 임명" },
+            { year: "1990", date: "2월 11일", text: "광명 성 디모테오 성당 축복식 — 집전 김성수 시몬 주교", key: true },
+            { year: "1990", date: "10월 15일", text: "관할사제 박찬욱 아브라함 사제, 관리사제 전삼광 세바스찬 사제 임명" },
+            { year: "1991", date: "12월 26일", text: "최상석 아타나시오 사제 부임" },
+            { year: "1992", date: "5월 3일", text: "광명시 하안동 중심상업지구 3-5, 성보프라자 이전 축복식", key: true },
+            { year: "1993", date: "2월 1일", text: "본교회 승격. 관할사제: 김재열 요한 사제", key: true },
+            { year: "1994", date: "4월 17일", text: "최상석 아타나시오 사제 관할사제 임명" },
+            { year: "1995", date: "11월 12일", text: "광명4동 158-288 성전 이전 축성식(집전: 정철범 마태오 주교)", key: true },
+            { year: "1999", date: "11월 28일", text: "이완홍 바나바 사제 부임" },
+            { year: "2003", date: "10월 12일", text: "광명시 노온사동 373-1 이전 축성식", key: true },
+            { year: "2003", date: "11월 16일", text: "고영돈 베네딕트 사제 부임" },
+            { year: "2009", date: "2월 22일", text: "박성순(야고보) 사제 부임" },
+            { year: "2012", date: "1월 15일", text: "김태욱 사제 부임" },
+            { year: "2013", date: "1월 27일", text: "김영회 사제 부임" },
+            { year: "2016", date: "1월 31일", text: "한자천 사제 부임" },
+            // 원본 PDF는 「2019년 2월 29일」 — 2019년에는 2월 29일이 없어 일(日)은 확인 전까지 비워 둔다
+            { year: "2019", date: "2월", text: "민숙희 사제 부임", key: true }
+        ]
     },
 
     // 교회 소개 페이지 — 섹션 둘러보기 내비 + 순차 연결 흐름
@@ -338,28 +564,32 @@ const CHURCH_DATA = {
     },
 
     worship: {
+        lectionaryError: {
+            description: "전례독서를 불러오지 못했습니다. 연결 상태를 확인한 뒤 다시 시도해 주세요.",
+            retry: "다시 불러오기"
+        },
         liturgicalSeason: LiturgicalCalendar.compute(),
         currentReadings: {
-            week: "맥추감사주일",
+            week: "연중 제29주일",
             year: "A년",
-            date: "2026년 7월 12일",
+            date: "2026년 10월 18일",
             note: "주보 기준 · 대한성공회 공동 전례독서에 따릅니다.",
             items: [
-                { role: "제1독서", ref: "신명 8:1-4" },
-                { role: "시편", ref: "시편 119편" },
-                { role: "서신서", ref: "히브리 11:32-40" },
-                { role: "복음", ref: "마태 6:25-34" }
+                { role: "제1독서", ref: "출애굽 33:12-23" },
+                { role: "시편", ref: "시편 99편" },
+                { role: "서신서", ref: "데살로니카전서 1:1-10" },
+                { role: "복음", ref: "마태 22:15-22" }
             ]
         },
         nextReadings: {
-            week: "연중 제16주일",
+            week: "연중 제30주일",
             year: "A년",
-            date: "2026년 7월 19일",
+            date: "2026년 10월 25일",
             items: [
-                { role: "제1독서", ref: "이사야 44:6-8" },
-                { role: "시편", ref: "시편 86:11-17" },
-                { role: "서신서", ref: "로마 8:12-25" },
-                { role: "복음", ref: "마태 13:24-30, 36-43" }
+                { role: "제1독서", ref: "신명기 34:1-12" },
+                { role: "시편", ref: "시편 95편" },
+                { role: "서신서", ref: "데살로니카전서 2:1-8" },
+                { role: "복음", ref: "마태 22:34-46" }
             ]
         },
         main: [
@@ -367,16 +597,17 @@ const CHURCH_DATA = {
                 id: "main",
                 title: "주일 감사성찬례",
                 time: "매주 일요일 오전 11:00",
-                desc: "성공회 전례의 중심인 감사성찬례(Eucharist)입니다. 말씀과 성찬 안에서 예수 그리스도를 만나는 시간이며, 세례받은 모든 그리스도인이 성체를 모실 수 있습니다. 반려동물과 함께 오신 분은 예배 후 신부님께 강복을 청할 수 있습니다."
+                desc: "성공회 전례의 중심인 감사성찬례(Eucharist)입니다. 말씀과 성찬 안에서 예수 그리스도를 만나는 시간이며, 세례받은 모든 그리스도인이 성체를 모실 수 있습니다. 반려동물과 함께 오신 분은 예배 후 신부님께 강복(축복 기도)을 청할 수 있습니다.",
+                summary: "말씀과 성찬 안에서 예수 그리스도를 만나는 성공회 전례의 중심 예배입니다. 세례받은 모든 그리스도인이 성체를 모실 수 있으며, 반려동물과 함께 오신 분은 예배 후 강복(축복 기도)을 청할 수 있습니다."
             },
             {
                 id: "children",
+                href: "children.html",
+                summary: "함께 놀고 기도하며 하느님의 사랑을 배웁니다.",
+                linkLabel: "어린이 예배 만나보기",
                 title: "어린이 예배",
                 time: "매주 일요일 오전 11:00",
-                desc: "교육관에서 드리는 어린이 예배입니다. 성공회 전례를 어린이 눈높이에 맞추어 구성합니다.",
-                verse: "나는 분명히 말한다. 너희가 생각을 바꾸어 어린이와 같이 되지 않으면 결코 하늘 나라에 들어가지 못할 것이다.",
-                verseRef: "마태 18:3",
-                detail: "주일학교 선생님들과 해당 주일 전례독서에 따라 찬양과 말씀 관련 활동을 하고, 영성체 시간에 어른들과 함께 영성체를 합니다. 세례받은 모든 어린이는 성체(흰색 밀 면병)를 받고, 성혈(무알코올 포도즙)을 받을 수 있습니다."
+                desc: "교육관에서 드리는 어린이 예배입니다. 성공회 전례를 어린이 눈높이에 맞추어 구성합니다."
             }
         ],
         guide: "",
@@ -384,7 +615,7 @@ const CHURCH_DATA = {
         eucharistIntroQuote: "감사성찬례는 예수님의 마지막 만찬에서 비롯되었으며, <strong>공동체가 함께 모여 말씀을 듣고 성찬을 나누는</strong> 시간입니다.",
         eucharistOrder: [
             {
-                title: "입당예식",
+                title: "개회예식",
                 items: [
                     "입당 성가와 함께 집전자가 입장합니다.",
                     "회중은 모두 일어나 하느님께 예배드릴 준비를 합니다.",
@@ -394,10 +625,10 @@ const CHURCH_DATA = {
             {
                 title: "말씀의 전례",
                 items: [
-                    "구약 성서 봉독 · 시편 화답송 · 서신서 봉독",
+                    "제1독서(구약) · 성시(시편) · 제2독서(서신서)",
                     "복음환호송(<em>\"알렐루야, 알렐루야\"</em>) 후 <strong>복음서 봉독</strong>과 설교",
                     "니케아 신경 또는 사도신경으로 신앙을 함께 고백합니다.",
-                    "교회와 세상, 이웃과 자신을 위한 중보기도 — 회중은 <em>\"주여, 우리의 기도를 들으소서\"</em>로 응답합니다."
+                    "교회와 세상, 이웃과 자신을 위한 중보기도 — 회중은 <em>\"주여, 우리의 기도를 들으소서\"</em>로 응답합니다."
                 ]
             },
             {
@@ -405,7 +636,7 @@ const CHURCH_DATA = {
                 items: [
                     "평화의 인사를 나눕니다.",
                     "빵과 포도주, 헌금을 봉헌하고 집전자가 <strong>빵과 포도주를 축성</strong>합니다.",
-                    "주님의 기도 후 <strong>영성체</strong> — 그리스도의 몸과 피를 모십니다."
+                    "주님의 기도 후 <strong>영성체</strong> — 그리스도의 몸과 피를 모십니다."
                 ]
             },
             {
@@ -413,7 +644,7 @@ const CHURCH_DATA = {
                 items: [
                     "감사 기도와 강복을 받습니다.",
                     "<em>\"나가서 주님의 복음을 전합시다 / 평화를 이룹시다 / 사랑을 나눕시다\"</em>",
-                    "회중: <em>\"그리스도의 이름으로. 아멘\"</em> — 우리는 세상으로 파송되는 선교사가 됩니다."
+                    "회중: <em>\"그리스도의 이름으로. 아멘\"</em> — 우리는 세상으로 파송되는 선교사가 됩니다."
                 ]
             }
         ],
@@ -421,31 +652,31 @@ const CHURCH_DATA = {
             intro: "성공회 성당에 처음 들어서면 낯선 공간과 물건들을 만나게 됩니다.",
             items: [
                 {
-                    icon: "💧",
+                    icon: "drop",
                     name: "성수대",
                     en: "Holy Water",
                     desc: "예배당 입구에 놓인 성수입니다. 세례를 통해 하느님의 백성이 되었음을 기억하며, 손끝에 적셔 십자 성호를 긋고 예배의 자리로 들어섭니다."
                 },
                 {
-                    icon: "📖",
+                    icon: "book",
                     name: "독서대",
                     en: "Ambo · Lectern",
                     desc: "하느님의 말씀을 봉독하고 설교를 선포하는 자리입니다. 구약·서신서·복음서가 이곳에서 회중에게 선포됩니다."
                 },
                 {
-                    icon: "🍞",
+                    icon: "chalice",
                     name: "제대",
                     en: "Altar",
                     desc: "감사성찬례의 중심이 되는 거룩한 식탁입니다. 빵과 포도주를 축성하여 그리스도의 몸과 피를 나누는, 예배의 가장 거룩한 자리입니다."
                 },
                 {
-                    icon: "⛪",
+                    icon: "tabernacle",
                     name: "성막",
                     en: "Tabernacle",
                     desc: "축성된 성체를 모셔 두는 곳입니다. 거동이 어려운 병자나 교우를 방문하여 성체를 나눌 때 이곳에 보관된 성체를 사용합니다."
                 },
                 {
-                    icon: "🕯️",
+                    icon: "candle",
                     name: "부활초",
                     en: "Paschal Candle",
                     desc: "부활하신 그리스도의 빛과 새 생명·영생의 소망을 상징합니다. 부활절에 새로 축복하여 밝히며, 세례와 장례 예식에서도 함께합니다."
@@ -454,19 +685,19 @@ const CHURCH_DATA = {
         },
         resources: [
             {
-                icon: "📖",
+                icon: "book",
                 title: "성공회 기도서",
                 desc: "공동기도서(BCP)입니다.",
                 url: "https://dulkuka12.github.io/kbcp/"
             },
             {
-                icon: "🎵",
+                icon: "music",
                 title: "성가집",
                 desc: "예배 성가를 온라인으로 볼 수 있습니다.",
                 url: "https://dulkuka12.github.io/khymn/"
             },
             {
-                icon: "✝️",
+                icon: "cross",
                 title: "공동번역 성서",
                 desc: "성공회 예배에서 봉독하는 공동번역 성서입니다.",
                 url: "https://bible.anglican.kr/"
@@ -480,28 +711,28 @@ const CHURCH_DATA = {
             ],
             dailyOffice: [
                 {
-                    icon: "🌅",
+                    icon: "sunrise",
                     title: "아침기도",
                     en: "Morning Prayer",
                     desc: "하루를 시작하며 드리는 기도입니다. 송가·시편·성서 봉독·기도로 구성됩니다.",
                     url: "https://dulkuka12.github.io/kbcp/morning-prayer.html"
                 },
                 {
-                    icon: "☀️",
+                    icon: "sun",
                     title: "낮기도",
                     en: "Noonday Prayer",
                     desc: "하루의 한가운데서 잠시 멈추어 드리는 짧은 기도입니다.",
                     url: "https://dulkuka12.github.io/kbcp/noonday-prayer.html"
                 },
                 {
-                    icon: "🌆",
+                    icon: "sunset",
                     title: "저녁기도",
                     en: "Evening Prayer",
                     desc: "하루를 마감하며 감사와 참회로 드리는 기도입니다. 성모마리아 송가(마그니피캇)를 포함하며, 빛이신 그리스도를 찬양합니다.",
                     url: "https://dulkuka12.github.io/kbcp/evening-prayer.html"
                 },
                 {
-                    icon: "🌙",
+                    icon: "moon",
                     title: "밤기도",
                     en: "Compline",
                     desc: "수도원 전통에서 비롯된 짧고 고요한 기도입니다. 잠자리에 들기 전 하루를 마감합니다.",
@@ -532,7 +763,7 @@ const CHURCH_DATA = {
                 ]
             },
             intercession: {
-                icon: "🌍",
+                icon: "globe",
                 title: "세계성공회 중보기도 목록",
                 en: "Anglican Cycle of Prayer",
                 desc: "전 세계 성공회 교구와 교회를 날마다 기억하며 기도합니다. 세계성공회가 공식 발행한 2023–2026년 기도 목록입니다.",
@@ -547,21 +778,21 @@ const CHURCH_DATA = {
                 id: "hopecenter",
                 title: "광명 희망터",
                 desc: "지역의 소외된 이웃과 함께하는 돌봄 사역",
-                icon: "🌱",
+                icon: "sprout",
                 detailUrl: "hopecenter.html"
             },
             {
                 id: "emmaus",
                 title: "엠마우스 코스",
                 desc: "그리스도교 신앙의 기초를 배우는 과정",
-                icon: "📖",
+                icon: "book",
                 detailUrl: "emmaus.html"
             },
             {
                 id: "smallgroup",
                 title: "소그룹 모임",
                 desc: "기도하고 이야기 나누는 작은 모임",
-                icon: "🤝",
+                icon: "people",
                 detailUrl: "smallgroup.html"
             },
             {
@@ -570,7 +801,7 @@ const CHURCH_DATA = {
                 desc: "예배 후 함께 음식을 나누는 자리",
                 note: "비건 음식도 함께 준비됩니다",
                 footnote: "* 비건: 계란·우유도 포함하지 않는 완전 채식",
-                icon: "🍚"
+                icon: "bowl"
             }
         ],
         smallgroups: {
@@ -578,7 +809,7 @@ const CHURCH_DATA = {
             groups: [
                 {
                     id: "parents",
-                    icon: "🏡",
+                    icon: "house",
                     title: "주일학교 양육자모임",
                     en: "Sunday School Parents",
                     schedule: "매월 셋째 주일 애찬 후",
@@ -600,6 +831,34 @@ const CHURCH_DATA = {
         holder: "대한성공회 광명교회",
         report: "분기별로 재정 운영 결과를 투명하게 공개합니다.",
         receiptInfo: "기부금 영수증을 발급해 드립니다. 필요하신 분은 교회 사무실로 문의해 주세요."
+    },
+
+    // 오시는 길(visit.html) — {phone}은 info.phone으로 치환
+    visit: {
+        locationTitle: "주소와 연락처",
+        transportTitle: "교통·주차 안내",
+        labels: { postal: "우편번호", phone: "전화", fax: "팩스", car: "승용차", bus: "버스", parking: "주차" },
+        car: "내비게이션에 <em>대한성공회 광명교회</em> 또는 위 주소를 검색해 주세요.",
+        bus: {
+            stopLabel: "가까운 정류장",
+            stop: "온신초등학교앞",
+            routes: [
+                { no: "505",  type: "blue" },
+                { no: "5627", type: "green" },
+                { no: "5633", type: "green" },
+                { no: "6637", type: "green" }
+            ],
+            note: "서울역·구로디지털단지·목동 방면에서 접근 가능합니다."
+        },
+        parking: "교회 인근에 무료 주차가 가능합니다. 방문 전 교회 사무실({phone})로 확인해 주세요.",
+        note: "※ 네이버 지도·카카오맵에서 <strong>대한성공회 광명교회</strong>로 검색하시면 최단 경로 안내를 받으실 수 있습니다."
+    },
+
+    // 방문자 수: 외부 카운터(Abacus, 가입 불필요)에 저장. baseline은 누적 표시에 더하는 시작 숫자
+    visitorCounter: {
+        endpoint: 'https://abacus.jasoncameron.dev',
+        namespace: 'gmchurch-frpsy-web',
+        baseline: 0
     },
 
     sns: {
@@ -648,7 +907,7 @@ const CHURCH_DATA = {
             media: "성공회신문",
             title: "서울교구 최초 여성 총사제 민숙희 마가렛 사제, 부산교구 최초 여성 성직자 상임위원 심미경 아가타 사제 인터뷰",
             date: "2025.02",
-            url: "http://www.skhnews.or.kr/news/articleView.html?idxno=768"
+            url: "https://www.skhnews.or.kr/news/articleView.html?idxno=768"
         },
         {
             year: "2021",
@@ -682,9 +941,9 @@ const CHURCH_DATA = {
         // 미디어·자료 허브(media.html) 카드 — MediaHubRenderer가 렌더
         hub: {
             cards: [
-                { icon: "🎬", title: "영상 갤러리", desc: "성공회의 신앙과 예배, 광명교회 공동체 이야기를 담은 유튜브 영상.", href: "videos.html",  action: "영상 보기" },
-                { icon: "📸", title: "사진 갤러리", desc: "예배와 나눔, 절기의 순간들을 담은 공동체 사진 모음.",            href: "gallery.html", action: "사진 보기" },
-                { icon: "🔗", title: "관련 기관",   desc: "대한성공회와 세계성공회의 기관·공동체 안내.",                   href: "links.html",   action: "자세히 보기" }
+                { icon: "film", title: "영상 갤러리", desc: "성공회의 신앙과 예배, 광명교회 공동체 이야기를 담은 유튜브 영상.", href: "videos.html",  action: "영상 보기" },
+                { icon: "camera", title: "사진 갤러리", desc: "예배와 나눔, 절기의 순간들을 담은 공동체 사진 모음.",            href: "gallery.html", action: "사진 보기" },
+                { icon: "link", title: "관련 기관",   desc: "대한성공회와 세계성공회의 기관·공동체 안내.",                   href: "links.html",   action: "자세히 보기" }
             ]
         },
         intro: "성공회의 신앙과 예배, 광명교회 공동체 이야기를 담은 영상입니다.",
@@ -699,7 +958,7 @@ const CHURCH_DATA = {
             {
                 id: "9gah5PrWiWk",
                 title: "광명교회 주일 애찬 풍경",
-                desc: "주일 감사성찬례가 끝난 후, 성도들이 함께 모여 밥을 나누는 애찬 시간을 담은 영상입니다.",
+                desc: "주일 감사성찬례가 끝난 후, 교우들이 함께 모여 밥을 나누는 애찬 시간을 담은 영상입니다.",
                 category: "공동체"
             },
             {
@@ -772,7 +1031,7 @@ const CHURCH_DATA = {
             {
                 id: "identity",
                 title: "정체성과 뿌리",
-                icon: "✝️",
+                icon: "cross",
                 items: [
                     {
                         q: "성공회는 이단인가요?",
@@ -788,7 +1047,7 @@ const CHURCH_DATA = {
                         a: "결혼 문제는 계기일 뿐, 핵심은 <strong>왕위 계승 위기</strong>와 유럽 종교개혁의 흐름이었습니다.\n\n헨리 8세는 남성 후계자 없이 생길 내전을 우려해 교황에게 이혼을 청했지만, 당시 교황은 왕비의 친정(에스파냐) 군대에 포위된 처지라 거절할 수밖에 없었습니다. 이에 헨리 8세는 로마와 관계를 끊고 국교회 수장이 되었고, 유럽의 종교개혁 세력이 이를 지지했습니다. 이후 크랜머 대주교 등의 영향으로 <strong>'개신교 교리에 가톨릭 전통의 예배 형식'</strong>을 갖춘 오늘날 성공회로 자리 잡았습니다.",
                         refs: [
                             { label: "잉글랜드의 종교 개혁 (Wikipedia)", url: "https://ko.wikipedia.org/wiki/%EC%9E%89%EA%B8%80%EB%9E%9C%EB%93%9C%EC%9D%98_%EC%A2%85%EA%B5%90_%EA%B0%9C%ED%98%81" },
-                            { label: "토머스 크랜머 (Wikipedia)", url: "https://ko.wikipedia.org/wiki/%ED%86%A0%EB%A8%B8%EC%8A%A4_%ED%81%AC%EB%9E%9C%EB%A8%B8" }
+                            { label: "토마스 크랜머 (Wikipedia)", url: "https://ko.wikipedia.org/wiki/%ED%86%A0%EB%A8%B8%EC%8A%A4_%ED%81%AC%EB%9E%9C%EB%A8%B8" }
                         ]
                     },
                     {
@@ -801,7 +1060,7 @@ const CHURCH_DATA = {
                     },
                     {
                         q: "톰 라이트·존 스토트 책으로 성공회를 처음 알게 됐는데, 왜 한국성공회는 느낌이 다른가요?",
-                        a: "성공회 안에는 신학 성향과 예배 스타일에 따라 크게 세 흐름이 공존합니다. <strong>저교회파(Low Church, 복음주의)</strong>는 성서의 권위와 설교를 중시하고, <strong>고교회파(High Church, 앵글로-가톨릭주의)</strong>는 초대교회 전승과 성사·전례를 강조하며, <strong>광교회파(Broad Church)</strong>는 이성·학문과 사회 참여를 중심에 둡니다.\n\n존 스토트(1921–2011)와 톰 라이트(N.T. Wright) 같은 영국 신학자들은 <strong>복음주의(저교회파) 전통</strong> 안에서 활동했습니다. 성서 중심의 설교와 개인 신앙을 강조하는 이 전통은 가톨릭적 의례 중심 예배와 분위기가 크게 다릅니다.\n\n대한성공회가 가톨릭처럼 느껴지는 이유는 <strong>1890년 첫 선교사들이 고교회파 계열</strong>이었기 때문입니다. 초대 주교 고요한(Charles Corfe)을 비롯한 선교사들은 19세기 영국에서 가톨릭의 역사적 전통과 전례를 회복하고자 일어난 <strong>'옥스퍼드 운동(Oxford Movement)'</strong>의 영향을 받았습니다. 이 뿌리로 인해 성당 건축·사제 제복·감사성찬례 형식이 가톨릭과 유사한 모습을 갖추게 되었습니다.\n\n그럼에도 저·고·광교회파 모두 '성서·전통·이성'의 세 기둥과 <strong>'중도의 길(Via Media)'</strong> 안에서 하나의 성공회를 이룹니다. 어떤 흐름으로 성공회를 처음 만나셨든, 같은 믿음의 공동체 안에 함께합니다.",
+                        a: "성공회 안에는 신학 성향과 예배 스타일에 따라 크게 세 흐름이 공존합니다. <strong>저교회파(Low Church, 복음주의)</strong>는 성서의 권위와 설교를 중시하고, <strong>고교회파(High Church, 앵글로-가톨릭주의)</strong>는 초대교회 전승과 성사·전례를 강조하며, <strong>광교회파(Broad Church)</strong>는 이성·학문과 사회 참여를 중심에 둡니다.\n\n존 스토트(1921–2011)와 톰 라이트(N.T. Wright) 같은 영국 신학자들은 <strong>복음주의(저교회파) 전통</strong> 안에서 활동했습니다. 성서 중심의 설교와 개인 신앙을 강조하는 이 전통은 가톨릭적 의례 중심 예배와 분위기가 크게 다릅니다.\n\n대한성공회가 가톨릭처럼 느껴지는 이유는 <strong>1890년 첫 선교사들이 고교회파 계열</strong>이었기 때문입니다. 초대 주교 고요한(찰스 존 코프)을 비롯한 선교사들은 19세기 영국에서 가톨릭의 역사적 전통과 전례를 회복하고자 일어난 <strong>'옥스퍼드 운동(Oxford Movement)'</strong>의 영향을 받았습니다. 이 뿌리로 인해 성당 건축·사제 제복·감사성찬례 형식이 가톨릭과 유사한 모습을 갖추게 되었습니다.\n\n그럼에도 저·고·광교회파 모두 '성서·전통·이성'의 세 기둥과 <strong>'중도의 길(Via Media)'</strong> 안에서 하나의 성공회를 이룹니다. 어떤 흐름으로 성공회를 처음 만나셨든, 같은 믿음의 공동체 안에 함께합니다.",
                         refs: [
                             { label: "고교회파 (위키백과)", url: "https://ko.wikipedia.org/wiki/%EA%B3%A0%EA%B5%90%ED%9A%8C%ED%8C%8C" },
                             { label: "고교회와 저교회 (나무위키)", url: "https://namu.wiki/w/%EA%B3%A0%EA%B5%90%ED%9A%8C%EC%99%80%20%EC%A0%80%EA%B5%90%ED%9A%8C" },
@@ -814,9 +1073,9 @@ const CHURCH_DATA = {
                     },
                     {
                         q: "결국 영국 교회 아닌가요? 외국 교회인가요?",
-                        a: "아닙니다. 대한성공회는 <strong>1993년 세계성공회로부터 독립 자치권을 인정받은 한국 교단</strong>입니다.\n\n1890년 영국 선교사 고요한(Charles Corfe) 주교가 설립했지만, 이후 한국화 과정을 거쳐 운영과 의사결정을 한국 교단이 자치적으로 합니다. 캔터베리 대주교와는 상하 관계가 아닌 동등한 ‘교제와 일치’의 관계입니다.",
+                        a: "아닙니다. 대한성공회는 <strong>1993년 세계성공회로부터 독립 자치권을 인정받은 한국 교단</strong>입니다.\n\n1890년 영국 선교사 고요한(찰스 존 코프) 주교가 설립했지만, 이후 한국화 과정을 거쳐 운영과 의사결정을 한국 교단이 자치적으로 합니다. 캔터베리 대주교와는 상하 관계가 아닌 동등한 ‘교제와 일치’의 관계입니다.",
                         refs: [
-                            { label: "대한성공회의 역사 (공식)", url: "https://www.skh.or.kr/3" },
+                            { label: "사진으로 보는 대한성공회 약사 (대한성공회 관구)", url: "https://anglicankr.church/%ec%82%ac%ec%a7%84%ec%9c%bc%eb%a1%9c-%eb%b3%b4%eb%8a%94-%eb%8c%80%ed%95%9c%ec%84%b1%ea%b3%b5%ed%9a%8c-%ec%95%bd%ec%82%ac/" },
                             { label: "대한성공회 (Wikipedia)", url: "https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C_%EC%84%B1%EA%B3%B5%ED%9A%8C" }
                         ]
                     }
@@ -825,27 +1084,27 @@ const CHURCH_DATA = {
             {
                 id: "faith",
                 title: "신앙과 성사",
-                icon: "🕊",
+                icon: "dove",
                 items: [
                     {
                         q: "구원을 어떻게 이해하나요?",
                         a: "구원은 조건을 채워 얻어내는 것이 아니라, <strong>예수 그리스도를 통해 하느님께서 거저 주시는 선물(은총)</strong>이라고 믿습니다.\n\n특정 교단 소속이나 정해진 ‘공식’을 구원의 조건으로 삼지 않으며, 성서를 구원에 필요한 모든 것을 담은 말씀으로 고백합니다.",
                         refs: [
-                            { label: "시카고-램베스 사대강령 — 성서의 권위", url: "https://www.anglicancommunion.org/the-chicago-lambeth-quadrilateral/" }
+                            { label: "시카고-람베스 사대강령 — 성서의 권위", url: "https://www.anglicancommunion.org/the-chicago-lambeth-quadrilateral/" }
                         ]
                     },
                     {
                         q: "성찬의 빵과 포도주를 어떻게 보나요?",
                         a: "그리스도께서 성찬에 <strong>참으로 임재</strong>하신다고 믿되, ‘어떻게’ 임재하시는지를 특정 교리로 규정하지 않습니다.\n\n빵과 포도주의 실체가 변한다는 가톨릭의 <strong>화체설은 따르지 않으며</strong>(39개조 제28조), 그 신비를 믿음으로 받아 모시는 것을 중요하게 여깁니다.",
                         refs: [
-                            { label: "성공회 신앙의 39개조 — 성찬론", url: "https://namu.wiki/w/%EC%84%B1%EA%B3%B5%ED%9A%8C%2039%EA%B0%9C%20%EC%8B%A0%EC%A1%B0" }
+                            { label: "성공회 신앙의 39개조 — 성찬론", url: "https://namu.wiki/w/39%EA%B0%9C%20%EC%8B%A0%EC%A1%B0" }
                         ]
                     },
                     {
                         q: "다른 교회에서 받은 세례를 다시 받아야 하나요?",
                         a: "아닙니다. <strong>삼위일체 하느님의 이름(성부·성자·성령)으로 물로 받은 세례</strong>는 교단과 관계없이 유효한 세례로 인정합니다.\n\n천주교·개신교에서 세례를 받으셨다면 다시 받을 필요가 없습니다.",
                         refs: [
-                            { label: "시카고-램베스 사대강령 — 세례 성사", url: "https://www.anglicancommunion.org/the-chicago-lambeth-quadrilateral/" },
+                            { label: "시카고-람베스 사대강령 — 세례 성사", url: "https://www.anglicancommunion.org/the-chicago-lambeth-quadrilateral/" },
                             { label: "세례 (Wikipedia)", url: "https://ko.wikipedia.org/wiki/%EC%84%B8%EB%A1%80" }
                         ]
                     },
@@ -853,7 +1112,7 @@ const CHURCH_DATA = {
                         q: "마리아와 성인을 숭배하나요?",
                         a: "아닙니다. 성모 마리아와 성인들을 <strong>신앙의 모범으로 공경</strong>하지만, 예배와 기도의 대상은 오직 삼위일체 하느님입니다.\n\n성인을 신처럼 섬기거나 구원의 중개자로 삼지 않습니다. 이 점에서 가톨릭의 성인 공경과 구별됩니다.",
                         refs: [
-                            { label: "성공회 신앙의 39개조 — 제22조", url: "https://namu.wiki/w/%EC%84%B1%EA%B3%B5%ED%9A%8C%2039%EA%B0%9C%20%EC%8B%A0%EC%A1%B0" }
+                            { label: "성공회 신앙의 39개조 — 제22조", url: "https://namu.wiki/w/39%EA%B0%9C%20%EC%8B%A0%EC%A1%B0" }
                         ]
                     }
                 ]
@@ -861,7 +1120,7 @@ const CHURCH_DATA = {
             {
                 id: "society",
                 title: "평등과 사회참여",
-                icon: "⚖️",
+                icon: "scales",
                 items: [
                     {
                         q: "성공회는 ‘좌파 교회’인가요?",
@@ -882,7 +1141,7 @@ const CHURCH_DATA = {
                         q: "성공회는 동성애·동성결혼을 지지하나요?",
                         a: "세계성공회 안에 <strong>단일한 공식 입장은 없으며</strong>, 대한성공회는 동성결혼을 공식 예식으로 시행하지 않습니다.\n\n관구에 따라 동성결혼을 허용하는 곳도 있고, 전통적 혼인관(1998년 람베스 회의 결의 I.10)을 유지하는 곳도 있어 논의 중입니다. 대한성공회는 <strong>성소수자를 정죄·배제하지 않으며 혐오와 차별에 반대</strong>합니다. 광명교회는 찾아오시는 누구도 문 앞에서 돌려보내지 않습니다.",
                         refs: [
-                            { label: "람베스 회의 1998 결의 I.10 (세계성공회)", url: "https://www.anglicancommunion.org/resources/document-library/lambeth-conference/1998/section-i-called-to-full-humanity/section-i10-human-sexuality" }
+                            { label: "람베스 회의 1998 결의문 (I.10 포함, 세계성공회)", url: "https://www.anglicancommunion.org/lambeth-conference-1998-resolutions/" }
                         ]
                     }
                 ]
@@ -890,7 +1149,7 @@ const CHURCH_DATA = {
             {
                 id: "join",
                 title: "함께하기",
-                icon: "🤝",
+                icon: "people",
                 items: [
                     {
                         q: "교파를 옮기거나 신앙을 새로 시작해야 하나요?",
@@ -915,7 +1174,7 @@ const CHURCH_DATA = {
                 en: "Advent",
                 colorName: "자색",
                 color: "#6b4f8f",
-                symbol: "🕯️",
+                symbol: "candle",
                 period: "성탄 4주 전 주일 ~ 성탄 전날",
                 desc: "주님의 오심을 기다리며 준비하는 시간. 교회력의 새해가 시작됩니다."
             },
@@ -925,7 +1184,7 @@ const CHURCH_DATA = {
                 en: "Christmas",
                 colorName: "백색·금색",
                 color: "#b8860b",
-                symbol: "⭐",
+                symbol: "star",
                 period: "12월 25일 ~ 1월 5일",
                 desc: "말씀이 사람이 되신 기쁨을 기념합니다. 성탄 후 12일간 이어집니다."
             },
@@ -934,8 +1193,8 @@ const CHURCH_DATA = {
                 name: "공현절 후",
                 en: "Epiphany",
                 colorName: "녹색",
-                color: "#3d6b4a",
-                symbol: "✨",
+                color: "#2f6a52",
+                symbol: "sparkle",
                 period: "1월 6일 ~ 재의 수요일 전날",
                 desc: "주님께서 세상에 자신을 드러내신 것을 기념합니다. 공현절과 주님의 세례 주일을 포함합니다."
             },
@@ -945,7 +1204,7 @@ const CHURCH_DATA = {
                 en: "Lent",
                 colorName: "자색",
                 color: "#6b4f8f",
-                symbol: "✝️",
+                symbol: "cross",
                 period: "재의 수요일 ~ 성주간 전날",
                 desc: "회개와 절제로 부활을 준비하는 시간. 재의 수요일에 시작됩니다."
             },
@@ -955,7 +1214,7 @@ const CHURCH_DATA = {
                 en: "Holy Week",
                 colorName: "적색",
                 color: "#c0390f",
-                symbol: "🌿",
+                symbol: "palm",
                 period: "종려주일 ~ 성토요일",
                 desc: "주님의 수난을 묵상하는 한 주간. 종려주일·성목요일·성금요일·성토요일을 포함합니다."
             },
@@ -965,7 +1224,7 @@ const CHURCH_DATA = {
                 en: "Easter",
                 colorName: "백색·금색",
                 color: "#b8860b",
-                symbol: "🌅",
+                symbol: "sunrise",
                 period: "부활 주일 ~ 성령강림 주일 (50일)",
                 desc: "다시 살아나신 주님을 기리는 기쁨의 계절. 50일간 이어집니다."
             },
@@ -975,7 +1234,7 @@ const CHURCH_DATA = {
                 en: "Pentecost",
                 colorName: "적색",
                 color: "#c0390f",
-                symbol: "🔥",
+                symbol: "flame",
                 period: "부활 후 50일째 주일",
                 desc: "성령께서 제자들에게 임하신 날을 기념합니다. 교회가 시작된 날입니다."
             },
@@ -984,8 +1243,8 @@ const CHURCH_DATA = {
                 name: "성령강림 후",
                 en: "Ordinary Time",
                 colorName: "녹색",
-                color: "#3d6b4a",
-                symbol: "🌿",
+                color: "#2f6a52",
+                symbol: "leaf",
                 period: "성령강림 다음 주 ~ 대림절 전날",
                 desc: "그리스도인의 일상을 살아가는 긴 계절. 왕이신 그리스도 주일로 마무리됩니다."
             }
@@ -1030,7 +1289,7 @@ const CHURCH_DATA = {
                 name: "환경주일",
                 en: "Environment Sunday",
                 date: "6월 첫째 주일",
-                origin: "NCCK · 대한성공회",
+                origin: "NCCK",
                 desc: "하느님의 창조세계를 돌보는 청지기 사명을 새기는 날. 한국교회가 함께 지켜 왔습니다."
             },
             {
@@ -1038,7 +1297,7 @@ const CHURCH_DATA = {
                 en: "Season of Creation",
                 date: "9월 1일 ~ 10월 4일",
                 origin: "세계교회 · 대한성공회",
-                desc: "1989년 에큐메니컬 총대주교 디미트리오스 1세의 선포로 시작. WCC가 절기로 확대했으며, 10월 4일 성 프란체스코 축일에 마무리됩니다."
+                desc: "1989년 에큐메니컬 총대주교 디미트리오스 1세의 선포로 시작. WCC가 절기로 확대했으며, 10월 4일 성 프란시스 축일에 마무리됩니다."
             },
             {
                 name: "모든 성인의 날",
@@ -1065,58 +1324,69 @@ const CHURCH_DATA = {
     },
 
     bulletins: {
+        labels: { thisWeek: "이번 주", latest: "최근 등록" },
         intro: "예배 순서와 공동체 소식을 담은 주간 주보입니다.",
         note: "예배 전에 미리 열어 두시면 도움이 됩니다.",
+        newsIntro: "최근 8주분의 교회소식을 보관합니다.",
+        newsEmpty: "등록된 교회소식이 없습니다.",
         items: [
             {
-                date: "2026-07-12",
-                label: "2026년 7월 12일",
-                season: "맥추감사주일",
-                images: ["bulletins/20260712_1.jpg", "bulletins/20260712_2.jpg", "bulletins/20260712_3.jpg", "bulletins/20260712_4.jpg"],
-                pdf: "bulletins/20260712.pdf"
+                date: "2026-10-18",
+                label: "2026년 10월 18일",
+                season: "가해 연중 제29주일",
+                images: ["bulletins/20261018_1.jpg", "bulletins/20261018_2.jpg", "bulletins/20261018_3.jpg", "bulletins/20261018_4.jpg"],
+                pdf: "bulletins/20261018.pdf",
+                news: [
+                    { title: "희망터 간담회 결과 안내", body: "지난 주일 열린 희망터 간담회에서는 현재 우리가 섬기는 이웃에게 반찬을 드리는 일은 12월까지 하고, 이전한 성당에서는 옥길동 행정복지센터에서 그 지역의 이웃을 소개받아 봉사를 이어가기로 했습니다.\n희망터 봉사를 이어가기 위해서는 교우 여러분의 봉헌과 봉사가 필요합니다. 많은 관심과 기도를 바랍니다." },
+                    { title: "마르코복음 강좌 안내", body: "11월과 12월 둘째 주일과 넷째 주일 애찬 후에 마르코복음 강좌가 열립니다. 교재 구입을 위해 박경준 프란시스 위원에게 25일까지 신청해 주시기 바랍니다. 많은 신청 바랍니다.\n(교재 가격은 15,000원입니다.)" },
+                    { title: "서부교무구 어머니연합회 기도모임 안내", body: "일시 : 10월 18일 오후 2시 30분\n장소 : 간석교회\n말씀 : 이명근 사제" },
+                    { title: "G.F.S. 주관 바자회", body: "다음 주일에 우리 교회 바자회가 있으니 미리 물품을 준비해 주시기 바랍니다." },
+                    { title: "신임 교회위원 교육 안내", body: "교구가 주관하는 신임 교회위원 교육이 있으니 모든 위원의 참여를 바랍니다.\n일시 : 10월 25일(주일) 오후 3시~5시\n장소 : 주교좌성당 프란시스 홀" },
+                    { title: "관할사제 일정", body: "18일 4시 동아시아 주교회의 폐회 성찬례와 만찬 참석\n22일 성공회대 총장 취임식\n22일 성직자원 임시총회" }
+                ]
             },
             {
-                date: "2026-07-05",
-                label: "2026년 7월 5일",
-                season: "가해 연중 14주일",
-                images: ["bulletins/20260705_1.jpg", "bulletins/20260705_2.jpg", "bulletins/20260705_3.jpg", "bulletins/20260705_4.jpg"],
-                pdf: "bulletins/20260705.pdf"
+                date: "2026-10-11",
+                label: "2026년 10월 11일",
+                season: "광명교회 축성 감사성찬례",
+                images: ["bulletins/20261011_1.jpg", "bulletins/20261011_2.jpg", "bulletins/20261011_3.jpg", "bulletins/20261011_4.jpg"],
+                pdf: "bulletins/20261011.pdf",
+                news: [
+                    { title: "감사드립니다.", body: "오늘 우리 성당 축성 23주년을 기념하여 하느님께 감사드립니다. 또한 이 교회를 세우고 지금까지 섬겨오신 교우님들께 감사드립니다.\n앞으로도 우리 모든 교우들의 헌신과 기도로 견고한 하느님의 성전이 되기를 바랍니다." },
+                    { title: "희망터 간담회 안내", body: "오늘 애찬 후에 희망터 봉사자 간담회가 있습니다. 많은 참석 바랍니다." },
+                    { title: "마르코복음 강좌 안내", body: "11월과 12월 둘째 주일과 넷째 주일 애찬 후에 마르코복음 강좌가 열립니다. 교재 구입을 위해 박경준 프란시스 위원에게 25일까지 신청해 주시기 바랍니다. 많은 신청 바랍니다.\n(교재 가격은 15,000원입니다.)" },
+                    { title: "서울교구 어머니연합회 연차총회 안내", body: "일시 : 10월 13일(화) 오전 11시\n장소 : 서울주교좌성당(프란시스 홀)\n일정 : 감사성찬례 / 회무처리 / 점심식사" },
+                    { title: "G.F.S. 총회 안내", body: "일시 : 10월 17일(토) 오전 11시\n장소 : 서울주교좌성당(프란시스 홀)" },
+                    { title: "서부교무구 어머니연합회 기도모임 안내", body: "일시 : 10월 18일 오후 2시 30분\n장소 : 간석교회\n말씀 : 이명근 사제" },
+                    { title: "G.F.S. 주관 바자회", body: "10월 25일에 바자회가 있으니 미리 물품을 준비해 주시기 바랍니다." },
+                    { title: "신임 교회위원 교육 안내", body: "교구가 주관하는 신임 교회위원 교육이 있으니 모든 위원의 참여를 바랍니다.\n일시 : 10월 25일(주일) 오후 3시~5시\n장소 : 주교좌성당 프란시스 홀" },
+                    { title: "관할사제 일정", body: "15일(목) 서부교무구 성직자 월례회의" }
+                ]
             },
             {
-                date: "2026-06-28",
-                label: "2026년 6월 28일",
-                season: "가해 연중 13주일",
-                images: ["bulletins/20260628_1.jpg", "bulletins/20260628_2.jpg", "bulletins/20260628_3.jpg", "bulletins/20260628_4.jpg"],
-                pdf: "bulletins/20260628.pdf"
-            },
-            {
-                date: "2026-06-21",
-                label: "2026년 6월 21일",
-                season: "가해 연중 12주일",
-                images: ["bulletins/20260621_1.jpg", "bulletins/20260621_2.jpg", "bulletins/20260621_3.jpg", "bulletins/20260621_4.jpg"],
-                pdf: "bulletins/20260621.pdf"
-            },
-            {
-                date: "2026-06-14",
-                label: "2026년 6월 14일",
-                season: "가해 연중 11주일",
-                images: ["bulletins/20260614_1.jpg", "bulletins/20260614_2.jpg", "bulletins/20260614_3.jpg", "bulletins/20260614_4.jpg"],
-                pdf: "bulletins/20260614.pdf"
-            },
-            {
-                date: "2026-06-07",
-                label: "2026년 6월 7일",
-                season: "가해 연중 10주일",
-                images: [],
-                pdf: "bulletins/20260607.pdf"
+                date: "2026-10-04",
+                label: "2026년 10월 4일",
+                season: "창조5주일",
+                images: ["bulletins/20261004_1.jpg", "bulletins/20261004_2.jpg", "bulletins/20261004_3.jpg", "bulletins/20261004_4.jpg"],
+                pdf: "bulletins/20261004.pdf",
+                news: [
+                    { title: "교회위원회 안내", body: "오늘 애찬 후에 새로운 회기가 시작되는 첫 교회위원회가 있습니다. 모든 위원들의 참석을 바랍니다." },
+                    { title: "새 성전 인테리어 공사 현장설명회", body: "8일(목)에는 새 성전 인테리어 공사를 위한 설명회가 있습니다. 이후에 견적서를 받아 시공업체를 정하면 공사가 시작됩니다. 순조로운 진행을 위해 기도 바랍니다." },
+                    { title: "우리 성당 축성기념 성찬례 안내", body: "다음 주일에 성당 축성 23주년을 기념하여 감사성찬례를 봉헌합니다. (축성일은 12일입니다) 이 성당에서의 마지막 축성기념일이 됩니다. 함께 감사하며 성찬례에 참석하시기 바랍니다." },
+                    { title: "희망터 봉사자 간담회", body: "다음 주일 애찬 후에 희망터 봉사자 간담회가 있습니다. 모든 봉사자들과 관심 있는 교우님들의 참석을 바랍니다." },
+                    { title: "뜨개질 소모임 안내", body: "오늘 애찬 후에 뜨개질 소모임이 있으니 많은 참석 바랍니다." },
+                    { title: "G.F.S. 주관 바자회", body: "10월 25일에 바자회가 있으니 미리 물품을 준비해 주시기 바랍니다." },
+                    { title: "서부교무구 어머니연합회 기도모임 안내", body: "일시 : 10월 18일 오후 2시 30분\n장소 : 간석교회\n말씀 : 이명근 사제" },
+                    { title: "관할사제 일정", body: "7일 총사제회의 (양이재 주교관)" }
+                ]
             }
         ]
     },
 
     // 사진 갤러리 (gallery.html)
     photoGallery: {
-        intro: "예배, 애찬, 절기 행사 등 광명교회 공동체의 순간들을 모았습니다.",
-        categories: ["전체", "예배", "공동체", "절기·행사", "교회 풍경"],
+        intro: "예배, 공동체 모임, 교회 풍경 등 광명교회의 순간들을 모았습니다.",
+        categories: ["전체", "예배", "공동체", "교회 풍경"],
         photos: [
             {
                 id: "p01",
@@ -1124,29 +1394,9 @@ const CHURCH_DATA = {
                 desc: "매주 주일, 공동체가 모여 말씀과 성찬을 나눕니다.",
                 category: "예배",
                 date: "2026.06",
-                src: "images/gallery/worship/야외성찬례.webp",
-                thumb: "images/gallery/worship/야외성찬례-thumb.webp",
+                src: "images/gallery/worship/outdoor-eucharist.webp",
+                thumb: "images/gallery/worship/outdoor-eucharist-thumb.webp",
                 alt: "광명교회 예배와 기도"
-            },
-            {
-                id: "p02",
-                title: "어린이 예배",
-                desc: "어린이들이 함께 참여하는 주일 예배.",
-                category: "예배",
-                date: "2025.04",
-                src: "https://picsum.photos/seed/gmc-worship2/900/600",
-                thumb: "https://picsum.photos/seed/gmc-worship2/480/320",
-                alt: "어린이 예배 모습"
-            },
-            {
-                id: "p03",
-                title: "새벽 성무일과",
-                desc: "고요한 새벽, 시편과 기도로 하루를 엽니다.",
-                category: "예배",
-                date: "2025.02",
-                src: "https://picsum.photos/seed/gmc-worship3/900/600",
-                thumb: "https://picsum.photos/seed/gmc-worship3/480/320",
-                alt: "새벽 성무일과"
             },
             {
                 id: "p04",
@@ -1154,89 +1404,19 @@ const CHURCH_DATA = {
                 desc: "함께 모여 말씀과 삶을 나누는 광명교회 공동체.",
                 category: "공동체",
                 date: "2026.06",
-                src: "images/gallery/community/공동체1.webp",
-                thumb: "images/gallery/community/공동체1-thumb.webp",
+                src: "images/gallery/community/community-01.webp",
+                thumb: "images/gallery/community/community-01-thumb.webp",
                 alt: "광명교회 공동체 모임"
             },
             {
-                id: "p05",
-                title: "엠마우스 코스",
-                desc: "신앙의 길을 함께 걷는 엠마우스 여정.",
-                category: "공동체",
-                date: "2024.11",
-                src: "https://picsum.photos/seed/gmc-community2/900/600",
-                thumb: "https://picsum.photos/seed/gmc-community2/480/320",
-                alt: "엠마우스 코스 모임"
-            },
-            {
-                id: "p06",
-                title: "소그룹 모임",
-                desc: "소그룹이 모여 말씀을 나누고 기도합니다.",
-                category: "공동체",
-                date: "2025.01",
-                src: "https://picsum.photos/seed/gmc-community3/900/600",
-                thumb: "https://picsum.photos/seed/gmc-community3/480/320",
-                alt: "소그룹 모임"
-            },
-            {
-                id: "p07",
-                title: "대림절 촛불 점화",
-                desc: "대림절 4주간, 촛불을 하나씩 밝히며 기다림을 삽니다.",
-                category: "절기·행사",
-                date: "2024.12",
-                src: "https://picsum.photos/seed/gmc-season1/900/600",
-                thumb: "https://picsum.photos/seed/gmc-season1/480/320",
-                alt: "대림절 촛불 점화"
-            },
-            {
-                id: "p08",
-                title: "부활절 새벽 예배",
-                desc: "해가 뜨기 전 모여 부활을 선포합니다.",
-                category: "절기·행사",
-                date: "2025.04",
-                src: "https://picsum.photos/seed/gmc-season2/900/600",
-                thumb: "https://picsum.photos/seed/gmc-season2/480/320",
-                alt: "부활절 새벽 예배"
-            },
-            {
-                id: "p09",
-                title: "세례식",
-                desc: "물과 성령으로 새로운 삶을 시작합니다.",
-                category: "절기·행사",
-                date: "2025.04",
-                src: "https://picsum.photos/seed/gmc-season3/900/600",
-                thumb: "https://picsum.photos/seed/gmc-season3/480/320",
-                alt: "세례식"
-            },
-            {
-                id: "p10",
-                title: "성탄절 예배",
-                desc: "말씀이 육신이 되어 우리 가운데 오심을 기억합니다.",
-                category: "절기·행사",
-                date: "2024.12",
-                src: "https://picsum.photos/seed/gmc-season4/900/600",
-                thumb: "https://picsum.photos/seed/gmc-season4/480/320",
-                alt: "성탄절 예배"
-            },
-            {
                 id: "p11",
-                title: "교회 내부 — 제단",
-                desc: "캔터베리 십자가와 제단이 있는 광명교회 성전.",
+                title: "교회 내부 — 제대",
+                desc: "캔터베리 십자가와 제대가 있는 광명교회 성전.",
                 category: "교회 풍경",
                 date: "2026.06",
-                src: "images/gallery/scenery/교회소개_교회내부_제단.webp",
-                thumb: "images/gallery/scenery/교회소개_교회내부_제단-thumb.webp",
-                alt: "광명교회 교회 내부 제단"
-            },
-            {
-                id: "p12",
-                title: "교회 마당",
-                desc: "예배 전후 사람들이 모이는 공간.",
-                category: "교회 풍경",
-                date: "2025.03",
-                src: "https://picsum.photos/seed/gmc-space2/900/600",
-                thumb: "https://picsum.photos/seed/gmc-space2/480/320",
-                alt: "교회 마당"
+                src: "images/gallery/scenery/sanctuary-altar.webp",
+                thumb: "images/gallery/scenery/sanctuary-altar-thumb.webp",
+                alt: "광명교회 교회 내부 제대"
             },
             {
                 id: "p13",
@@ -1247,6 +1427,66 @@ const CHURCH_DATA = {
                 src: "images/gallery/scenery/greenchurch-award-2023.webp",
                 thumb: "images/gallery/scenery/greenchurch-award-2023-thumb.webp",
                 alt: "2023년 녹색교회 선정 상패"
+            },
+            {
+                id: "p14",
+                title: "희망터 봉사자들의 기도",
+                desc: "희망터 주방에서 봉사자들이 두 손을 모으고 기도합니다.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/hopecenter-prayer.webp",
+                thumb: "images/gallery/community/hopecenter-prayer-thumb.webp",
+                alt: "주방 조리대 앞에서 두 손을 모으고 기도하는 봉사자들"
+            },
+            {
+                id: "p15",
+                title: "이웃에게 드릴 반찬",
+                desc: "이웃 가정에 드릴 반찬을 정성껏 만듭니다.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/hopecenter-dishes.webp",
+                thumb: "images/gallery/community/hopecenter-dishes-thumb.webp",
+                alt: "용기에 나누어 담은 오이부추무침과 양념장에 담근 달걀"
+            },
+            {
+                id: "p16",
+                title: "나눔 물품을 싣고",
+                desc: "나눔 물품을 가득 실은 차량 앞에 선 광명 희망터 봉사자들.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/hopecenter-delivery.webp",
+                thumb: "images/gallery/community/hopecenter-delivery-thumb.webp",
+                alt: "나눔 물품 상자를 가득 실은 차량 앞에 선 봉사자 세 사람"
+            },
+            {
+                id: "p17",
+                title: "하늘과 들판 위의 교회",
+                desc: "어린이 예배 아이들이 벽에 그린 교회 그림.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/children-mural-church.webp",
+                thumb: "images/gallery/community/children-mural-church-thumb.webp",
+                alt: "푸른 하늘과 초록 들판 위에 그린 작은 교회 벽화"
+            },
+            {
+                id: "p18",
+                title: "천사와 교회를 그린 벽화",
+                desc: "아이들이 직접 색을 골라 붓으로 벽에 그렸습니다.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/children-mural-angel.webp",
+                thumb: "images/gallery/community/children-mural-angel-thumb.webp",
+                alt: "여러 색의 바탕 위에 천사와 교회를 그린 벽화"
+            },
+            {
+                id: "p19",
+                title: "벽에 색을 칠하는 아이",
+                desc: "어린이 예배 아이들이 함께 벽화를 그립니다.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/children-painting-together.webp",
+                thumb: "images/gallery/community/children-painting-together-thumb.webp",
+                alt: "여러 색으로 칠한 벽에 붓질하는 어린이"
             }
         ]
     },
@@ -1256,10 +1496,11 @@ const CHURCH_DATA = {
             label: "교회 소개",
             href: "clergy.html",
             items: [
-                { label: "성공회란?",   href: "clergy.html#what-is-anglican" },
+                { label: "성공회란?",   short: "성공회", href: "clergy.html#what-is-anglican" },
                 { label: "대한성공회",  href: "clergy.html#ack" },
                 { label: "섬기는 이들", href: "clergy.html#priest-section" },
                 { label: "교회 이야기", href: "clergy.html#philosophy" },
+                { label: "교회 연혁",   short: "연혁", href: "clergy.html#history" },
                 { label: "녹색교회",   href: "greenchurch.html" }
             ]
         },
@@ -1268,12 +1509,19 @@ const CHURCH_DATA = {
             href: "worship.html",
             items: [
                 { label: "주일 감사성찬례",  href: "worship.html#main" },
-                { label: "어린이 예배",     href: "worship.html#children" },
+                { label: "어린이 예배",     href: "children.html" },
                 { label: "감사성찬례 순서",  href: "worship.html#eucharist-order" },
                 { label: "성무일과(매일기도)", href: "worship.html#daily-office" },
                 { label: "예배 자료",       href: "worship.html#resources" },
-                { label: "공동기도서와 성가", href: "worship.html#bcp-hymnal" },
-                { label: "주일 주보",       href: "bulletin.html" }
+                { label: "공동기도서와 성가", href: "worship.html#bcp-hymnal" }
+            ]
+        },
+        {
+            label: "주보·소식",
+            href: "bulletin.html",
+            items: [
+                { label: "주일 주보", href: "bulletin.html" },
+                { label: "교회 소식", href: "news.html" }
             ]
         },
         {

@@ -1,4 +1,4 @@
-// 표준 전례독서(data/lectionary-year-a.json) 위에 주보 기록
+// 표준 전례독서(data/lectionary-year-*.json) 위에 주보 기록
 // (data/lectionary-overrides.json)을 병합해, 특정 주일에 실제로 봉독하는
 // 네 본문을 산출한다.
 //
@@ -7,9 +7,22 @@
 //    (브라우저는 빌드가 없어 이 ESM을 직접 import하지 못하므로 로직이
 //     두 곳에 존재한다. 한쪽을 고치면 반드시 다른 쪽도 함께 고칠 것.)
 
+// 표준 전례독서 연도별 파일 (data/ 기준). 새 해(다해 등)를 추가할 때는
+// 이 목록과 app.js SundaysRenderer._LECTIONARY_FILES를 함께 갱신한다.
+export const STANDARD_FILES = ['lectionary-year-a.json', 'lectionary-year-b.json'];
+
+// 연도별 파일 내용([{year, sundays}])을 날짜순 단일 목록으로 합치고,
+// 각 주일에 소속 연도(year: 'A'|'B'|'C')를 기록한다.
+export function mergeStandards(files) {
+    return files
+        .flatMap(f => f.sundays.map(s => ({ ...s, year: f.year })))
+        .sort((a, b) => a.date.localeCompare(b.date));
+}
+
 // 주보에서 확인한 트랙·특별 주일 독서를 표준 주일 위에 병합해 실제 봉독 본문을 반환.
 // - 특별 주일(override.readings): 네 본문 전체 교체, 표준 주일명은 standardName으로 보존
-// - 일반 주일: firstReading은 트랙으로 선택(주보 기록 우선, 없으면 짝 독서 B 기본)
+// - 일반 주일: firstReading은 트랙으로 선택(주보 기록 우선, 없으면 연속 독서 A 기본)
+//   트랙 미기록 주일은 표준 시편이 짝 독서(B)값이라 어긋나므로 시편을 비운다
 // date가 표준 목록에 없으면 null.
 export function resolveReadings(sundays, overrides, date) {
     const s = sundays.find(x => x.date === date);
@@ -19,6 +32,7 @@ export function resolveReadings(sundays, overrides, date) {
     if (o && o.readings) {
         return {
             date,
+            year: s.year,
             week: o.koreanName || s.koreanName,
             standardName: s.koreanName,
             track: null,
@@ -33,18 +47,21 @@ export function resolveReadings(sundays, overrides, date) {
     // 일반 주일: 제1독서는 트랙으로 선택, 시편은 트랙 A일 때 표준(트랙 B값)과
     // 어긋나므로 주보 기록(o.psalm)이 있으면 우선한다.
     const hasB  = !!s.readings.firstReadingB;
-    const track = hasB ? ((o && o.track) || 'B') : null;
+    const track = hasB ? ((o && o.track) || 'A') : null;
     const first = (hasB && track === 'B')
         ? s.readings.firstReadingB
         : s.readings.firstReadingA;
+    const trackUnknown = hasB && !(o && o.track);
+    const psalm = (o && o.psalm) || (trackUnknown ? null : s.readings.psalm);
     return {
         date,
+        year: s.year,
         week: s.koreanName,
         standardName: s.koreanName,
         track,
         fromBulletin: !!(o && (o.track || o.psalm)),
         first,
-        psalm:  (o && o.psalm) || s.readings.psalm,
+        psalm,
         second: s.readings.secondReading,
         gospel: s.readings.gospel
     };

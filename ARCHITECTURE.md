@@ -17,29 +17,34 @@
 ```
 gmchurch_web/
 ├── index.html        메인 페이지
-├── clergy.html       교회 소개 (성공회·사제·철학·교회 이야기·로고·언론)
-├── faq.html          자주 묻는 질문 (성공회 오해·궁금증 FAQ, 가안)
+├── clergy.html       교회 소개 (성공회·사제·철학·교회 이야기·연혁·로고·언론)
+├── faq.html          자주 묻는 질문 (성공회 오해·궁금증 FAQ)
 ├── worship.html      예배 안내 (예배 카드·감사성찬례란·순서·예배 자료)
 ├── newcomer.html     처음 오신 분 (환영·참여 안내·전례·전례 공간·영성체·문의)
 ├── community.html    공동체 (희망터·엠마우스·소그룹·녹색교회)
 ├── sundays.html      교회력 허브 (이달의 교회력·전례독서·절기·특별 주일)
+├── bulletin.html     주일 주보 (noindex, 이미지·PDF 목록)
+├── news.html         교회 소식 게시판 (noindex, 주보 교회소식 모음)
 ├── emmaus.html       엠마우스 코스 상세 페이지
 ├── hopecenter.html   광명 희망터 상세 페이지
 ├── smallgroup.html   소그룹 모임 상세 페이지
 ├── greenchurch.html  녹색교회 상세 페이지
 ├── links.html        관련 기관 상세 페이지
 ├── visit.html        오시는 길 (지도·교통·주차)
-├── giving.html       헌금 (봉헌 계좌·영수증 안내)
+├── giving.html       헌금 (헌금 계좌·영수증 안내)
 ├── media.html        미디어·자료 허브 (영상·사진·관련 기관 카드 링크)
 ├── videos.html       영상 갤러리 상세 페이지
 ├── gallery.html      사진 갤러리 상세 페이지 (noindex)
 ├── privacy.html      개인정보 처리방침 (noindex)
 ├── data.js           ★ 단일 콘텐츠 소스 — CHURCH_DATA (1081줄)
 ├── app.js            렌더러 모음 + App bootstrap (2588줄)
-├── style.css         전체 스타일 (4128줄)
-├── favicon.svg       캔터베리 십자가 (짙은 녹색 배경 + 흰색 십자가)
-├── apple-touch-icon.png
-├── og-image-v2.png   소셜 공유 OG 이미지 (1200×630)
+├── style.css         전체 스타일 (5382줄)
+├── images/icons.svg  ★ 아이콘 팩 — 사이트 전체 아이콘 SVG 스프라이트 (이모티콘 대신 사용)
+├── favicon.svg       교회 로고 '열린 빛' (숲 녹 배경 + 크림 아치 십자)
+├── apple-touch-icon.png  180×180 (scripts/brand/icon.html에서 생성)
+├── images/brand/og-image-v3.png  소셜 공유 OG 이미지 1200×630 (scripts/brand/og.html에서 생성)
+├── images/clergy/   성직자 초상 (원본 portrait jpg + 목록용 `-450` 썸네일, data.js `photoThumb`) · images/hero/ 페이지 상단 이미지(home.webp 포함) · images/gallery/ 갤러리 사진(영문 소문자·하이픈 파일명)
+├── fonts/            brand-serif.woff2 — 로고 워드마크 전용 3KB 서브셋 (고운바탕 Bold, OFL)
 ├── robots.txt
 ├── sitemap.xml
 ├── docs/             위원회 audit 보고서 · 작업 지시서
@@ -49,10 +54,20 @@ gmchurch_web/
 **스크립트 로드 순서**: 모든 HTML 공통 — `data.js` → `app.js`  
 `data.js`가 먼저 로드되어 `CHURCH_DATA` / `LiturgicalCalendar` 전역 변수를 정의하고, `app.js`가 이를 참조해 렌더링함.
 
-**로고(캔터베리 십자가) 단일 소스**: `app.js` 상단의 `CANTERBURY_CROSS_PATH` 상수 +
-`canterburyCrossSVG()` 헬퍼가 nav · footer · 로고 소개 · 지도 핀의 십자가를 공유함.
-트럼펫형(오목) 4팔 + 계단형 중앙 사각 + 중앙 점(`fill-rule="evenodd"` 구멍). favicon.svg도 동일 경로 사용.
-로고 디자인 변경 시 `CANTERBURY_CROSS_PATH` 1곳 + `favicon.svg` 1곳만 수정.
+**아이콘 팩 (`images/icons.svg`)**: 사이트의 모든 그림 아이콘은 이 스프라이트 하나로 통일한다 — **이모티콘 직접 사용 금지**(테스트 `tests/icons.test.js`가 검사).
+- 스타일: 24px 격자 · 1.35 가는 단색 선(글자색 `currentColor`)만 쓰는 미니멀 아이콘. 색면·다색 금지.
+- 크기: `.ico`가 `1em`이라 아이콘 자리의 `font-size`가 곧 크기다. 카드 속 큰 아이콘 자리(`.story-value-icon`, `.resource-icon`, `.card-icon` 등)는 가는 원 테두리 배지(1.7em) 안에 테마색 선으로 놓인다 — 규칙은 style.css 맨 끝.
+- 사용: `data.js`의 `icon`/`symbol` 값은 **심볼 이름**(예: `"church"`), `app.js`에서는 `icon('name')`, 정적 HTML에서는 `<svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=…#name"/></svg>`.
+- 새 아이콘: 같은 스타일로 `<symbol id="이름">`을 추가한다(XML 주석 안에 `--` 금지 — 스프라이트 전체가 깨진다).
+- 목록(46개): `church`, `dove`, `map`, `people`, `hands-heart`, `leaf`, `palm`, `cross`, `book`, `books`, `calendar`, `candle`, `star`, `sparkle`, `sunrise`, `sun`, `sunset`, `moon`, `flame`, `bulb`, `pillar`, `mitre`, `cap`, `globe`, `scales`, `drop`, `chalice`, `tabernacle`, `music`, `sprout`, `bowl`, `dish`, `house`, `film`, `camera`, `link`, `footsteps`, `pen`, `veg`, `paw`, `leaf-fall`, `phone`, `mail`, `boat`, `parking`, `question`
+- UI 조작용 SVG(화살표·검색·닫기·PDF)와 로고(`ARCH_MARK_PATH`, `CANTERBURY_CROSS_PATH`)는 팩에 넣지 않고 그대로 둔다. →·↗·✓·✕ 같은 글자 기호도 이모티콘이 아니므로 허용.
+
+**교회 로고 '열린 빛' 단일 소스**: `app.js` 상단의 `ARCH_MARK_PATH` + `archMarkSVG()`가 nav · footer 로고를 그린다
+(아치창 좌·우 두 조각 사이로 십자 빛이 열리는 형태, 마스크/ID 없이 인라인 재사용).
+워드마크(교회명 + `info.tagline`)는 `--font-brand`(BrandSerif 서브셋 → Pretendard 폴백). **교회명·부제 글자를 바꾸면
+`fonts/brand-serif.woff2` 서브셋을 다시 만들어야 한다** (없는 글자는 Pretendard로 표시되어 깨지지는 않음).
+favicon.svg · apple-touch-icon · OG 이미지는 작은 크기용으로 십자 틈을 넓힌 변형 경로를 쓴다 (`scripts/brand/`).
+캔터베리 십자가(`CANTERBURY_CROSS_PATH`)는 세계성공회 상징으로 로고 소개 섹션(`clergy.html#logo-intro`)에 남아 있다.
 
 ---
 
@@ -124,8 +139,26 @@ const CHURCH_DATA = {
     email: "bsyg2000@hanmail.net"
   },
 
+  ui: { copyAddress: { success, failure } }, // 공통 동작 안내
+
+  home: {                           // index.html 전용 문구 (예배 시간·위치는 worship.main/info에서 파생)
+    heroActions: [{ label, href, primary? }],
+    stats: { established, worship, location },   // 히어로 수치 라벨
+    about:   { eyebrow, title, facts: [{ label, key }], more },  // key = info의 필드명
+    worship: { eyebrow, title, sub, more },     // 카드는 worship.main[].summary(없으면 desc)
+    thisSunday: { title, labels: { season, first, second, gospel }, more, bulletin },  // 다가오는 주일 카드
+    guide:   { eyebrow, title, sub, cards: [{ icon, title, desc, href, action }] },
+    visit:   { eyebrow, title, sub, phoneLabel, more }
+  },
+
+  visit: {                          // visit.html 교통·주차 문구 ({phone} → info.phone 치환)
+    locationTitle, transportTitle, labels: { postal, phone, fax, car, bus, parking },
+    car, bus: { stopLabel, stop, routes: [{ no, type: "blue"|"green" }], note }, parking, note
+  },
+
   anglican: {
-    welcome: "…배너 문구…",
+    welcome: "…인사 문구…",
+    welcomeSub: "…보조 문구…",
     what: {                         // 성공회란? 섹션
       eyebrow, title,
       paras: [String, String],
@@ -140,10 +173,10 @@ const CHURCH_DATA = {
     }
   },
 
-  logo: {                           // 캔터베리 십자가 소개 (clergy.html)
-    eyebrow, title, desc,
-    colors: String
-    // letters 필드 없음 — ACGM 모노그램 → 캔터베리 십자가로 변경됨
+  logo: {                           // 로고 소개 (clergy.html#logo-intro)
+    eyebrow, title,
+    church: { name, subtitle, desc[], elements[{label,desc}], colors[{name,hex,desc}] },  // 교회 로고 '열린 빛'
+    anglican: { lead, title, subtitle, desc, history, elements[], refs[] }               // 세계성공회 상징(캔터베리 십자가)
   },
 
   ministerSection: {
@@ -260,17 +293,21 @@ const CHURCH_DATA = {
   └ 성공회란?          clergy.html#what-is-anglican
   └ 대한성공회         clergy.html#ack
   └ 섬기는 이들        clergy.html#priest-section       (JS)
-  └ 교회 철학          clergy.html#philosophy
-  └ 교회 이야기        clergy.html#identity
+  └ 교회 이야기        clergy.html#philosophy   (철학 #philosophy + 이야기 #identity 섹션)
+  └ 교회 연혁          clergy.html#history              (JS, data.js history)
   └ 녹색교회           greenchurch.html                 (상세 페이지로 직접 이동)
 
 예배와 기도  worship.html
   └ 주일 감사성찬례    worship.html#main                (JS)
   └ 어린이 예배        worship.html#children            (JS)
   └ 감사성찬례 순서    worship.html#eucharist-order     (JS)
-  └ 성무일과           worship.html#daily-office        (JS)
-  └ 세계성공회 중보기도 worship.html#intercession       (JS)
+  └ 성무일과(매일기도) worship.html#daily-office        (JS)
   └ 예배 자료          worship.html#resources           (JS)
+  └ 공동기도서와 성가  worship.html#bcp-hymnal          (JS)
+
+주보·소식  bulletin.html
+  ├ 주일 주보          bulletin.html                    (상세 페이지로 직접 이동)
+  └ 교회 소식          news.html                        (상세 페이지로 직접 이동)
 
 교회력  sundays.html
   └ 이달의 교회력      sundays.html#monthly             (JS)
@@ -284,7 +321,7 @@ const CHURCH_DATA = {
   └ 성공회 전례란?     newcomer.html#liturgy            (JS)
   └ 전례 공간 안내     newcomer.html#worship-space      (JS)  성수대·독서대·제대·성막·부활초
   └ 영성체 안내        newcomer.html#communion          (JS)
-  └ 자주 묻는 질문     faq.html                         (가안 badge)
+  └ 자주 묻는 질문     faq.html
   └ 문의하기           newcomer.html#contact            (JS)
 
 공동체  community.html
@@ -301,7 +338,7 @@ const CHURCH_DATA = {
   └ 주소·교통          visit.html#location              (JS)
   └ 주차 안내          visit.html#parking               (JS)
 
-※ Footer 전용 링크: giving.html(봉헌 안내), clergy.html#logo-intro(로고 소개), clergy.html#press(언론 보도), privacy.html(개인정보처리방침)
+※ Footer 전용 링크: giving.html(헌금 안내), clergy.html#logo-intro(로고 소개), clergy.html#press(언론 보도), privacy.html(개인정보처리방침)
 ```
 
 ---
@@ -324,8 +361,9 @@ window DOMContentLoaded
       │     하위 메뉴 item에 badge 필드 → .nav-badge 칩 렌더 (예: "임시")
       │
       ├── FooterRenderer.render()     → #main-footer (모든 페이지)
+      ├── VisitorCounter.render()     → #footer-visitors (오늘·누적 방문자, Abacus 외부 카운터, data.js visitorCounter)
       │     info + clergy[0] + sns 4개 링크
-      │     하단 바: 봉헌 안내(→ giving.html) + 개인정보 처리방침 링크
+      │     하단 바: 헌금 안내(→ giving.html) + 개인정보 처리방침 링크
       │     주소 → 네이버지도 링크로 렌더됨 (MapHelper.naverUrl)
       │
       ├── IndexRenderer.render()      → index.html 전용
@@ -372,7 +410,7 @@ window DOMContentLoaded
       │     _korea()   → #anglican-korea (2단 레이아웃: 텍스트 + 배지)
       │
       ├── ClergyRenderer.render()     → clergy.html 전용
-      │     _logo()       → #logo-content  (캔터베리 십자가 SVG + 설명)
+      │     _logo()       → #logo-content  (교회 로고 '열린 빛' + 세계성공회 상징 캔터베리 십자가)
       │     _clergy()     → #clergy-full   (주교 + 카테고리별 성직자 clergy-card / 임원진 officer-card)
       │       _bioSection(bio) → 타임라인 + 소임 태그 + 교회 밖 활동 + 출처
       │     _philosophy() → #philosophy-full  (.values-grid, 녹색교회 카드는 greenchurch.html 링크)
@@ -391,20 +429,42 @@ window DOMContentLoaded
       ├── MediaHubRenderer.render()   → #media-hub (media.html)
       │     data.media.hub.cards 기준 resource-grid (영상·사진·관련 기관 카드)
       │
+      ├── PhotoGalleryRenderer.render() → #gallery-full (gallery.html)
+      │     CHURCH_DATA.photoGallery 기준 카테고리별 사진 갤러리
+      │
+      ├── BulletinRenderer.render()   → #bulletin-full (bulletin.html)
+      │     CHURCH_DATA.bulletins 목록 (5개씩 페이지) · 행 클릭 시 이미지·PDF 펼침
+      ├── NewsRenderer.render()       → #news-full (news.html)
+      │     bulletins.items[].news(sync가 data/bulletin-news.json에서 합침)를 게시판 목록으로 렌더 (주보 목록(bulletin-list) 스타일 재사용, 날짜 클릭 시 그 주 소식 펼침·최신 주 기본 펼침·#news-날짜 딥링크, "일시 : …" 줄은 항목표로 렌더)
+      │     '이번 주' 배지는 한국 시간 기준 이번 주 주보에만, 아니면 최신 항목에 '최근 등록'
+      │
       ├── LinksRenderer.render()      → #links-full (links.html)
       │     관련 기관 목록.
+      │
+      ├── HistoryRenderer.render()    → #history-full (clergy.html)
+      │     history.items { year, date, text, key?, first? } — 약력 타임라인(.bio-timeline) 재사용,
+      │     같은 해 둘째 항목부터 연도 칸 비움. .history-timeline/.history-date
+      │     기본은 key: true 항목(#history-key)만, .more-toggle 버튼으로 전체(#history-all) 전환
+      │     (labels: history.moreLabel/lessLabel, Ctrl+F·인쇄 시 자동 펼침)
       │
       ├── PressRenderer.render()      → #press-table (clergy.html)
       │     press-list: press 배열의 모든 기사
       │     각 항목: 연도 | 미디어 · 날짜 | 제목(링크)
       │
       ├── FaqRenderer.render()        → #faq-full (faq.html)
-      │     draft-banner(가안) + faq-cat × 4 (정체성·신앙·사회참여·함께하기)
+      │     guide-banner(안내문) + faq-cat × 4 (정체성·신앙·사회참여·함께하기)
       │     각 항목: <details.faq-item> → .faq-q(summary) / .faq-a / .faq-refs(출처)
       │
       ├── SundaysRenderer.render()    → #sundays-full (sundays.html)
       │     이달의 교회력(#monthly) · 전례독서(#lectionary) · 절기 안내(#seasons) · 특별 주일(#special)
       │     ※ worship.html의 #worship-calendar / #worship-special 위젯도 담당
+      │
+      ├── MoreToggle.init()           (clergy 사제 이력·캔터베리 십자가 / worship 공동기도서와 성가 / sundays 특별 주일)
+      │     _TARGETS 목록의 블록에 토글 버튼(.more-toggle) 하나를 붙여 보조 설명을 접음
+      │     버튼은 항상 보이는 부분 바로 아래·숨긴 부분(.more-body) 바로 위 → 눌러도 제자리에서 아래로 펼침
+      │     text 모드: 앞 keep개 자식만 보이고 나머지를 블록 안 .more-body[hidden=until-found]로 묶음 (Ctrl+F로 찾으면 자동 펼침)
+      │     items 모드: 그리드 앞 items개만 보이고 나머지는 같은 클래스의 형제 컨테이너(.more-body)로 옮김
+      │     숨길 부분이 120px 미만이면 접지 않음 · 앵커 이동(_scrollToHash)·인쇄 시 자동 펼침
       │
       ├── ScrollReveal.init()         (모든 페이지)
       │     .reveal 클래스 요소들을 scroll 시 페이드인
@@ -413,11 +473,17 @@ window DOMContentLoaded
       ├── ScrollProgress.init()       (모든 페이지)
       │     페이지 스크롤 진행도를 시각화 (막대 또는 스타일 적용)
       │
+      ├── TapFeedback.init()          (모든 페이지)
+      │     iOS :active(눌림 색)용 touchstart 리스너만 — 이동 지연 없음. 터치 기기 hover 이동 제거는 style.css 끝 @media (hover: none)
+      │
+      ├── HeroNav.init()              (.page-hero--photo가 있고 navigation 최상위 메뉴인 페이지)
+      │     히어로 좌·우 17%에 이전/다음 메뉴 링크(.hero-nav) 추가 — 메뉴 순서는 CHURCH_DATA.navigation, 양 끝은 순환
+      │
       └── MenuOverlay.init()          (모든 페이지)
             nav-menu-trigger 버튼으로 여는 전체 메뉴 + 검색 오버레이
             CHURCH_DATA.navigation을 사이트맵으로 펼침
             검색 인덱스 = nav 라벨 + CHURCH_DATA 본문 자동 추출
-              + 정적 HTML 페이지(story·emmaus·greenchurch·hopecenter) 런타임 fetch 파싱
+              + 정적 HTML 페이지(story·emmaus·greenchurch) 런타임 fetch 파싱
             본문 일치 시 발췌 스니펫 표시, 첫 검색 시 정적 페이지 1회 로드
             
       └── App._handleHashScroll()
@@ -429,6 +495,10 @@ window DOMContentLoaded
 
 ---
 
+### TextFit (모바일 본문 줄 끝 맞춤)
+
+`App.init()` 끝에서 `TextFit.init()` 호출. 480px 이하에서 `TextFit.SELECTOR`(style.css ≤480px 본문 규칙과 같은 목록)의 문단마다 자간 -0.02~+0.015em 중 줄 끝 편차가 가장 작은 값을 인라인 `letter-spacing`으로 정한다. 폭이 바뀌면(resize) 다시 계산하고, 접힌 `details`는 열릴 때 계산한다. 본문 클래스를 추가하면 CSS와 이 목록을 함께 고칠 것.
+
 ## HTML 페이지별 섹션 구조
 
 ### index.html
@@ -439,11 +509,14 @@ window DOMContentLoaded
 <header class="hero">
   #hero-title / #hero-sub                   ← IndexRenderer._hero()
 <section id="about-brief">
-  #about-brief-content                      ← IndexRenderer._about()
+  #about-brief-header / #about-brief-content           ← IndexRenderer._about()
 <section id="worship">
-  #worship-grid / #worship-guide            ← IndexRenderer._worship()
+  #worship-header / #worship-grid / #worship-guide / #worship-more ← IndexRenderer._worship()
+  #this-sunday (info-card, 독서 파일 로드 실패 시 hidden) ← IndexRenderer._thisSunday() — SundaysRenderer._loadSundays() 재사용
+<section id="home-guide">
+  #home-guide-header / #home-guide-cards (resource-grid) ← IndexRenderer._guide()
 <section id="visit-preview">
-  #location-card                            ← IndexRenderer._visit()
+  #visit-header / #location-card                       ← IndexRenderer._visit()
 </main>
 <footer id="main-footer">                   ← FooterRenderer
 ```
@@ -462,6 +535,8 @@ window DOMContentLoaded
   #philosophy-full                          ← ClergyRenderer._philosophy()
 <section id="identity"> .story-values — 교회 이야기 5대 정체성 서사 블록 (정적 HTML)
   01 전례 전통  02 평등 공동체  03 부활 신앙  04 밥상 공동체  05 약자·창조 돌봄
+<section id="history">
+  #history-full                             ← HistoryRenderer.render()
 <section id="logo-intro">
   #logo-content                             ← ClergyRenderer._logo()
 <section id="press">
@@ -473,7 +548,7 @@ window DOMContentLoaded
 <div class="page-hero">                       자주 묻는 질문 (FAQ)
 <section id="faq"> .container--narrow
   #faq-full                                 ← FaqRenderer.render()
-     draft-banner(가안) + .faq-lead + .faq-cat × 4 (정체성·신앙·사회참여·함께하기)
+     guide-banner(안내문) + .faq-lead + .faq-cat × 4 (정체성·신앙·사회참여·함께하기)
      각 항목 <details.faq-item> → .faq-q(summary) / .faq-a / .faq-refs(출처 링크)
 ※ 콘텐츠는 CHURCH_DATA.faq (카테고리 4 · 질문 12 · 출처 링크 17)
 ```
@@ -538,29 +613,42 @@ window DOMContentLoaded
 ### CSS 변수
 
 ```css
---green-deep:   #0a1f12   /* 주 브랜드 색 (nav, footer, 제목) */
---green-mid:    #3a7252
---green-light:  #eef2ec
---green-soft:   #c4d6c8
---gold:         #c09a60
---gold-bg:      #faf3e6
---cream:        #f7f4ed   /* 기본 배경 */
+/* 팔레트: 숲 녹 #173a2e · 세이지 #a8bd9f · 크림 #f2f3ef (로고·OG 이미지 등 브랜드 에셋은 기존 #1c4336/#f0ece4 유지) */
+--green-deep:   #173a2e   /* 주 브랜드 색 (nav, footer, 어두운 띠) */
+--green-mid:    #285a47   /* 흰 글자 7.9:1, 크림 위 7.1:1 */
+--green-light:  #e7eee8
+--green-soft:   #c8d7c9
+--gold:         #a8bd9f   /* 이름은 유지, 값은 세이지 — 장식선·어두운 배경 위 강조 전용 (밝은 배경 글자 금지) */
+--gold-bg:      #edf2ea
+--sage-ink:     #3f6046   /* 밝은 배경 위 세이지 계열 글자 */
+--font-brand:   "BrandSerif", "Pretendard", …   /* 로고 워드마크 전용 */
+--cream:        #f2f3ef   /* 기본 배경 */
 --white:        #ffffff
 --text:         #1a1a1a
 --text-muted:   #4d4c46   /* WCAG AA(4.5:1) 충족 */
---heading:      #0a1f12
---border:       #e8e5dc
+--heading:      #112f25
+--border:       #dde3dc
 --red:          #b53737
---nav-glass:    rgba(10, 31, 18, 0.9)  /* 네비게이션 글래스 배경 */
+--nav-glass:    rgba(23, 58, 46, 0.94)  /* 네비게이션 글래스 배경 */
 --surface-nav:  rgba(255, 255, 255, 0.96)
---theme:        #3a7252   /* 현재 절기색 (JS가 --season 값으로 덮어씀) */
---theme-light:  #eef2ec
+--theme:        #285a47   /* 사이트 대표 녹색 (고정 — 절기색은 --season) */
+--theme-light:  #e7eee8
 --theme-on:     #fff      /* --theme 배경 위 텍스트 */
 --nav-h:        68px
---section-pad:  7rem
+--section-pad:  6rem   /* ≤768px 2.5rem */
 --content-max:  1200px
---radius-sm/md/lg: 8px / 14px / 20px
+--radius-xs/sm/md/lg: 4px / 8px / 14px / 20px
+--fs-label/md/sm/body/lead: 12.48 / 13.6 / 14.4 / 16 / 18px   /* 라벨 하한은 12.48px */
+--fs-desc:      0.95rem   /* 문장형 카드·목록 설명 15.2px (내비용 --fs-sm과 분리) */
+--lh-tight/snug/body/relaxed: 1.2 / 1.55 / 1.75 / 1.9   /* 큰 제목 / 여러 줄 제목·리드 / 본문 / 장문 */
+--space-4h/6h:  1.25rem / 1.75rem
+--content-read/narrow: 760px / 820px
+--ink-on-light/--ink-on-sage/--brand-mid/--green-hover/--red-hover   /* 모드와 무관한 고정색 */
+--on-dark-1/2/3: rgba(255,255,255,.92/.78/.70)
+--lift-1/2:     -2px / -4px   /* hover 이동 */
 ```
+
+디자인 기준(글자 크기·간격·색·포커스 링 규칙)은 `audit/03-design-spec.md` 참고.
 
 ### 주요 클래스 목록
 
@@ -571,7 +659,7 @@ window DOMContentLoaded
 | `.nav-chevron` | 모바일 드롭다운 토글 화살표 버튼 (desktop: hidden) |
 | `.nav-item.mobile-open` | 모바일 드롭다운 열림 상태 |
 | `.hero` / `.hero-fallback` | Ken Burns 애니메이션 배경 (Unsplash 이미지) |
-| `.page-hero` | 서브 페이지 상단 헤더 |
+| `.page-hero` | 서브 페이지 상단 헤더 (높이 통일: PC `min-height` 350px · 모바일 291px, 내용은 세로 가운데 정렬) |
 | `.section` / `.section-header` | 섹션 레이아웃 |
 | `.container` | 최대폭 1200px, 패딩 clamp |
 | `.grid` | auto-fit minmax(280px) 그리드 |
@@ -584,7 +672,16 @@ window DOMContentLoaded
 | `.bio-first` | '최초' 배지 |
 | `.bio-roles` / `.bio-role-tag` | 소임 태그 그룹 |
 | `.bio-source` | 출처 각주 |
+| `.more-toggle` / `.more-body` | 긴 블록 접기·펼치기 토글 버튼(콘텐츠 폭 가로 막대)과 접힌 영역 (MoreToggle) |
 | `.liturgy-guide` | 전례 가이드 전체 래퍼 |
+| `.section--tight-bottom` | 아래 패딩을 줄인 섹션(단독 섹션 뒤에 이어지는 섹션 앞) |
+| `.text-note` | 본문 아래 작은 보조 설명 문단 |
+| `.prose-list` | 불릿 있는 본문 목록 |
+| `.privacy-doc` `.privacy-lead` `.privacy-h2` `.privacy-list` `.privacy-foot` | 개인정보처리방침 본문 |
+| `.container--read` `.container--narrow` | 읽기 폭 760px / 820px 컨테이너 |
+| `.section-title--sub` | 소제목 h2(1.3rem) |
+| `.nowrap` | 줄바꿈 금지 구간(날짜 등) |
+| `.section.gc-section-alt` | 교차 띠 배경(emmaus·greenchurch) |
 | `.liturgy-season-badge` | 현재 절기 배지 (색·심볼·절기명) |
 | `.liturgy-steps` / `.liturgy-step` | 감사성찬례 4단계 |
 | `.communion-grid` / `.communion-card` | 영성체 안내 카드 |
@@ -598,7 +695,9 @@ window DOMContentLoaded
 | `.container--narrow` | 읽기 폭 제한 컨테이너 (max 820px, faq.html) |
 | `.anglican-pillars` | 성공회 3기둥 카드 그리드 |
 | `.anglican-korea-inner` | 대한성공회 2단 레이아웃 |
-| `.logo-intro-grid` | 캔터베리 십자가 소개 그리드 |
+| `.logo-intro-grid` | 로고 소개 그리드 (마크 + 설명) |
+| `.logo-lockup` / `.logo-swatches` | 교회 로고 가로형 조합 / 로고 색 칩 |
+| `.logo-anglican` | 로고 소개 안 세계성공회 상징 단락 |
 | `.press-list` / `.press-item` | 언론 보도 리스트 |
 | `.bus-chip.bus-blue/green` | 버스 번호 칩 |
 | `.bank-card` | 봉헌 계좌 카드 |
@@ -610,7 +709,10 @@ window DOMContentLoaded
 | `.video-channel-cta` | 유튜브 채널 전체 보기 CTA 버튼 |
 | `.footer-inner` | 푸터 3단 그리드 |
 | `.footer-logo-mark` | 푸터 캔터베리 십자가 컨테이너 (38×38px, 흰색 SVG) |
+| `.ico` | 아이콘 팩 SVG (`images/icons.svg` 심볼, 1em 크기·가는 단색 선) |
 | `.reveal` | ScrollReveal 애니메이션 대상 (fade-in on scroll) |
+| `.hero-nav` / `.hero-nav--prev` / `--next` | 메뉴 히어로 좌·우 17% 이전/다음 메뉴 터치 영역 (HeroNav가 생성) |
+| `.page-hero--{clergy,worship,sundays,newcomer,community,media,visit}` | 메뉴별 상징 이미지 히어로 (`images/hero/*.webp`, 모바일은 `-m` 경량본). 글자 배치는 전부 `.page-hero--photo` 공통 규칙 |
 
 ### 반응형 브레이크포인트
 
@@ -685,3 +787,10 @@ LiturgicalCalendar.compute(new Date('2026-12-25'))  // 특정일
 LiturgicalCalendar.easterDate(2027)   // 부활절 날짜
 LiturgicalCalendar.adventStart(2026)  // 대림 1주일
 ```
+
+
+## 어린이 예배 소개 (2026-10-18)
+- `hopecenter.html` → `HopeCenterRenderer` → `CHURCH_DATA.hopeCenter`(교회 제공 소개문 2026-10-21). 구성: 사진+설립 요약 → 토요일의 나눔 3단계 → 걸어온 길 → 비전 → 함께하기(총무는 `officers`의 `희망터 총무`에서 파생). 사진 `images/hopecenter/`(배달 사진은 받는 분 얼굴·주소 표지판이 보이지 않게 잘라 씀). 검색 색인은 `_extractContent`에서 data로 추출.
+- `children.html` → `ChildrenRenderer` → `CHURCH_DATA.childrenWorship`. 예배와 기도 하위 메뉴와 기존 어린이 예배 카드에서 연결. 하단에서 `smallgroup.html#parents`(주일학교 양육자모임)로 연결.
+- 사용자가 제공한 소개문, 활동 사진 4장, 예수님과 어린이 그림을 사용. 사진 날짜·참여 연령 등 미확인 사실은 추가하지 않음.
+- 시간과 영성체 안내는 `worship.main`의 어린이 예배 항목에서 파생. 장소는 교육관. 이미지 `images/children/`, 반응형 스타일 `.children-*`.

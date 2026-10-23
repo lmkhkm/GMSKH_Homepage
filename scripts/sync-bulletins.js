@@ -3,7 +3,7 @@ import fs   from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import PDFDocument from 'pdfkit';
-import { resolveReadings, isToggleWeek, nextSundayKey, koreanDate } from './lib/lectionary.js';
+import { resolveReadings, isToggleWeek, nextSundayKey, koreanDate, STANDARD_FILES, mergeStandards } from './lib/lectionary.js';
 
 // ── 전례력 절기 레이블 ────────────────────────────────────────
 function easterDate(year) {
@@ -75,7 +75,7 @@ function sundayLabel(dateStr) {
         if (w === 1) return '삼위일체 주일';
         const weeksToGoCK = Math.round((+ck - +date) / 604800000);
         if (weeksToGoCK === 0) return '그리스도 왕 주일';
-        return `${yLbl}해 연중 ${34 - weeksToGoCK}주일`;
+        return `${yLbl}해 연중 제${34 - weeksToGoCK}주일`;
     }
 
     // 부활절 ~ 성령강림
@@ -93,7 +93,7 @@ function sundayLabel(dateStr) {
     if (date >= ashWed) return `사순 제${wk(date, ashWed)}주일`;
 
     // 주현절 이후 연중 (사순절 전)
-    if (date >= baptism) return `${yLbl}해 연중 ${wk(date, baptism) + 1}주일`;
+    if (date >= baptism) return `${yLbl}해 연중 제${wk(date, baptism) + 1}주일`;
 
     // 성탄절 후 (1/1~1/5, 12/26~12/31 등)
     return '성탄절 후 주일';
@@ -125,8 +125,12 @@ const ROOT      = path.resolve(__dirname, '..');
 const BULLETINS = path.join(ROOT, 'bulletins');
 const DATA_JS   = path.join(ROOT, 'data.js');
 const OVERRIDES = path.join(ROOT, 'data', 'lectionary-overrides.json');
-const STANDARD  = path.join(ROOT, 'data', 'lectionary-year-a.json');
-const MAX_WEEKS = 13;
+const NEWS      = path.join(ROOT, 'data', 'bulletin-news.json');
+// 보관 규칙: 최근 8개 주보 이내이면서 8주(56일) 넘게 지나지 않은 것만 남긴다.
+// 단, 가장 최근 주보 한 건은 기간이 지나도 남겨 목록이 비지 않게 한다.
+// 새 주보가 없어도 날짜만 지나면 삭제되도록, 매일 도는 워크플로가 이 스크립트를 실행한다.
+const MAX_BULLETINS = 8;
+const MAX_AGE_DAYS  = 56;
 
 // 지정한 마커 사이 구간을 통째로 교체 (data.js 손질용)
 function replaceRegion(text, startMarker, endMarker, replacement) {
@@ -144,7 +148,7 @@ function readingsBlock(key, resolved, standardYear, withNote) {
         ['시편',    resolved.psalm],
         ['서신서',  resolved.second],
         ['복음',    resolved.gospel]
-    ].map(([role, ref]) => `                { role: "${role}", ref: "${ref}" }`).join(',\n');
+    ].filter(([, ref]) => ref).map(([role, ref]) => `                { role: "${role}", ref: "${ref}" }`).join(',\n');
     const note = withNote
         ? `\n            note: "주보 기준 · 대한성공회 공동 전례독서에 따릅니다.",`
         : '';
@@ -160,10 +164,6 @@ function readingsBlock(key, resolved, standardYear, withNote) {
     ].join('\n');
 }
 
-const cutoff = new Date();
-cutoff.setDate(cutoff.getDate() - MAX_WEEKS * 7);
-cutoff.setHours(0, 0, 0, 0);
-
 // ── 메인 (비동기) ─────────────────────────────────────────────
 (async () => {
     // ── 1. JPG 스캔 및 날짜별 그룹화 ────────────────────────────
@@ -176,11 +176,20 @@ cutoff.setHours(0, 0, 0, 0);
         groups.get(ds).push(file);
     }
 
-    // ── 2. 오래된 날짜 삭제 (이미지 + PDF) ──────────────────────
+    // ── 2. 보관 규칙을 넘긴 주보 삭제 (이미지 + PDF) ─────────────
+    // PDF만 있는 항목(직접 업로드된 PDF)도 같은 기준으로 센다
+    const allPdfs = fs.readdirSync(BULLETINS).filter(f => /^\d{8}\.pdf$/i.test(f));
+    const allDates = new Set([...groups.keys(), ...allPdfs.map(f => f.slice(0, 8))]);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const ageDays = ds => Math.round((today - new Date(+ds.slice(0, 4), +ds.slice(4, 6) - 1, +ds.slice(6, 8))) / 86400000);
+    const recent = [...allDates].sort((a, b) => b.localeCompare(a)).slice(0, MAX_BULLETINS);
+    const keep = new Set(recent.filter((ds, i) => i === 0 || ageDays(ds) <= MAX_AGE_DAYS));
+
     const valid = new Map();
-    for (const [ds, files] of groups) {
-        const fileDate = new Date(+ds.slice(0, 4), +ds.slice(4, 6) - 1, +ds.slice(6, 8));
-        if (fileDate < cutoff) {
+    for (const ds of allDates) {
+        const files = groups.get(ds) || [];
+        if (!keep.has(ds)) {
             files.forEach(f => {
                 fs.unlinkSync(path.join(BULLETINS, f));
                 console.log(`  삭제: ${f}`);
@@ -190,28 +199,14 @@ cutoff.setHours(0, 0, 0, 0);
                 fs.unlinkSync(pdfFile);
                 console.log(`  삭제: ${ds}.pdf`);
             }
-        } else {
-            files.sort((a, b) => {
-                const na = +a.replace(/^\d{8}_(\d+)\.jpe?g$/i, '$1');
-                const nb = +b.replace(/^\d{8}_(\d+)\.jpe?g$/i, '$1');
-                return na - nb;
-            });
-            valid.set(ds, files);
+            continue;
         }
-    }
-
-    // PDF만 있는 항목 (JPG 없음) 추가 — 직접 업로드된 PDF
-    const allPdfs = fs.readdirSync(BULLETINS).filter(f => /^\d{8}\.pdf$/i.test(f));
-    for (const pdfFile of allPdfs) {
-        const ds = pdfFile.slice(0, 8);
-        if (valid.has(ds)) continue;
-        const fileDate = new Date(+ds.slice(0, 4), +ds.slice(4, 6) - 1, +ds.slice(6, 8));
-        if (fileDate < cutoff) {
-            fs.unlinkSync(path.join(BULLETINS, pdfFile));
-            console.log(`  삭제: ${pdfFile}`);
-        } else {
-            valid.set(ds, []);
-        }
+        files.sort((a, b) => {
+            const na = +a.replace(/^\d{8}_(\d+)\.jpe?g$/i, '$1');
+            const nb = +b.replace(/^\d{8}_(\d+)\.jpe?g$/i, '$1');
+            return na - nb;
+        });
+        valid.set(ds, files);
     }
 
     // ── 3. PDF 생성 (이미지 있는 경우, 없는 경우만) ──────────────
@@ -239,6 +234,18 @@ cutoff.setHours(0, 0, 0, 0);
         }
     }
 
+    let newsByWeek = {};
+    let newsNote = '';
+    if (fs.existsSync(NEWS)) {
+        try {
+            const parsed = JSON.parse(fs.readFileSync(NEWS, 'utf8'));
+            newsByWeek = parsed.weeks || {};
+            newsNote = parsed.note || '';
+        } catch (err) {
+            console.error('  bulletin-news.json 파싱 실패:', err.message);
+        }
+    }
+
     const newItems = [...valid.keys()]
         .sort((a, b) => b.localeCompare(a))
         .map(ds => {
@@ -253,9 +260,21 @@ cutoff.setHours(0, 0, 0, 0);
                 label:  `${y}년 ${mo}월 ${d}일`,
                 season: (ov && ov.koreanName) || sundayLabel(ds),
                 images: valid.get(ds).map(f => `bulletins/${f}`),
-                pdf:    fs.existsSync(pdfPath) ? `bulletins/${ds}.pdf` : null
+                pdf:    fs.existsSync(pdfPath) ? `bulletins/${ds}.pdf` : null,
+                news:   newsByWeek[dateKey] || []
             };
         });
+
+    // 보관하지 않는 주보의 교회소식은 원본 파일에서도 지운다 (data.js와 같은 기준)
+    const keptNews = Object.fromEntries(
+        newItems.filter(it => it.news.length).map(it => [it.date, it.news]));
+    if (fs.existsSync(NEWS) && JSON.stringify(keptNews) !== JSON.stringify(
+        Object.fromEntries(Object.entries(newsByWeek).sort(([a], [b]) => b.localeCompare(a))))) {
+        const weeksJson = Object.entries(keptNews).map(([date, list]) =>
+            `    ${JSON.stringify(date)}: [\n${list.map(n => `      ${JSON.stringify(n)}`).join(',\n')}\n    ]`).join(',\n');
+        fs.writeFileSync(NEWS, `{\n  "note": ${JSON.stringify(newsNote)},\n  "weeks": {\n${weeksJson}\n  }\n}\n`);
+        console.log('  bulletin-news.json: 보관 기간이 지난 주 정리');
+    }
 
     // ── 5. data.js items 배열 교체 ───────────────────────────────
     const src = fs.readFileSync(DATA_JS, 'utf8');
@@ -285,12 +304,15 @@ cutoff.setHours(0, 0, 0, 0);
         .map(it => {
             const imagesStr = it.images.map(img => `"${img}"`).join(', ');
             const pdfLine   = it.pdf ? `,\n                pdf: "${it.pdf}"` : '';
+            const newsLine  = it.news.length
+                ? `,\n                news: [\n${it.news.map(n => `                    { title: ${JSON.stringify(n.title)}, body: ${JSON.stringify(n.body)} }`).join(',\n')}\n                ]`
+                : '';
             return [
                 '            {',
                 `                date: "${it.date}",`,
                 `                label: "${it.label}",`,
                 `                season: "${it.season}",`,
-                `                images: [${imagesStr}]${pdfLine}`,
+                `                images: [${imagesStr}]${pdfLine}${newsLine}`,
                 '            }'
             ].join('\n');
         })
@@ -305,24 +327,27 @@ cutoff.setHours(0, 0, 0, 0);
 
     // ── 6. 최신 주보 주간 → worship.currentReadings/nextReadings 자동 파생 ──
     //    (표준 독서 위에 주보 기록 병합. 화면 fallback + 데이터 일관성 유지)
-    let standard = null;
-    if (fs.existsSync(STANDARD)) {
+    // 연도별 표준 파일을 날짜순 단일 목록으로 병합 (나해 등 연도 경계를 넘어 동작)
+    const standardFiles = [];
+    for (const f of STANDARD_FILES) {
+        const p = path.join(ROOT, 'data', f);
+        if (!fs.existsSync(p)) continue;
         try {
-            standard = JSON.parse(fs.readFileSync(STANDARD, 'utf8'));
+            standardFiles.push(JSON.parse(fs.readFileSync(p, 'utf8')));
         } catch (err) {
-            console.error('  lectionary-year-a.json 파싱 실패:', err.message);
+            console.error(`  ${f} 파싱 실패:`, err.message);
         }
     }
+    const standard = standardFiles.length ? mergeStandards(standardFiles) : null;
 
     if (standard && newItems.length > 0) {
         const latest  = newItems[0].date;                    // 목록은 최신순 정렬
-        const current = resolveReadings(standard.sundays, overrides, latest);
-        const next    = resolveReadings(standard.sundays, overrides, nextSundayKey(latest));
-        const yr      = standard.year || 'A';
+        const current = resolveReadings(standard, overrides, latest);
+        const next    = resolveReadings(standard, overrides, nextSundayKey(latest));
 
         if (current && next) {
-            const block = readingsBlock('currentReadings', current, yr, true)
-                        + '\n' + readingsBlock('nextReadings', next, yr, false)
+            const block = readingsBlock('currentReadings', current, current.year, true)
+                        + '\n' + readingsBlock('nextReadings', next, next.year, false)
                         + '\n';
             const rewritten = replaceRegion(out,
                 '        currentReadings: {', '        main: [', block);
@@ -335,13 +360,13 @@ cutoff.setHours(0, 0, 0, 0);
 
     // ── 7. 주보 주간 전례독서 커버리지 검증 ──────────────────────
     //    이미지 주보가 있는데 트랙/시편 기록이 빠지면 화면·fallback이 어긋난다
-    const gaps = [];      // 트랙 자체가 없음 → 기본 B로 표시
+    const gaps = [];      // 트랙 자체가 없음 → 기본 A로 표시, 시편 생략
     const psalmGaps = []; // 트랙 A인데 시편 없음 → 표준(트랙 B 시편)과 어긋남
     for (const it of newItems) {
         if (!it.images.length) continue;                     // PDF 전용 항목은 제외
         if (!standard) break;
         const ov = overrides[it.date];
-        if (!isToggleWeek(standard.sundays, it.date)) continue;
+        if (!isToggleWeek(standard, it.date)) continue;
         if (ov && ov.readings) continue;                     // 특별 주일은 전체 지정됨
         if (!ov || !ov.track) { gaps.push(it); continue; }
         if (ov.track === 'A' && !ov.psalm) psalmGaps.push(it);
@@ -355,9 +380,15 @@ cutoff.setHours(0, 0, 0, 0);
     if (newItems.length === 0) console.log('  (등록된 주보 없음)');
 
     if (gaps.length) {
-        console.log('\n⚠️  전례독서 트랙 미기록 (기본 짝 독서 B로 표시됨):');
+        console.log('\n⚠️  전례독서 트랙 미기록 (기본 연속 독서 A로 표시, 시편 생략):');
         gaps.forEach(it => console.log(
             `   - ${it.date}  → 주보 예배 순서면 확인 후 data/lectionary-overrides.json에 "track" 기록`));
+    }
+    const newsGaps = newItems.filter(it => it.news.length === 0);
+    if (newsGaps.length) {
+        console.log('\nℹ️  교회소식 미기록 (교회 소식 페이지에 표시되지 않음):');
+        newsGaps.forEach(it => console.log(
+            `   - ${it.date}  → 주보 '교회소식' 란을 data/bulletin-news.json에 추가`));
     }
     if (psalmGaps.length) {
         console.log('\nℹ️  트랙 A 주간 시편 미기록 (표준 트랙 B 시편으로 표시됨):');
