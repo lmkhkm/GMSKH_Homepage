@@ -13,6 +13,12 @@
 - 전례독서: `data/lectionary-year-a.json`(가해)·`lectionary-year-b.json`(나해) + 주보 기록 `data/lectionary-overrides.json`
 - 테스트: `npm test` (Vitest 90개). 로컬 미리보기: `python3 -m http.server 8000` → `http://localhost:8000`
 
+## 저장소 2개 운영 규칙 (중요)
+
+- 모든 작업은 이 저장소 `frpsy/gmchurch_web`에서만 한다.
+- 공식 교회 저장소 `lmkhkm/GMSKH_Homepage`(gmskh.or.kr)에는 **사용자가 요청할 때만** `scripts/release-official.sh`로 이 저장소 `main`을 머지한다. 직접 작업 금지.
+- 반영 시점: 개발 저장소는 머지 후 1~2분(GitHub Pages), 공식은 공식 `main` 머지 후 최대 2시간(서버 타이머). 상세는 `docs/REPO-STRUCTURE.md`.
+
 ## 작업 순서 (매번)
 
 ```bash
