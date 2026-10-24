@@ -34,14 +34,15 @@ gmchurch_web/
 ├── videos.html       영상 갤러리 상세 페이지
 ├── gallery.html      사진 갤러리 상세 페이지 (noindex)
 ├── visit.html        오시는 길 (지도 · 교통 · 주차)
-├── giving.html       헌금 (봉헌 계좌 · 영수증 안내)
+├── giving.html       헌금 (헌금 계좌 · 영수증 안내)
 ├── privacy.html      개인정보 처리방침 (noindex)
 ├── data.js           ★ 단일 콘텐츠 소스 (1081줄)
 ├── app.js            렌더러 모음 + App bootstrap (2211줄)
 ├── style.css         전체 스타일 (4128줄)
-├── favicon.svg       캔터베리 십자가 아이콘
+├── favicon.svg       교회 로고 아이콘 ('열린 빛')
 ├── apple-touch-icon.png
-├── og-image-v2.png   소셜 공유 OG 이미지
+├── images/           brand/(OG 이미지) · clergy/(성직자 사진) · hero/(상단 이미지) · gallery/(카테고리별 사진) · icons.svg
+├── fonts/            로고 워드마크 서체 서브셋
 ├── robots.txt
 ├── sitemap.xml
 ├── docs/             위원회 audit 보고서 · 작업 지시서
@@ -60,7 +61,7 @@ gmchurch_web/
 - **교회력** (`sundays.html`) — 이달의 교회력, 전례독서, 절기 안내, 특별 주일
 - **공동체** (`community.html`) — 광명 희망터, 엠마우스 코스, 소그룹 모임 소개
 - **오시는 길** (`visit.html`) — Google Maps 지도, 대중교통, 주차 안내
-- **헌금** (`giving.html`) — 봉헌 계좌, 기부금 영수증 안내
+- **헌금** (`giving.html`) — 헌금 계좌, 기부금 영수증 안내
 - **미디어·자료** (`media.html`) — 영상·사진 갤러리, 관련 기관으로 이어지는 허브
 - **영상 갤러리** (`videos.html`) — 성공회·신앙·공동체 관련 유튜브 영상 소개
 - **사진 갤러리** (`gallery.html`) — 예배·나눔·절기의 순간을 담은 사진 모음

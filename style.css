@@ -4,33 +4,45 @@
    ========================================================== */
 
 /* ── Variables ───────────────────────────────────────────── */
+/* 로고 워드마크 전용 세리프 — 로고 글자 11자만 담은 3KB 서브셋(고운바탕 Bold, OFL).
+   본문 서체(Pretendard)는 그대로이며, 서브셋에 없는 글자는 자동으로 다음 서체로 표시된다. */
+@font-face {
+    font-family: "BrandSerif";
+    src: url("fonts/brand-serif.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+}
+
 :root {
     /* Primary palette — refined forest green */
-    --green-deep:   #0a1f12;
-    --green-mid:    #3a7252;
-    --green-light:  #eef2ec;
-    --green-soft:   #c4d6c8;
+    --green-deep:   #173a2e;
+    --green-mid:    #285a47;
+    --green-light:  #e7eee8;
+    --green-soft:   #c8d7c9;
     /* 전례 테마 — JS가 현재 절기 색으로 덮어씀. 기본값은 평시 녹색. */
-    --theme:        #3a7252;
-    --theme-light:  #eef2ec;
+    --theme:        #285a47;
+    --theme-light:  #e7eee8;
     --theme-on:     #fff;     /* --theme 배경 위 텍스트 색 (금색 절기엔 어두운 값) */
     /* Accent — luminous amber gold */
-    --gold:         #c09a60;
-    --gold-bg:      #faf3e6;
+    --brand-sub:    #c4d4c0;  /* 로고 부제 — 항상 어두운 숲 녹 바탕 위(헤더·푸터·로고 소개) */
+    --gold:         #a8bd9f;  /* 세이지 — 장식선·어두운 배경 위 강조 전용(밝은 배경 글자 금지) */
+    --gold-bg:      #edf2ea;
+    --sage-ink:     #3f6046;  /* 밝은 배경 위 세이지 계열 글자 (AA 7.06:1, white) */
+    --font-brand:   "BrandSerif", "Pretendard", -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
     /* Neutrals */
-    --cream:        #f7f4ed;
+    --cream:        #f2f3ef;
     --white:        #ffffff;
     --text:         #1a1a1a;
     --text-muted:   #4d4c46;  /* WCAG AA(4.5:1) 충족 — cream/white 배경 위 본문용 */
-    --border:       #e8e5dc;
+    --border:       #dde3dc;
     /* 표면 위 제목 텍스트 — 모드별로 분기 (green-deep은 배경 전용으로 유지) */
-    --heading:      #0a1f12;
+    --heading:      #112f25;
     /* Skeleton 로더 — 모드 대응 */
     --skeleton-base: #dbd8d0;
     --skeleton-mid:  #c8c5bc;
     --red:          #b53737;
     /* Nav glass */
-    --nav-glass:    rgba(10, 31, 18, 0.9);
+    --nav-glass:    rgba(23, 58, 46, 0.94);
     /* 섹션 내 sticky 서브 네비 표면 — 모드별 분기 (다크에서 흰 배경 방지) */
     --surface-nav:  rgba(255, 255, 255, 0.96);
     /* Layout */
@@ -40,24 +52,31 @@
     --radius-sm:    8px;
     --radius-md:    14px;
     --radius-lg:    20px;
+    --radius-pill:  999px;
     /* Shadows — lighter, less decorative */
-    --shadow-sm:    0 1px 3px rgba(10, 31, 18, 0.05);
-    --shadow-md:    0 3px 14px rgba(10, 31, 18, 0.07);
-    --shadow-lg:    0 12px 40px rgba(10, 31, 18, 0.10);
+    --shadow-sm:    0 1px 3px rgba(28, 67, 54, 0.06);
+    --shadow-md:    0 3px 14px rgba(28, 67, 54, 0.08);
+    --shadow-lg:    0 12px 40px rgba(28, 67, 54, 0.11);
     /* Motion — shared language for hover/reveal across all pages */
     --ease-out:        cubic-bezier(0.2, 0.7, 0.3, 1);
-    --hover-shadow:    0 12px 36px rgba(22, 61, 36, 0.13);
-    --hover-shadow-sm: 0 8px 26px rgba(22, 61, 36, 0.10);
+    --dur-fast:        0.15s;
+    --dur:             0.2s;
+    --dur-slow:        0.3s;
+    --hover-shadow:    0 12px 36px rgba(28, 67, 54, 0.14);
+    --hover-shadow-sm: 0 8px 26px rgba(28, 67, 54, 0.11);
     /* Type scale — 본문·컴포넌트 공통 (크기 난립 방지) */
     --fs-label:  0.78rem;   /* 소형 라벨·캡션 */
+    --fs-md:     0.85rem;   /* 중간 캡션·부가 본문 */
     --fs-sm:     0.9rem;    /* 보조 본문 */
     --fs-body:   1rem;      /* 기본 본문 */
     --fs-lead:   1.125rem;  /* 카드 제목 등 */
+    --fs-desc:   0.95rem;   /* 문장형 카드·목록 설명 (15.2px, 내비용 --fs-sm과 분리) */
     /* Line-height — 역할별 행간 */
     --lh-tight:   1.2;      /* 큰 제목 */
     --lh-heading: 1.45;     /* 중간 제목·리드 */
     --lh-body:    1.75;     /* 기본 본문 */
     --lh-relaxed: 1.9;      /* 장문 본문 */
+    --lh-snug:    1.55;     /* 여러 줄 제목·리드 */
     /* Letter-spacing — uppercase 라벨 */
     --ls-eyebrow: 0.2em;
     --ls-label:   0.08em;
@@ -70,10 +89,34 @@
     --space-6: 2rem;
     --space-7: 2.5rem;
     --space-8: 3.5rem;
+    --space-4h: 1.25rem;
+    --space-6h: 1.75rem;
+    /* 읽기 폭 */
+    --content-narrow: 820px;
+    --content-read:   760px;
+    /* 모드와 무관하게 고정인 색 — 항상 어두운/밝은 면 위에 얹는 글자·호버용 */
+    --ink-on-light: #173a2e;   /* 항상 흰 버튼 위 글자 */
+    --ink-on-sage:  #142c24;   /* 세이지(--gold) 위 글자 */
+    --brand-mid:    #285a47;   /* 항상 어두운 띠 위 그라데이션 */
+    --green-hover:  #e3e7d2;   /* 밝은 버튼·배지 호버 */
+    --red-hover:    #9b1c1c;
+    /* 어두운 면 위 흰 글자 투명도 3단계 */
+    --on-dark-1: rgba(255, 255, 255, 0.92);
+    --on-dark-2: rgba(255, 255, 255, 0.78);
+    --on-dark-3: rgba(255, 255, 255, 0.70);
+    /* 컴포넌트 규격 */
+    --radius-xs: 4px;
+    --lift-1: -2px;   /* 작은 컨트롤 hover 이동 */
+    --lift-2: -4px;   /* 카드 hover 이동 */
 }
 
 /* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* 본문에 text-wrap: pretty/balance를 걸지 않는다. keep-all 한글은 끊을 자리가 어절뿐이라,
+   Safari(WebKit)가 줄을 문단 단위로 다듬으면서 줄 끝이 일찍 끊겨 들쭉날쭉해진다. */
+/* 짧은 제목·카드 이름·푸터 주소만 예외: 마지막 줄에 한두 글자만 남는 현상 방지(본문 p·li는 제외) */
+h1, h2, h3, h4,
+.links-card-name, .iona-link-card__desc, .footer-addr-link { text-wrap: balance; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
 /* 부드러운 스크롤은 모션 민감 사용자에게는 비활성화 (전정기관 자극 방지) */
 @media (prefers-reduced-motion: no-preference) {
@@ -91,6 +134,7 @@ body {
     word-break: keep-all;
     overflow-wrap: break-word;
 }
+button, input, select, textarea { font-family: inherit; }
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
 
@@ -111,13 +155,14 @@ img { display: block; max-width: 100%; }
     background: var(--green-deep);
     color: #fff;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     text-decoration: none;
     border-radius: 0 0 var(--radius-sm) var(--radius-sm);
     z-index: 10000;
-    transition: top 0.1s;
+    transition: top var(--dur-fast);
 }
 .skip-link:focus { top: 0; }
+.skip-link:focus-visible { outline-color: #fff; outline-offset: -4px; }
 
 /* 화면에는 숨기고 스크린리더에만 노출 (구조용 헤딩 등) */
 .sr-only {
@@ -135,12 +180,17 @@ img { display: block; max-width: 100%; }
 :focus-visible {
     outline: 3px solid var(--theme);
     outline-offset: 3px;
-    border-radius: 3px;
 }
 a:focus-visible,
 button:focus-visible {
-    outline: 2px solid var(--gold);
+    outline: 2px solid var(--theme);
     outline-offset: 4px;
+}
+/* 어두운 숲 녹 영역에서는 세이지 포커스 링 (밝은 배경에선 세이지가 3:1 미달) */
+.nav-header a:focus-visible, .nav-header button:focus-visible,
+footer a:focus-visible, footer button:focus-visible,
+.hero a:focus-visible, .next-step-cta a:focus-visible {
+    outline-color: var(--gold);
 }
 a:focus:not(:focus-visible),
 button:focus:not(:focus-visible) { outline: none; }
@@ -152,7 +202,7 @@ button:focus:not(:focus-visible) { outline: none; }
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 75%, white));
-    box-shadow: 0 0 10px rgba(192, 154, 96, 0.55);
+    box-shadow: 0 0 10px rgba(177, 184, 131, 0.55);
     border-radius: 0 2px 2px 0;
     z-index: 1100;
     transform: scaleX(0);
@@ -171,15 +221,14 @@ button:focus:not(:focus-visible) { outline: none; }
     position: fixed;
     top: 0; left: 0; right: 0;
     height: var(--nav-h);
-    background: rgba(10, 31, 18, 0.82);
+    background: var(--nav-glass);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     z-index: 1000;
-    transition: box-shadow 0.3s, background 0.3s;
+    transition: box-shadow var(--dur-slow), background var(--dur-slow);
 }
 .nav-header.scrolled {
-    background: rgba(10, 31, 18, 0.97);
     box-shadow: 0 4px 20px rgba(0,0,0,0.18);
 }
 
@@ -196,16 +245,26 @@ button:focus:not(:focus-visible) { outline: none; }
     flex-shrink: 0;
 }
 .nav-logo-mark {
-    width: 34px; height: 34px;
+    width: 26px; height: 35px;
     flex-shrink: 0; display: block;
+    color: #f0ece4;   /* 숲 녹 내비 위 크림 마크 (내비는 다크모드에서도 어두움) */
 }
 .nav-logo-mark svg {
     width: 100%; height: 100%; display: block;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.28));
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.22));
 }
-.nav-logo-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
-.nav-logo-name { font-size: 0.95rem; font-weight: 700; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-.nav-logo-sub  { font-size: 0.7rem; color: rgba(255,255,255,0.9); letter-spacing: 0.04em; }
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.nav-logo-name {
+    font-family: var(--font-brand);
+    font-size: var(--fs-body); font-weight: 700; letter-spacing: 0.01em;
+    color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.nav-logo-sub {
+    font-family: var(--font-brand);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.34em;
+    color: var(--brand-sub);   /* 밝은 세이지 — 반투명 내비가 밝은 본문 위에 있어도 4.6:1 */
+    margin-top: 0.1rem;
+}
 
 .nav-menu { display: flex; list-style: none; height: 100%; align-items: center; margin-left: auto; }
 
@@ -217,22 +276,22 @@ button:focus:not(:focus-visible) { outline: none; }
     border: none; background: none; cursor: pointer;
     color: rgba(255,255,255,0.85);
     border-radius: 50%;
-    transition: color 0.2s, background 0.2s;
+    transition: color var(--dur), background var(--dur);
 }
 .nav-menu-trigger:hover,
-.nav-menu-trigger:focus-visible { color: #fff; background: rgba(255,255,255,0.12); outline: none; }
+.nav-menu-trigger:focus-visible { color: #fff; background: rgba(255,255,255,0.12); outline-offset: 2px; }
 .nav-menu-trigger svg { display: block; }
 .nav-item { position: relative; height: 100%; display: flex; align-items: center; }
 
 .nav-link {
     padding: 0 1.1rem;
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     font-weight: 500;
     color: rgba(255,255,255,0.85);
     height: 100%;
     display: flex;
     align-items: center;
-    transition: color 0.2s;
+    transition: color var(--dur);
     white-space: nowrap;
 }
 .nav-link:hover,
@@ -254,7 +313,7 @@ button:focus:not(:focus-visible) { outline: none; }
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px);
-    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+    transition: opacity var(--dur), transform var(--dur), visibility var(--dur);
     box-shadow: 0 8px 28px rgba(0,0,0,0.12);
 }
 /* 키보드 사용자도 상위 링크 포커스 시 하위 메뉴 접근 가능 (focus-within) */
@@ -265,10 +324,10 @@ button:focus:not(:focus-visible) { outline: none; }
 .dropdown li a {
     display: block;
     padding: 0.8rem 1.25rem;  /* 터치 타깃 ≥44px 확보 */
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     color: var(--text-muted);
     border-bottom: 1px solid var(--border);
-    transition: color 0.15s, background 0.15s, padding-left 0.15s;
+    transition: color var(--dur-fast), background var(--dur-fast), padding-left var(--dur-fast);
 }
 .dropdown li:last-child a { border-bottom: none; }
 .dropdown li a:hover {
@@ -276,6 +335,7 @@ button:focus:not(:focus-visible) { outline: none; }
     background: var(--green-light);
     padding-left: 1.6rem;
 }
+.dropdown li a:focus-visible { outline-color: var(--theme); outline-offset: -3px; }
 
 /* 메뉴 배지 (임시/준비중 등 상태 표시) */
 .nav-badge {
@@ -289,7 +349,7 @@ button:focus:not(:focus-visible) { outline: none; }
     color: var(--gold);
     background: var(--gold-bg);
     border: 1px solid var(--gold);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     vertical-align: middle;
 }
 
@@ -299,13 +359,13 @@ button:focus:not(:focus-visible) { outline: none; }
     background: var(--red);
     color: #fff;
     padding: 0.55rem 1.15rem;
-    border-radius: 50px;
-    font-size: 0.82rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-md);
     font-weight: 700;
     white-space: nowrap;
-    transition: background 0.2s;
+    transition: background var(--dur);
 }
-.btn-nav-live:hover { background: #9b1c1c; }
+.btn-nav-live:hover { background: var(--red-hover); }
 
 /* Dropdown chevron (mobile-only toggle) */
 .nav-chevron {
@@ -326,8 +386,12 @@ button:focus:not(:focus-visible) { outline: none; }
 .nav-toggle span {
     display: block; width: 22px; height: 2px;
     background: #fff; border-radius: 2px;
-    transition: transform 0.3s, opacity 0.3s;
+    transition: transform var(--dur-slow), opacity var(--dur-slow);
 }
+/* 메뉴가 열리면 ≡ → ✕ (닫기 버튼임을 바로 알 수 있게) */
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── Hero ────────────────────────────────────────────────── */
 .hero {
@@ -355,7 +419,7 @@ button:focus:not(:focus-visible) { outline: none; }
     inset: 0;
     z-index: 0;
     background:
-        var(--green-deep) url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1800&q=80')
+        var(--green-deep) url('images/hero/home.webp')
         center/cover no-repeat;
     animation: hero-kenburns 24s ease-in-out infinite;
     will-change: transform;
@@ -368,9 +432,9 @@ button:focus:not(:focus-visible) { outline: none; }
     z-index: 1;
     background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.45) 0%,
-        rgba(0, 0, 0, 0.15) 45%,
-        rgba(0, 0, 0, 0.65) 100%
+        rgba(8, 26, 20, 0.58) 0%,
+        rgba(8, 26, 20, 0.28) 45%,
+        rgba(8, 26, 20, 0.76) 100%
     );
 }
 
@@ -415,10 +479,10 @@ button:focus:not(:focus-visible) { outline: none; }
 
 .hero-label {
     display: block;
-    font-size: 0.70rem;
-    letter-spacing: 0.24em;
+    font-size: var(--fs-label);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.72);
+    color: rgba(255,255,255,0.82);
     font-weight: 500;
     margin-bottom: 1.5rem;
 }
@@ -448,18 +512,18 @@ button:focus:not(:focus-visible) { outline: none; }
     background: rgba(255,255,255,0.10);
     color: #fff;
     padding: 0.68rem 1.75rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
     font-weight: 600;
     letter-spacing: 0.01em;
-    transition: background 0.2s ease, border-color 0.2s ease,
-                transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background var(--dur) ease, border-color var(--dur) ease,
+                transform var(--dur) ease, box-shadow var(--dur) ease;
 }
 .btn-outline:hover {
     background: rgba(255,255,255,0.18);
     border-color: rgba(255,255,255,0.85);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(192, 154, 96, 0.22);
+    transform: translateY(var(--lift-1));
+    box-shadow: 0 6px 20px rgba(177, 184, 131, 0.22);
 }
 
 /* Hero — 실시간 예배 버튼 (히어로 외부 영역용) */
@@ -468,30 +532,30 @@ button:focus:not(:focus-visible) { outline: none; }
     background: var(--red);
     color: #fff;
     padding: 0.8rem 1.8rem;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     font-weight: 700;
-    font-size: 0.9rem;
-    transition: background 0.2s, transform 0.2s;
+    font-size: var(--fs-sm);
+    transition: background var(--dur), transform var(--dur);
 }
-.btn-live:hover { background: #9b1c1c; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(155, 28, 28, 0.30); }
+.btn-live:hover { background: var(--red-hover); transform: translateY(var(--lift-1)); box-shadow: 0 6px 18px rgba(155, 28, 28, 0.30); }
 
 /* Hero — solid primary CTA */
 .btn-hero-primary {
     display: inline-block;
-    background: #fff;
+    background: #f6f4ee;
     color: var(--heading);
     padding: 0.68rem 1.75rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
     font-weight: 600;
     letter-spacing: 0.01em;
-    transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+    transition: background var(--dur) ease, transform var(--dur) ease, box-shadow var(--dur) ease;
     box-shadow: 0 4px 20px rgba(0,0,0,0.18);
 }
 .btn-hero-primary:hover {
-    background: var(--green-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(192, 154, 96, 0.26);
+    background: var(--green-hover);
+    transform: translateY(var(--lift-1));
+    box-shadow: 0 8px 24px rgba(177, 184, 131, 0.26);
 }
 
 /* Hero — 하단 스탯 스트립 */
@@ -504,7 +568,8 @@ button:focus:not(:focus-visible) { outline: none; }
     justify-content: center;
     gap: 0;
     padding: 1.1rem 1.5rem;
-    background: rgba(0,0,0,0.38);
+    /* 상단 내비와 같은 유리 톤 — 사진 위 상·하단 띠의 명도 차이 방지 */
+    background: var(--nav-glass);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid rgba(255,255,255,0.10);
@@ -518,14 +583,14 @@ button:focus:not(:focus-visible) { outline: none; }
     padding: 0.25rem 2rem;
 }
 .hero-stat-val {
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     font-weight: 700;
     color: #fff;
     letter-spacing: 0.01em;
     white-space: nowrap;
 }
 .hero-stat-lbl {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     color: rgba(255,255,255,0.78);  /* 어두운 오버레이 위 대비 상향 */
     letter-spacing: 0.1em;
@@ -542,14 +607,13 @@ button:focus:not(:focus-visible) { outline: none; }
 }
 .hero-stat--link {
     text-decoration: none;
-    border-radius: 8px;
-    transition: background 0.18s;
+    border-radius: var(--radius-sm);
+    transition: background var(--dur);
     cursor: pointer;
 }
 .hero-stat--link:hover,
 .hero-stat--link:focus-visible {
     background: rgba(255,255,255,0.12);
-    outline: none;
 }
 .hero-stat--link:hover .hero-stat-val,
 .hero-stat--link:focus-visible .hero-stat-val {
@@ -580,18 +644,45 @@ button:focus:not(:focus-visible) { outline: none; }
     /* CTA — 세로 스택 시 동일 너비로 정렬 */
     .hero-actions { flex-direction: column; align-items: center; gap: 0.7rem; }
     .hero-actions a { width: 100%; max-width: 300px; text-align: center; }
-    .hero-label { letter-spacing: 0.18em; font-size: 0.66rem; }
 
     .hero-stats { gap: 0; padding: 0.8rem 0.5rem; }
     .hero-stat { padding: 0.2rem 0.7rem; }
-    .hero-stat-val { font-size: 0.82rem; }
-    .hero-stat-lbl { font-size: 0.68rem; }
+    .hero-stat-val { font-size: var(--fs-md); }
+    .hero-stat-lbl { font-size: 0.75rem; }
     .hero-stat-divider { height: 1.8rem; }
     .hero-scroll { bottom: 5rem; }
-    .btn-hero-primary { font-size: 0.92rem; }
+    .btn-hero-primary { font-size: var(--fs-sm); }
 
     .hero-fallback { animation: none; transform: none; will-change: auto; }
 }
+
+/* ── 아이콘 팩 (images/icons.svg) ──────────────────────────
+   가는 단색 선(글자색 currentColor)만 쓰는 미니멀 아이콘.
+   크기는 부모 font-size(1em)를 따르므로 기존 아이콘 자리의 font-size가 그대로 크기가 된다. */
+.ico {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: -0.14em;
+    flex-shrink: 0;
+    overflow: visible;
+}
+/* 장식용 아이콘 자리는 테마색 선으로 통일 */
+.story-value-icon, .resource-icon, .card-icon, .anglican-pillar-icon, .korea-hl-icon,
+.space-icon, .placeholder-icon, .emmaus-join-icon, .bio-ministry-icon, .about-brief-award-icon,
+.faq-cat-icon, .val-icon, .iona-link-card__icon {
+    color: var(--theme);
+}
+.iona-link-card__icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; }
+/* 글줄 속 작은 아이콘은 글자보다 한 단계 가볍게 — 글자가 주인공 (대비는 3:1 이상 유지) */
+.btn-next .ico, .newcomer-cta-link .ico, .resource-desc .ico, .emmaus-contact-link .ico,
+.season-pop-period .ico, .clergy-card p > .ico, .lit-cal-hd-season .ico, .liturgy-season-badge .ico {
+    opacity: 0.8;
+}
+.season-ribbon-mark { color: #fff; }
+.bishop-portrait-fallback { color: #fff; }
+.emmaus-contact-link .ico { margin-right: 0.3rem; }
+.btn-next .ico, .newcomer-cta-link .ico { width: 1.2em; height: 1.2em; }
 
 /* ── Page Hero (sub-pages) ───────────────────────────────── */
 /* Stagger children so eyebrow → h1 → subtitle animate in sequence */
@@ -606,12 +697,21 @@ button:focus:not(:focus-visible) { outline: none; }
 .page-hero > :nth-child(4) { animation-delay: 0.50s; }
 
 .page-hero {
-    padding-top: calc(var(--nav-h) + 4rem);
-    padding-bottom: 4rem;
+    padding-top: calc(var(--nav-h) + 3.8rem - 5px);
+    padding-bottom: calc(3.8rem - 5px);
     padding-left: clamp(1.25rem, 5vw, 2.5rem);
     padding-right: clamp(1.25rem, 5vw, 2.5rem);
     text-align: center;
+    /* 부제 줄 수와 무관하게 모든 메뉴 히어로 높이를 같게 맞춘다(콘텐츠가 더 길면 늘어남) */
+    min-height: 333px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: linear-gradient(165deg, color-mix(in srgb, var(--season, var(--theme)) 18%, var(--cream)) 0%, var(--theme-light) 40%, var(--cream) 100%);
+}
+@media (max-width: 768px) {
+    .page-hero { min-height: 276px; }
 }
 .page-hero h1 {
     font-size: clamp(2.2rem, 4.5vw, 3.4rem);
@@ -632,6 +732,16 @@ button:focus:not(:focus-visible) { outline: none; }
     overflow-wrap: break-word;
 }
 
+/* 부제가 한 줄이어도 두 줄 높이를 확보해, 페이지마다 제목 위치가 달라지지 않게 한다 */
+.page-hero p:not(.section-eyebrow) { min-height: 3.4em; }
+
+/* 서브 히어로 eyebrow — .page-hero p 크기를 의도적으로 따르는 라벨(부제와는 자간·대문자·굵기로 구분) */
+.page-hero .section-eyebrow {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+}
+
 /* ── Page Hero — 사진 배경 변형 ────────────────────────────── */
 .page-hero--photo {
     position: relative;
@@ -645,9 +755,9 @@ button:focus:not(:focus-visible) { outline: none; }
     position: absolute;
     inset: 0;
     background: linear-gradient(to bottom,
-        rgba(0,0,0,0.52) 0%,
-        rgba(0,0,0,0.38) 60%,
-        rgba(0,0,0,0.55) 100%);
+        rgba(8, 26, 20, 0.62) 0%,
+        rgba(8, 26, 20, 0.48) 60%,
+        rgba(8, 26, 20, 0.68) 100%);
     z-index: 0;
 }
 .page-hero--photo > * { position: relative; z-index: 1; }
@@ -658,17 +768,78 @@ button:focus:not(:focus-visible) { outline: none; }
     text-shadow: 0 1px 10px rgba(0,0,0,0.45);
 }
 
-.page-hero--worship   { background-image: url('images/gallery/worship/야외성찬례.webp'); }
-.page-hero--community { background-image: url('images/gallery/community/공동체1.webp'); }
-.page-hero--clergy       { background-image: url('images/gallery/scenery/교회소개_교회내부_제단.webp'); background-position: 55% center; }
-.page-hero--greenchurch  { background-image: url('images/gallery/scenery/greenchurch-award-2023.webp'); background-position: center 30%; }
+/* 메뉴 상징 이미지(실제 교회 사진 아님) — 함께 모여 차를 나누는 공동체 공간. 글자 배치는 다른 페이지와 동일 */
+.page-hero--community { background-image: url('images/hero/community.webp'); background-position: center 52%; }
+
+/* 메뉴 상징 이미지(실제 교회 사진 아님) — 모바일은 경량 버전 */
+.page-hero--worship  { background-image: url('images/hero/worship.webp');  background-position: 30% center; }
+.page-hero--clergy   { background-image: url('images/hero/clergy.webp');   background-position: 60% 25%; }
+.page-hero--sundays  { background-image: url('images/hero/sundays.webp'); }
+.page-hero--newcomer { background-image: url('images/hero/newcomer.webp'); background-position: 60% center; }
+.page-hero--media    { background-image: url('images/hero/media.webp'); }
+.page-hero--visit    { background-image: url('images/hero/visit.webp');    background-position: center 60%; }
+@media (max-width: 768px) {
+    .page-hero--community { background-image: url('images/hero/community-m.webp'); background-position: 60% 50%; }
+    .page-hero--worship  { background-image: url('images/hero/worship-m.webp'); }
+    .page-hero--clergy   { background-image: url('images/hero/clergy-m.webp'); background-position: 62% 30%; }
+    .page-hero--sundays  { background-image: url('images/hero/sundays-m.webp'); }
+    .page-hero--newcomer { background-image: url('images/hero/newcomer-m.webp'); }
+    .page-hero--media    { background-image: url('images/hero/media-m.webp'); }
+    .page-hero--visit    { background-image: url('images/hero/visit-m.webp'); }
+}
+/* 상패·촛불·인형이 모바일에서도 함께 보이도록 가로 구도의 보정본을 사용한다. */
+.page-hero--greenchurch { background-image: url('images/hero/greenchurch-award.webp'); background-position: center 65%; }
+@media (max-width: 768px) {
+    .page-hero--greenchurch { background-image: url('images/hero/greenchurch-award-m.webp'); background-position: center; }
+}
+
+/* 히어로 좌·우 17% 메뉴 이동 영역 — 가운데 글자 영역은 건드리지 않는다 */
+.page-hero > .hero-nav {
+    position: absolute;
+    top: var(--nav-h);
+    bottom: 0;
+    width: 17%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    animation: none;
+    opacity: 1;
+    color: #fff;
+    -webkit-tap-highlight-color: transparent;
+}
+.hero-nav--prev { left: 0;  justify-content: flex-start; padding-left: 0.4rem; }
+.hero-nav--next { right: 0; justify-content: flex-end;   padding-right: 0.4rem; }
+.hero-nav svg {
+    width: 1.9rem;
+    height: 1.9rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.35;
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
+    transition: opacity var(--dur-fast);
+}
+/* 누를 때는 영역 전체가 아니라 화살표 주변에만 아주 옅게 표시한다 */
+.hero-nav:active svg {
+    opacity: 0.7;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.05);
+    box-shadow: 0 0 0 0.3rem rgba(255,255,255,0.05);
+}
+.hero-nav:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
+@media (hover: hover) {
+    .hero-nav:hover svg { opacity: 0.7; }
+}
+@media print { .hero-nav { display: none !important; } }
 
 @media (prefers-color-scheme: dark) {
     .page-hero--photo::before {
         background: linear-gradient(to bottom,
-            rgba(0,0,0,0.65) 0%,
-            rgba(0,0,0,0.50) 60%,
-            rgba(0,0,0,0.68) 100%);
+            rgba(0,0,0,0.70) 0%,
+            rgba(0,0,0,0.56) 60%,
+            rgba(0,0,0,0.74) 100%);
     }
 }
 
@@ -690,10 +861,13 @@ button:focus:not(:focus-visible) { outline: none; }
 .section.gc-section-alt { background: var(--theme-light); }
 @media (prefers-color-scheme: dark) {
     .section.gc-section-alt { background: color-mix(in srgb, var(--theme) 20%, var(--white)); }
+    /* 녹색 틴트 배경 위 eyebrow(--theme)는 3.9:1 — 밝게 섞어 AA 확보 */
+    .section.gc-section-alt .section-eyebrow,
+    .section.gc-section-alt a:not(.btn) { color: color-mix(in srgb, var(--theme) 60%, var(--heading)); }
 }
 
 .section-eyebrow {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--theme);
@@ -717,7 +891,6 @@ button:focus:not(:focus-visible) { outline: none; }
     line-height: var(--lh-body);
     word-break: keep-all;
     overflow-wrap: break-word;
-    text-wrap: balance;
 }
 .section-header { margin-bottom: var(--space-8); }
 /* 서브 문구가 없는 헤더는 본문과의 간격을 줄여 리듬 정돈 */
@@ -736,16 +909,16 @@ button:focus:not(:focus-visible) { outline: none; }
     background: var(--white);
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-out), opacity 0.6s ease;
+    transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
     will-change: transform, opacity;
 }
 .card:hover {
     border-color: var(--theme);
     box-shadow: var(--hover-shadow);
-    transform: translateY(-6px);
+    transform: translateY(var(--lift-2));
 }
 @media (prefers-reduced-motion: reduce) {
-    .card { transition: border-color 0.25s, box-shadow 0.25s; }
+    .card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
     .card:hover { transform: none; }
 }
 .card h3 {
@@ -763,14 +936,14 @@ button:focus:not(:focus-visible) { outline: none; }
 }
 .card-desc {
     color: var(--text-muted);
-    font-size: var(--fs-sm);
+    font-size: var(--fs-desc);
     line-height: var(--lh-body);
 }
 .card-icon {
     font-size: 2.2rem;
     margin-bottom: 1.1rem;
     display: inline-block;
-    transition: transform 0.35s var(--ease-out);
+    transition: transform var(--dur-slow) var(--ease-out);
 }
 .card:hover .card-icon { transform: scale(1.18) translateY(-3px); }
 
@@ -780,15 +953,15 @@ button:focus:not(:focus-visible) { outline: none; }
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
     padding: 2.5rem 2.25rem;
-    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-out), opacity 0.6s ease;
+    transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
 }
 .info-card:hover {
     border-color: var(--theme);
     box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-4px);
+    transform: translateY(var(--lift-2));
 }
 @media (prefers-reduced-motion: reduce) {
-    .info-card { transition: border-color 0.25s, box-shadow 0.25s; }
+    .info-card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
     .info-card:hover { transform: none; }
 }
 .info-card h3 {
@@ -871,7 +1044,7 @@ button:focus:not(:focus-visible) { outline: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: height 0.35s cubic-bezier(.4, 0, .2, 1), flex-grow 0.35s;
+    transition: height var(--dur-slow) cubic-bezier(.4, 0, .2, 1), flex-grow var(--dur-slow);
 }
 .season-ribbon-seg:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
 .season-ribbon-seg:last-child  { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
@@ -879,7 +1052,7 @@ button:focus:not(:focus-visible) { outline: none; }
 .season-ribbon-seg.is-current {
     flex-grow: 1.8;
     height: 30px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
                 0 5px 14px color-mix(in srgb, var(--seg) 55%, transparent);
     z-index: 1;
@@ -915,23 +1088,25 @@ button:focus:not(:focus-visible) { outline: none; }
 .season-ribbon-mark {
     position: relative;
     z-index: 2;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     line-height: 1;
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 .season-ribbon-cap {
     margin: 0.7rem 0 0;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
 }
 .season-ribbon-cap strong { color: var(--heading); font-weight: 700; }
 button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: pointer; }
+/* 얇은 띠(13~16px)의 터치 영역만 위아래로 넓힌다 (현재 절기 조각은 ::before를 이미 씀) */
+button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absolute; inset: -10px 0; }
 .season-pop {
     margin: 0.5rem auto 0;
     max-width: 320px;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     box-shadow: 0 4px 18px rgba(0,0,0,.1);
     overflow: hidden;
     text-align: left;
@@ -941,17 +1116,17 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .season-pop-bar { height: 4px; }
 .season-pop-title {
     padding: 0.7rem 1rem 0.15rem;
-    font-size: 0.98rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     display: flex;
     align-items: baseline;
     gap: 0.4em;
 }
-.season-pop-en { font-size: 0.75rem; font-weight: 400; color: var(--text-muted); }
-.season-pop-meta   { padding: 0 1rem; margin: 0 0 0.2rem; font-size: 0.82rem; color: var(--text-muted); }
-.season-pop-period { padding: 0 1rem; margin: 0 0 0.2rem; font-size: 0.82rem; color: var(--text); font-weight: 500; }
-.season-pop-desc   { padding: 0 1rem 0.75rem; margin: 0; font-size: 0.82rem; color: var(--text-muted); }
+.season-pop-en { font-size: var(--fs-label); font-weight: 400; color: var(--text-muted); }
+.season-pop-meta   { padding: 0 1rem; margin: 0 0 0.2rem; font-size: var(--fs-md); color: var(--text-muted); }
+.season-pop-period { padding: 0 1rem; margin: 0 0 0.2rem; font-size: var(--fs-md); color: var(--text); font-weight: 500; }
+.season-pop-desc   { padding: 0 1rem 0.75rem; margin: 0; font-size: var(--fs-md); color: var(--text-muted); }
 @keyframes season-pop-in {
     from { opacity: 0; transform: translateY(-5px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -964,7 +1139,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     .season-ribbon { height: 26px; gap: 2px; }
     .season-ribbon-seg { height: 13px; }
     .season-ribbon-seg.is-current { height: 26px; }
-    .season-ribbon-mark { font-size: 0.72rem; }
+    .season-ribbon-mark { font-size: var(--fs-label); }
 }
 
 /* ── 월간 교회력 달력 위젯 ─────────────────────────────── */
@@ -973,7 +1148,6 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: var(--radius-md);
     overflow: hidden;
     max-width: 560px;
-    margin: 0 auto;
 }
 .lit-cal-hd {
     padding: 0.9rem 1.5rem;
@@ -987,23 +1161,24 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     flex-wrap: wrap;
 }
 .lit-cal-hd-nav { display: flex; align-items: center; gap: 0.5rem; }
-.lit-cal-hd-month { font-size: 1rem; font-weight: 700; color: #fff; }
-.lit-cal-hd-season { font-size: 0.8rem; color: rgba(255,255,255,0.92); }
+.lit-cal-hd-month { font-size: var(--fs-body); font-weight: 700; color: #fff; }
+.lit-cal-hd-season { font-size: var(--fs-label); color: rgba(255,255,255,0.92); }
 .lit-cal-nav {
     background: none;
     border: none;
     color: #fff;
-    font-size: 0.7rem;
+    font-size: var(--fs-md);
     cursor: pointer;
-    padding: 0.2rem 0.45rem;
+    padding: 0.5rem 0.75rem;   /* 손가락 터치 영역 확보 */
     border-radius: var(--radius-sm);
-    opacity: 0.7;
-    transition: opacity 0.15s, background 0.15s;
+    opacity: 0.9;
+    transition: opacity var(--dur-fast), background var(--dur-fast);
     line-height: 1;
     flex-shrink: 0;
 }
 .lit-cal-nav:hover,
-.lit-cal-nav:focus-visible { opacity: 1; background: rgba(255,255,255,0.18); outline: none; }
+.lit-cal-nav:focus-visible { opacity: 1; background: rgba(255,255,255,0.18); }
+.lit-cal-nav:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
 .lit-cal-wds {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -1013,7 +1188,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .lit-cal-wds span {
     text-align: center;
     padding: 0.4rem 0;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.04em;
@@ -1028,7 +1203,8 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .lit-cal-cell:nth-child(7n) { border-right: none; }
 .lit-cal-cell--empty { opacity: 0.35; }
-.lit-cal-cell--past { opacity: 0.4; }
+.lit-cal-cell--past .lit-cal-num { color: color-mix(in srgb, var(--text-muted) 85%, var(--cream)); }
+.lit-cal-cell--past .lit-cal-label { color: var(--text-muted); }   /* opacity .4는 대비 2.2:1이라 글자색 단계로 구분. 절기 틴트 위 라벨은 4.5:1 확보를 위해 --text-muted 그대로 */
 /* 날짜 숫자 — 색은 항상 변수 기반(다크모드 자동 대비). 절기 구분은 배경 틴트로 표현 */
 .lit-cal-num {
     display: inline-flex;
@@ -1037,7 +1213,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     width: 1.7rem;
     height: 1.7rem;
     border-radius: 50%;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     font-weight: 600;
     line-height: 1;
     color: var(--heading);
@@ -1050,7 +1226,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .lit-cal-label {
     display: block;
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--heading);
     line-height: 1.25;
@@ -1066,8 +1242,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     gap: 1.1rem;
     margin: 1.25rem auto 0;
     padding: 0;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
+}
+.lit-cal-legend li[role="button"] {
+    padding: 0.35rem 0.6rem;
+    margin: -0.35rem -0.6rem;   /* 레이아웃은 그대로, 터치 영역만 확장 */
+    border-radius: var(--radius-pill);
+    cursor: pointer;
 }
 .lit-cal-legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
 .lit-cal-legend li[data-cal-today] { cursor: pointer; border-radius: 0.25rem; }
@@ -1082,7 +1264,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .lit-cal-legend-dot--today { box-shadow: inset 0 0 0 2px var(--season); }
 .lit-cal-legend-dot--sun   { background: color-mix(in srgb, var(--season) 28%, transparent); }
 .lit-cal-legend-tag {
-    font-size: 0.6rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: var(--heading);
     border: 1px solid var(--border);
@@ -1092,9 +1274,9 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 @media (max-width: 480px) {
     .lit-cal-cell { min-height: 46px; padding: 0.2rem 0.2rem; }
-    .lit-cal-num { width: 1.5rem; height: 1.5rem; font-size: 0.74rem; }
-    .lit-cal-label { font-size: 0.55rem; }
-    .lit-cal-legend { gap: 0.75rem; font-size: 0.74rem; }
+    .lit-cal-num { width: 1.5rem; height: 1.5rem; font-size: var(--fs-label); }
+    .lit-cal-label { font-size: 0.7rem; }   /* 11.2px, 좁은 칸에서도 한 단어는 들어감 */
+    .lit-cal-legend { gap: 0.75rem; font-size: var(--fs-label); }
 }
 
 /* 절기 카드 순번 배지 + 현재 절기 태그 */
@@ -1109,18 +1291,18 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     height: 1.7rem;
     border-radius: 50%;
     border: 2px solid var(--theme);
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     font-weight: 700;
     color: var(--heading);
 }
 .lit-current-tag {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     margin-top: 0.55rem;
-    color: var(--season);
+    color: var(--season-ink, var(--season));
 }
 /* 현재 절기 강조 텍스트 — 절기색 사용. 다크모드에선 밝게 보정해 가독 확보 */
-.sundays-season-hero .section-eyebrow { color: var(--season); }
+.sundays-season-hero .section-eyebrow { color: var(--season-ink, var(--season)); }
 @media (prefers-color-scheme: dark) {
     .sundays-season-hero .section-eyebrow,
     .lit-current-tag {
@@ -1137,10 +1319,10 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     margin: 1.5rem 0;
 }
 .quote-block p {
-    font-size: 0.98rem;
+    font-size: var(--fs-body);
     font-style: italic;
     color: var(--heading);
-    line-height: 1.85;
+    line-height: 1.9;
     word-break: keep-all;
     overflow-wrap: break-word;
 }
@@ -1156,18 +1338,18 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.75rem 1.5rem;
-    transition: transform 0.3s cubic-bezier(.2,.7,.3,1),
-                box-shadow 0.3s cubic-bezier(.2,.7,.3,1),
-                border-color 0.3s;
+    transition: transform var(--dur-slow) cubic-bezier(.2,.7,.3,1),
+                box-shadow var(--dur-slow) cubic-bezier(.2,.7,.3,1),
+                border-color var(--dur-slow);
 }
 .value-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-1));
     box-shadow: var(--shadow-md);
     border-color: var(--green-soft);
 }
 .value-card .val-icon { font-size: 1.8rem; margin-bottom: 0.85rem; }
-.value-card h3 { font-size: 0.98rem; font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; }
-.value-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.8; }
+.value-card h3 { font-size: var(--fs-body); font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; }
+.value-card p { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.8; }
 
 .value-card--link {
     display: block;
@@ -1178,7 +1360,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .value-card-cta {
     display: inline-block;
     margin-top: 0.85rem;
-    font-size: 0.83rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--green-mid);
 }
@@ -1192,7 +1374,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .philosophy-intro p {
     font-size: 1.05rem;
     color: var(--text);
-    line-height: 1.85;
+    line-height: 1.9;
     margin-bottom: 0.75rem;
     word-break: keep-all;
 }
@@ -1206,9 +1388,9 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     text-align: left;
 }
 .philosophy-closing p {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--heading);
-    line-height: 1.85;
+    line-height: 1.9;
     margin: 0;
     word-break: keep-all;
 }
@@ -1216,7 +1398,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 /* Minister Category */
 .minister-category { margin-bottom: 2.5rem; }
 .minister-cat-title {
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--theme);
     text-transform: uppercase;
@@ -1228,13 +1410,13 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .minister-category:first-child .minister-cat-title { margin-top: 0; }
 .minister-cat-note {
     color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: var(--fs-desc);
     line-height: 1.65;
     margin: -0.5rem 0 1.25rem;
 }
 .minister-empty {
     color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     padding: 0.75rem 0;
 }
 
@@ -1260,14 +1442,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .officer-role {
     flex-shrink: 0;
     width: 96px;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--theme);
     letter-spacing: 0.02em;
 }
+.officer-term {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: var(--fs-label);
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0;
+}
 .officer-names {
     color: var(--heading);
-    font-size: 0.98rem;
+    font-size: var(--fs-body);
     font-weight: 500;
     line-height: 1.7;
     word-break: keep-all;
@@ -1293,7 +1483,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     overflow: hidden;
     flex-shrink: 0;
     border: 3px solid rgba(58, 114, 82, 0.3);
-    box-shadow: 0 4px 14px rgba(10,31,18,0.10);
+    box-shadow: 0 4px 14px rgba(13, 33, 26, 0.10);
 }
 /* 사진 없을 때 그라디언트+이모지 폴백 */
 .clergy-avatar--fallback {
@@ -1311,13 +1501,13 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: block;
 }
 .clergy-name { font-size: 1.2rem; font-weight: 700; color: var(--heading); letter-spacing: -0.01em; }
-.clergy-title { font-size: 0.85rem; color: var(--theme); font-weight: 600; margin-top: 0.25rem; letter-spacing: 0.02em; word-break: keep-all; overflow-wrap: break-word; }
-.clergy-desc { font-size: 0.95rem; color: var(--text); line-height: 1.85; margin-top: 1rem; opacity: 0.85; }
+.clergy-title { font-size: var(--fs-md); color: var(--theme); font-weight: 600; margin-top: 0.25rem; letter-spacing: 0.02em; word-break: keep-all; overflow-wrap: break-word; }
+.clergy-desc { font-size: var(--fs-body); color: var(--text); line-height: 1.9; margin-top: 1rem; opacity: 0.85; }
 
 /* ── Clergy Bio Section ──────────────────────────────────── */
 .bio-section { margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: left; }
 .bio-label {
-    font-size: 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1343,7 +1533,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .bio-year {
     min-width: 38px;
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--theme);
     font-variant-numeric: tabular-nums;
@@ -1365,14 +1555,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .bio-text {
     flex: 1;
-    font-size: 0.87rem;
+    font-size: var(--fs-desc);
     line-height: 1.7;
     color: var(--text);
 }
 .bio-first {
     display: inline-flex;
     align-items: center;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     font-weight: 800;
     letter-spacing: 0.04em;
     color: #fff;
@@ -1386,7 +1576,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .bio-roles { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .bio-role-tag {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     color: var(--theme);
     background: var(--green-light);
     border: 1px solid var(--border);
@@ -1404,10 +1594,10 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 1rem 1.1rem;
     margin-top: 1.25rem;
 }
-.bio-ministry-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-.bio-ministry-note p { font-size: 0.88rem; line-height: 1.8; color: var(--text); margin: 0; }
+.bio-ministry-icon { font-size: var(--fs-lead); flex-shrink: 0; margin-top: 0.1rem; }
+.bio-ministry-note p { font-size: var(--fs-sm); line-height: 1.8; color: var(--text); margin: 0; }
 .bio-source {
-    font-size: 0.75rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     margin-top: 1.25rem;
     padding-top: 1rem;
@@ -1427,7 +1617,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     color: var(--heading);
     letter-spacing: -0.025em;
     margin-bottom: var(--space-5);
-    line-height: var(--lh-heading);
+    line-height: var(--lh-snug);
     word-break: keep-all;
     overflow-wrap: break-word;
 }
@@ -1454,7 +1644,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
 }
 .about-brief-facts strong {
     min-width: 64px;
@@ -1470,10 +1660,10 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: inline-block;
     color: var(--theme);
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     border-bottom: 1px solid currentColor;
     padding-bottom: 0.15rem;
-    transition: color 0.2s;
+    transition: color var(--dur);
 }
 .about-brief-link:hover { color: var(--heading); }
 
@@ -1488,9 +1678,9 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 0.85rem 1.25rem;
     margin-bottom: var(--space-5);
     text-decoration: none;
-    transition: background 0.2s, border-color 0.2s;
+    transition: background var(--dur), border-color var(--dur);
 }
-.about-brief-award:hover { background: #dce8dd; border-color: var(--theme); }
+.about-brief-award:hover { background: var(--green-hover); border-color: var(--theme); }
 .about-brief-award-icon { font-size: 1.25rem; flex-shrink: 0; }
 .about-brief-award-body { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; text-align: left; }
 .about-brief-award-body strong { font-size: var(--fs-sm); font-weight: 700; color: var(--heading); }
@@ -1516,13 +1706,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     max-width: 900px;
     margin: 0 auto;
 }
+.logo-head { max-width: 900px; margin-left: auto; margin-right: auto; }   /* 제목을 본문 폭에 맞춤 */
 .logo-display { text-align: center; }
 /* rect 없이 CSS만으로 배경 처리 — 단일 border-radius로 깔끔하게 클리핑 */
 .logo-badge {
     width: 140px;
     height: 140px;
-    border-radius: 20px;
-    background: #163d24;
+    border-radius: var(--radius-lg);
+    background: var(--green-deep);
     box-shadow: var(--shadow-md);
     overflow: hidden;
     display: inline-flex;
@@ -1534,30 +1725,79 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     height: 100%;
 }
 
+/* 교회 로고 가로형 조합 — 시안처럼 숲 녹 바탕에 크림 마크 + 세리프 워드마크
+   (다크모드에서도 같은 브랜드 색 유지) */
+.logo-lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.84rem;
+    padding: 1.4rem 1.6rem;
+    border-radius: var(--radius-md);
+    background: var(--green-deep);
+    box-shadow: var(--shadow-md);
+}
+.logo-lockup-mark { width: 31px; height: 42px; color: #f0ece4; flex-shrink: 0; }
+.logo-lockup-mark svg { width: 100%; height: 100%; display: block; }
+.logo-lockup-text { display: flex; flex-direction: column; text-align: left; line-height: 1.25; }
+.logo-lockup-name {
+    font-family: var(--font-brand);
+    font-size: 1.25rem; font-weight: 700; letter-spacing: 0.01em;
+    color: #fff; white-space: nowrap;
+}
+.logo-lockup-tag {
+    font-family: var(--font-brand);
+    font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.34em;
+    color: var(--brand-sub); margin-top: 0.12rem;
+}
+.logo-swatches {
+    list-style: none;
+    margin: 1rem auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    width: fit-content;
+    text-align: left;
+}
+.logo-swatch { display: flex; align-items: center; gap: 0.6rem; font-size: var(--fs-md); color: var(--text-muted); }
+.logo-swatch strong { color: var(--heading); font-weight: 700; margin-right: 0.15rem; }
+.logo-swatch-chip {
+    width: 1.5rem; height: 1.5rem; border-radius: var(--radius-sm); flex-shrink: 0;
+    background: var(--chip);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);   /* 크림 칩이 밝은 배경에 묻히지 않게 */
+}
+.logo-badge--sm { width: 96px; height: 96px; border-radius: var(--radius-md); }
+
+/* 세계성공회 상징(캔터베리 십자가) — 교회 로고 아래 별도 단락 */
+.logo-anglican {
+    max-width: 900px;
+    margin: 3.5rem auto 0;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+}
+.logo-anglican-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin: 0.35rem 0 1.5rem;
+}
+
 
 .logo-subtitle {
     margin-top: 0.75rem;
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--theme);
 }
-.logo-colors {
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-    max-width: 200px;
-}
 .logo-desc {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     line-height: 1.9;
     color: var(--text);
     margin-bottom: 1.25rem;
 }
 .logo-history {
-    font-size: 0.9rem;
+    font-size: var(--fs-desc);
     line-height: 1.9;
     color: var(--text);
     opacity: 0.85;
@@ -1576,14 +1816,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 0.85rem 1rem;
 }
 .logo-element-label {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--theme);
     margin-bottom: 0.3rem;
     letter-spacing: 0.02em;
 }
 .logo-element-desc {
-    font-size: 0.83rem;
+    font-size: var(--fs-desc);
     line-height: 1.65;
     color: var(--text);
     opacity: 0.85;
@@ -1604,12 +1844,12 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: flex;
     gap: 0.6rem;
     align-items: flex-start;
-    font-size: 0.78rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     line-height: 1.7;
 }
 .logo-ref-num {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--theme);
     background: var(--green-light);
@@ -1630,23 +1870,38 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 
 /* ── Anglican Intro Sections ─────────────────────────────── */
 .anglican-welcome {
-    background: var(--green-deep);
-    color: rgba(255,255,255,0.9);
-    padding: 1.25rem 0;
+    background: var(--white);
+    padding: 4rem 0 1rem;
+    text-align: center;
 }
 .anglican-welcome .container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
 }
-.anglican-welcome p {
-    font-size: 0.92rem;
-    line-height: 1.75;
+.anglican-welcome .container::before {
+    content: "";
+    width: 40px;
+    height: 3px;
+    background: var(--green-mid);
+    margin-bottom: 0.75rem;
+}
+.anglican-welcome-lead {
+    font-size: clamp(1.5rem, 1rem + 1.6vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--heading);
     margin: 0;
-    opacity: 0.92;
+}
+.anglican-welcome-sub {
+    font-size: var(--fs-lead);
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--text) 72%, var(--white));
+    margin: 0;
 }
 .anglican-para {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     line-height: 1.9;
     color: var(--text);
     margin-bottom: 1.1rem;
@@ -1654,7 +1909,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .anglican-para:last-child { margin-bottom: 0; }
 .anglican-body { margin: 0 auto 2.5rem; max-width: 760px; }
 .bcp-section-title {
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin: 1.75rem 0 0.6rem;
@@ -1674,31 +1929,31 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: var(--radius-md);
     padding: 1.6rem 1.4rem;
     text-align: center;
-    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-out), opacity 0.6s ease;
+    transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
 }
 .anglican-pillar:hover {
     border-color: var(--theme);
     box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-4px);
+    transform: translateY(var(--lift-2));
 }
 @media (prefers-reduced-motion: reduce) {
-    .anglican-pillar { transition: border-color 0.25s, box-shadow 0.25s; }
+    .anglican-pillar { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
     .anglican-pillar:hover { transform: none; }
 }
 .anglican-pillar-icon {
     font-size: 2rem;
     margin-bottom: 0.75rem;
     display: inline-block;
-    transition: transform 0.35s var(--ease-out);
+    transition: transform var(--dur-slow) var(--ease-out);
 }
 .anglican-pillar:hover .anglican-pillar-icon { transform: scale(1.15) translateY(-2px); }
 @media (prefers-reduced-motion: reduce) {
     .anglican-pillar-icon { transition: none; }
 }
-.anglican-pillar-title { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; }
-.anglican-pillar-desc { font-size: 0.85rem; line-height: 1.75; color: var(--text-muted); }
+.anglican-pillar-title { font-size: var(--fs-body); font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; }
+.anglican-pillar-desc { font-size: var(--fs-desc); line-height: 1.75; color: var(--text-muted); }
 .anglican-pillar-note {
-    font-size: 0.82rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
     line-height: 1.7;
     padding: 0.9rem 1.1rem;
@@ -1732,7 +1987,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .founded-label {
     display: block;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     letter-spacing: 0.1em;
     opacity: 0.7;
     margin-top: 0.4rem;
@@ -1743,13 +1998,13 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     align-items: flex-start;
     gap: 0.6rem;
     padding: 0.55rem 0;
-    font-size: 0.87rem;
+    font-size: var(--fs-sm);
     line-height: 1.6;
     color: var(--text);
     border-bottom: 1px solid var(--border);
 }
 .korea-highlight-item:last-child { border-bottom: none; }
-.korea-hl-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; }
+.korea-hl-icon { flex-shrink: 0; font-size: var(--fs-body); margin-top: 0.05rem; }
 
 /* Iona pilgrim trail link card */
 .iona-link-card {
@@ -1759,22 +2014,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     margin-top: 1.5rem;
     padding: 0.85rem 1.1rem;
     border: 1px solid var(--theme);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     color: var(--theme);
     text-decoration: none;
-    transition: background 0.25s var(--ease-out), color 0.25s;
+    transition: background var(--dur-slow) var(--ease-out), color var(--dur-slow);
     width: 100%;
     box-sizing: border-box;
 }
 .iona-link-card--hover,
 .iona-link-card:hover { background: var(--theme); color: var(--theme-on); }
 .iona-link-card__text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.iona-link-card__label { font-size: 0.9rem; font-weight: 700; }
-.iona-link-card__desc  { font-size: 0.78rem; margin-top: 0.15rem; opacity: 0.8; }
+.iona-link-card__label { font-size: var(--fs-sm); font-weight: 700; }
+.iona-link-card__desc  { font-size: var(--fs-md); margin-top: 0.15rem; }
 .iona-link-card__arrow {
     flex-shrink: 0;
-    font-size: 1rem;
-    transition: transform 0.25s var(--ease-out);
+    font-size: var(--fs-body);
+    transition: transform var(--dur-slow) var(--ease-out);
 }
 .iona-link-card:hover .iona-link-card__arrow { transform: translateX(3px); }
 @media (prefers-reduced-motion: reduce) {
@@ -1790,22 +2045,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     gap: 1rem;
     padding: 1rem 1.25rem;
     background: var(--green-light);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border-left: 3px solid var(--theme);
-    transition: box-shadow 0.3s ease, transform 0.3s var(--ease-out), opacity 0.6s ease;
+    transition: box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
 }
 .mission-mark:hover {
     box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-3px);
+    transform: translateY(var(--lift-2));
 }
 @media (prefers-reduced-motion: reduce) {
-    .mission-mark { transition: box-shadow 0.25s; }
+    .mission-mark { transition: box-shadow var(--dur-slow); }
     .mission-mark:hover { transform: none; }
 }
-.mission-mark__num { flex-shrink: 0; width: 1.75rem; height: 1.75rem; background: var(--theme); color: var(--theme-on); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+.mission-mark__num { flex-shrink: 0; width: 1.75rem; height: 1.75rem; background: var(--theme); color: var(--theme-on); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-label); font-weight: 700; }
 .mission-mark__body { flex: 1; min-width: 0; }
-.mission-mark__title { font-size: 0.95rem; font-weight: 700; color: var(--heading); margin: 0 0 0.25rem; }
-.mission-mark__en { font-size: 0.82rem; color: var(--text-muted); font-style: italic; margin: 0; }
+.mission-mark__title { font-size: var(--fs-body); font-weight: 700; color: var(--heading); margin: 0 0 0.25rem; }
+.mission-mark__en { font-size: var(--fs-desc); color: var(--text-muted); font-style: italic; margin: 0; }
 
 /* Bank Card */
 .bank-card {
@@ -1821,7 +2076,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     letter-spacing: 0.02em;
     font-variant-numeric: tabular-nums;
 }
-.bank-card .sub { font-size: 0.85rem; color: var(--theme); margin-top: 0.35rem; }
+.bank-card .sub { font-size: var(--fs-md); color: var(--theme); margin-top: 0.35rem; }
 
 /* ── Bus Chips ──────────────────────────────────────────── */
 .bus-list {
@@ -1834,7 +2089,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: inline-block;
     padding: 0.18rem 0.55rem;
     border-radius: 4px;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: #fff;
     letter-spacing: 0.01em;
@@ -1847,7 +2102,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .press-category { margin-bottom: 1.8rem; }
 .press-category:last-child { margin-bottom: 0; }
 .press-category-title {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1868,7 +2123,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     gap: 1rem;
     padding: 1.1rem 1.5rem;
     border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
+    transition: background var(--dur);
 }
 .press-item:last-child { border-bottom: none; }
 .press-item:hover { background: var(--green-light); }
@@ -1876,7 +2131,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     flex-shrink: 0;
     background: var(--green-deep);
     color: #fff;
-    font-size: 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
@@ -1890,21 +2145,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: block;
     color: var(--text);
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     line-height: 1.55;
-    transition: color 0.2s;
+    transition: color var(--dur);
     word-break: keep-all;
 }
 .press-link:hover { color: var(--theme); text-decoration: underline; }
 .press-meta {
     display: block;
     margin-top: 0.2rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
 }
 
 /* ── FAQ (faq.html) ─────────────────────────────────────── */
-.container--narrow { max-width: 820px; }
+.container--narrow { max-width: var(--content-narrow); }
+.container--read { max-width: var(--content-read); }
 
 .faq-lead {
     font-size: var(--fs-lead);
@@ -1922,7 +2178,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-size: 1.15rem;
+    font-size: var(--fs-lead);
     font-weight: 700;
     color: var(--heading);
     padding-bottom: 0.75rem;
@@ -1939,7 +2195,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color var(--dur), box-shadow var(--dur);
 }
 .faq-item[open] {
     border-color: var(--theme);
@@ -1956,8 +2212,8 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     cursor: pointer;
     list-style: none;
     font-weight: 600;
-    font-size: 1rem;
-    line-height: var(--lh-heading);
+    font-size: var(--fs-body);
+    line-height: var(--lh-snug);
     color: var(--heading);
     word-break: keep-all;
 }
@@ -1981,7 +2237,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     flex-shrink: 0;
     width: 18px;
     height: 18px;
-    transition: transform 0.25s var(--ease-out);
+    transition: transform var(--dur-slow) var(--ease-out);
 }
 .faq-q-mark::before,
 .faq-q-mark::after {
@@ -2049,16 +2305,16 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     color: var(--theme);
     background: var(--green-light);
     border: 1px solid var(--green-soft);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 0.25rem 0.7rem;
     line-height: 1.4;
-    transition: background 0.2s, color 0.2s;
+    transition: background var(--dur), color var(--dur);
     word-break: keep-all;
 }
 .faq-ref:hover { background: var(--theme); color: var(--theme-on); border-color: var(--theme); }
 
 @media (max-width: 600px) {
-    .faq-q { padding: 1rem 1.1rem; font-size: 0.95rem; }
+    .faq-q { padding: 1rem 1.1rem; font-size: var(--fs-body); }
     .faq-a { padding: 0 1.1rem 1.1rem; }
 }
 
@@ -2067,30 +2323,36 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 :root { --season: var(--green-mid); --season-light: var(--green-light); }
 
 .liturgy-season-badge .season-dot      { background: var(--season); }
-.liturgy-season-badge .season-name     { color: var(--season); font-weight: 700; }
-.liturgy-guide .section-eyebrow        { color: var(--season); }
+.liturgy-season-badge .season-name     { color: var(--season-ink, var(--season)); font-weight: 700; }
+.liturgy-guide .section-eyebrow        { color: var(--season-ink, var(--season)); }
 .liturgy-guide .liturgy-inner-quote    { border-left-color: var(--season); }
 .liturgy-guide .liturgy-card           { border-left-color: var(--season); }
-.liturgy-guide .step-num               { background: var(--season); }
+.liturgy-guide .step-num               { background: var(--season); color: var(--season-on, #fff); }
 .liturgy-guide .resource-card          { border-top-color: var(--season); }
-.liturgy-guide .resource-link          { color: var(--season); }
+.liturgy-guide .resource-link          { color: var(--season-ink, var(--season)); }
+#home-guide .resource-card            { border-top-color: var(--theme); }
+#home-guide .resource-link            { color: var(--theme); }
 .liturgy-guide .space-item             { border-top-color: var(--season); }
 .liturgy-guide .communion-season       { border-top-color: var(--season); background: var(--season-light); }
-.liturgy-guide .check-icon             { color: var(--season); }
+.liturgy-guide .check-icon             { color: var(--season-ink, var(--season)); }
 
 .liturgy-guide {
     max-width: 760px;
     margin: 4rem auto 0;
 }
+/* 공동기도서와 성가: 제목도 다른 예배 단락처럼 본문과 같은 760px 칼럼에 맞춘다 */
+#worship-bcp { max-width: 760px; margin: 0 auto; }
 .liturgy-season-badge {
     display: inline-flex;
+    flex-wrap: wrap;   /* 좁은 화면: '성령강림 후'가 글자 중간에서 끊기지 않고 항목 단위로 줄바꿈 */
+    justify-content: center;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.15rem 0.45rem;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     padding: 0.35rem 1rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 600;
     color: var(--text);
     margin-bottom: 2.25rem;
@@ -2102,10 +2364,11 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     flex-shrink: 0;
 }
 .season-note {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
     font-weight: 400;
     margin-left: 0.25rem;
+    white-space: nowrap;
 }
 /* Newcomer intro block */
 .newcomer-intro {
@@ -2123,9 +2386,9 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     letter-spacing: -0.01em;
 }
 .newcomer-intro-body {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     color: var(--text);
-    line-height: 1.95;
+    line-height: 1.9;
     margin-bottom: 0.85rem;
 }
 .newcomer-key-facts {
@@ -2140,13 +2403,13 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: flex;
     align-items: baseline;
     gap: 0.85rem;
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     line-height: 1.7;
 }
 .newcomer-key-label {
     flex-shrink: 0;
     min-width: 44px;
-    font-size: 0.74rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2162,7 +2425,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     display: inline-block;
     margin-top: 0.25rem;
     color: var(--theme);
-    font-size: 0.86rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     text-decoration: none;
 }
@@ -2171,9 +2434,28 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 /* Newcomer CTA (page closing) */
 /* ── Next Step CTA ────────────────────────────────────────── */
 .next-step-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     padding: var(--section-pad) 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1e4530 0%, var(--green-deep) 65%);
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--brand-mid) 0%, var(--green-deep) 65%);
     border-top: none;
+}
+.next-step-cta::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    right: max(-60px, calc(50% - 640px));
+    bottom: -90px;
+    width: 320px;
+    aspect-ratio: 40 / 54;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 54'%3E%3Cpath fill='%23b1b883' d='M2 54V18.5C2 9.6 9.2 2.8 18.75 1.6L18.37 18.8H12.4v2.8h5.9L17.6 54ZM38 54V18.5C38 9.6 30.8 2.8 21.25 1.6L21.63 18.8H27.6v2.8h-5.9L22.4 54Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.05;
+    pointer-events: none;
+    display: none;   /* 버튼·문단과 겹치면 가독성을 해치므로 여백이 충분한 넓은 화면에서만 */
+}
+@media (min-width: 1100px) {
+    .next-step-cta::before { display: block; }
 }
 .next-step-cta .container {
     display: flex;
@@ -2182,7 +2464,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     text-align: center;
 }
 .next-step-cta-eyebrow {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -2199,7 +2481,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     word-break: keep-all;
 }
 .next-step-cta-desc {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: rgba(255,255,255,0.70);
     max-width: 480px;
     margin: 0 0 2.4rem;
@@ -2217,17 +2499,17 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     align-items: center;
     gap: 0.5rem;
     padding: 0.85rem 1.7rem;
-    border-radius: 50px;
-    font-size: 0.92rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
     font-weight: 600;
     background: var(--white);
     border: 1px solid var(--border);
     color: var(--text);
-    transition: transform 0.2s ease, box-shadow 0.2s ease,
-                border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition: transform var(--dur) ease, box-shadow var(--dur) ease,
+                border-color var(--dur) ease, background var(--dur) ease, color var(--dur) ease;
 }
 .btn-next:hover {
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-1));
     border-color: var(--theme);
     box-shadow: var(--hover-shadow-sm);
 }
@@ -2259,17 +2541,16 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .next-step-cta .btn-next--primary {
     background: var(--gold);
     border-color: var(--gold);
-    color: #fff;
+    color: var(--ink-on-sage);   /* 세이지 위 숲 녹 글자 (흰 글자는 대비 미달) */
 }
 .next-step-cta .btn-next--primary:hover {
     background: color-mix(in srgb, var(--gold) 78%, white);
     border-color: color-mix(in srgb, var(--gold) 78%, white);
-    color: #fff;
-    box-shadow: 0 8px 28px rgba(192,154,96,0.35);
+    color: var(--ink-on-sage);
+    box-shadow: 0 8px 28px rgba(177, 184, 131, 0.35);
 }
 
 @media (max-width: 560px) {
-    .next-step-cta { padding: 4rem 0; }
     .next-step-cta-actions { flex-direction: column; width: 100%; align-items: center; }
     .btn-next { width: 100%; max-width: 320px; justify-content: center; }
 }
@@ -2283,16 +2564,16 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     text-align: center;
 }
 .newcomer-cta h3 {
-    font-size: 1.15rem;
+    font-size: var(--fs-lead);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.75rem;
     letter-spacing: -0.01em;
 }
 .newcomer-cta > p {
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     color: var(--text-muted);
-    line-height: 1.85;
+    line-height: 1.9;
     max-width: 520px;
     margin: 0 auto 1.5rem;
 }
@@ -2309,26 +2590,27 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 0.7rem 1.4rem;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
+    text-wrap: balance;
     text-decoration: none;
-    transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+    transition: border-color var(--dur), color var(--dur), background var(--dur), transform var(--dur), box-shadow var(--dur);
 }
 .newcomer-cta-link:hover {
     border-color: var(--theme);
     color: var(--heading);
     background: var(--green-light);
     box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-1px);
+    transform: translateY(var(--lift-1));
 }
 
 .liturgy-section { margin-bottom: 3.5rem; }
 .liturgy-body {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     color: var(--text);
-    line-height: 1.95;
+    line-height: 1.9;
     margin-bottom: 1.1rem;
 }
 .liturgy-card {
@@ -2340,16 +2622,16 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     margin-top: 1.5rem;
 }
 .liturgy-card-title {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.85rem;
 }
 .liturgy-list { list-style: none; padding: 0; }
 .liturgy-list li {
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     color: var(--text);
-    line-height: 1.85;
+    line-height: 1.9;
     padding: 0.2rem 0 0.2rem 1.2rem;
     position: relative;
 }
@@ -2368,7 +2650,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     padding: 1.2rem 1.5rem;
     margin: 1.25rem 0;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     color: var(--text);
     line-height: 1.9;
 }
@@ -2383,15 +2665,15 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: var(--radius-md);
     padding: 1.5rem 1.75rem;
     border: 1px solid var(--border);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s var(--ease-out), opacity 0.6s ease;
+    transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
 }
 .liturgy-step:hover {
     border-color: var(--green-soft);
     box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-3px);
+    transform: translateY(var(--lift-2));
 }
 @media (prefers-reduced-motion: reduce) {
-    .liturgy-step { transition: border-color 0.25s, box-shadow 0.25s; }
+    .liturgy-step { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
     .liturgy-step:hover { transform: none; }
 }
 .step-num {
@@ -2399,22 +2681,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     width: 30px; height: 30px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     font-weight: 700;
-    color: #fff;
+    color: var(--theme-on);
 }
 .step-body { flex: 1; min-width: 0; }
 .step-title {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.55rem;
 }
 .step-list { list-style: none; padding: 0; }
 .step-list li {
-    font-size: 0.87rem;
+    font-size: var(--fs-sm);
     color: var(--text-muted);
-    line-height: 1.85;
+    line-height: 1.9;
     padding-left: 1rem;
     position: relative;
 }
@@ -2439,7 +2721,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 1.5rem 1.75rem;
 }
 .communion-card h3 {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.85rem;
@@ -2449,13 +2731,15 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 
 /* Worship page components */
 .worship-services-grid { margin-bottom: 2rem; }
+.worship-season { text-align: center; }
 .worship-time          { color: var(--green-mid); font-weight: 700; }
-.worship-card-desc     { margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.9; }
-.worship-card-quote    { margin-top: 1.25rem; font-size: 0.9rem; }
-.worship-card-cite     { font-size: 0.8rem; font-style: normal; color: var(--text-muted); }
-.worship-card-detail   { margin-top: 1rem; font-size: 0.87rem; color: var(--text-muted); line-height: 1.9; }
+.worship-card-desc     { margin-top: 1rem; color: var(--text-muted); font-size: var(--fs-desc); line-height: 1.9; }
+.worship-card-quote    { margin-top: 1.25rem; font-size: var(--fs-sm); }
+.worship-card-cite     { font-size: var(--fs-label); font-style: normal; color: var(--text-muted); }
+.worship-card-detail   { margin-top: 1rem; font-size: var(--fs-desc); color: var(--text-muted); line-height: 1.9; }
+.worship-card-desc + .btn-next { margin-top: 1.25rem; }
 .liturgy-body--lead    { margin-bottom: 1.5rem; }
-.resource-en           { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+.resource-en           { font-size: var(--fs-label); color: var(--text-muted); margin-bottom: 0.4rem; }
 .resource-grid--single { --resource-cols: 1; grid-template-columns: 1fr; }
 
 /* Worship Resources */
@@ -2475,22 +2759,28 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 1.6rem 1.6rem 1.4rem;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-out), opacity 0.6s ease;
+    transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease, background-color var(--dur-slow) ease;
 }
-.resource-card:hover {
-    border-color: var(--theme);
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(-5px);
+/* 터치 기기는 hover가 탭과 동시에 걸려 카드가 뜨며 어색하므로 마우스에서만 적용 */
+@media (hover: hover) {
+    .resource-card:hover {
+        border-color: var(--theme);
+        box-shadow: var(--hover-shadow-sm);
+        transform: translateY(var(--lift-2));
+    }
 }
+.resource-card { -webkit-tap-highlight-color: transparent; }
 .resource-icon {
     font-size: 1.9rem;
     margin-bottom: 0.8rem;
     display: inline-block;
-    transition: transform 0.35s var(--ease-out);
+    transition: transform var(--dur-slow) var(--ease-out);
 }
-.resource-card:hover .resource-icon { transform: scale(1.12) translateY(-2px); }
+@media (hover: hover) {
+    .resource-card:hover .resource-icon { transform: scale(1.12) translateY(-2px); }
+}
 .resource-title {
-    font-size: 1.02rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.45rem;
@@ -2499,7 +2789,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     overflow-wrap: break-word;
 }
 .resource-desc {
-    font-size: 0.86rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
     line-height: 1.75;
     margin-bottom: 1rem;
@@ -2507,9 +2797,9 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     word-break: keep-all;
     overflow-wrap: break-word;
 }
-.resource-link { font-size: 0.84rem; font-weight: 700; letter-spacing: 0.01em; }
+.resource-link { font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.01em; }
 @media (prefers-reduced-motion: reduce) {
-    .resource-card { transition: border-color 0.25s, box-shadow 0.25s; }
+    .resource-card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
     .resource-card:hover { transform: none; }
     .resource-icon { transition: none; }
     .resource-card:hover .resource-icon { transform: none; }
@@ -2522,15 +2812,6 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid var(--border);
-}
-.lectionary-cal {
-    display: block;
-    width: 100%;
-    height: 480px;
-    border: none;
-}
-@media (max-width: 600px) {
-    .lectionary-cal { height: 380px; }
 }
 
 /* 전례독서 카드 */
@@ -2547,7 +2828,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     box-shadow: 0 4px 16px color-mix(in srgb, var(--green-mid) 25%, transparent);
 }
 .lectionary-card-label {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.05em;
     color: var(--green-mid);
@@ -2555,7 +2836,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     text-transform: uppercase;
 }
 .lectionary-card-head {
-    background: color-mix(in srgb, var(--season, var(--green-dark)) 12%, var(--white));
+    background: color-mix(in srgb, var(--season, var(--theme)) 12%, var(--white));
     padding: 1rem 1.25rem 0.85rem;
     border-bottom: 1px solid var(--border);
 }
@@ -2566,7 +2847,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     margin: 0 0 0.2rem;
 }
 .lectionary-card-meta {
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     margin: 0;
 }
@@ -2583,14 +2864,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .lectionary-row:last-child { border-bottom: none; }
 .lectionary-role {
     flex: 0 0 4rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--text-muted);
     text-transform: uppercase;
 }
 .lectionary-ref {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     color: var(--heading);
     font-weight: 600;
 }
@@ -2601,14 +2882,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     gap: 0.25rem;
     color: var(--theme);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color var(--dur-fast) ease;
 }
 .lectionary-ref-link:hover {
     color: var(--heading);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
-.lectionary-ref-ico { font-size: 0.72em; opacity: 0.6; }
+.lectionary-ref-ico { font-size: 0.72em; }
 
 /* 연속(A)·짝(B) 독서 트랙 토글 */
 .lect-track {
@@ -2618,7 +2899,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     padding: 0.25rem;
     background: var(--cream);
     border: 1px solid var(--border);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
 }
 .lect-track-btn {
     display: inline-flex;
@@ -2626,14 +2907,14 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     gap: 0.35rem;
     padding: 0.4rem 0.85rem;
     border: none;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     background: transparent;
     color: var(--text-muted);
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition: background var(--dur) ease, color var(--dur) ease, box-shadow var(--dur) ease;
     white-space: nowrap;
 }
 .lect-track-btn:hover:not(.is-active) { color: var(--heading); }
@@ -2642,6 +2923,10 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     color: var(--theme-on);
     box-shadow: var(--hover-shadow-sm);
 }
+/* 선택 상태의 트랙 원(흰 글자)은 밝은 틴트 대신 어둡게 — 라이트 전용(다크는 글자가 어두움) */
+@media (prefers-color-scheme: light) {
+    .lect-track-btn.is-active .lect-track-tag { background: rgba(0, 0, 0, 0.18); }
+}
 .lect-track-tag {
     display: inline-flex;
     align-items: center;
@@ -2649,12 +2934,12 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     width: 1.05rem;
     height: 1.05rem;
     border-radius: 50%;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     background: color-mix(in srgb, currentColor 16%, transparent);
 }
 .lect-track-hint {
-    font-size: 0.76rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
     margin: 0.5rem 1.25rem 0;
     line-height: 1.5;
@@ -2668,7 +2953,7 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
     max-width: 560px;
 }
 .lect-nav-label {
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     font-weight: 700;
     color: var(--heading);
     text-align: center;
@@ -2677,15 +2962,15 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .lect-nav-btn {
     padding: 0.38rem 0.9rem;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--border);
     background: var(--white);
     color: var(--text);
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color var(--dur) ease, color var(--dur) ease, box-shadow var(--dur) ease;
     flex-shrink: 0;
 }
 .lect-nav-btn:hover:not(:disabled) {
@@ -2699,12 +2984,12 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .lectionary-loading {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     padding: 1rem 0;
 }
 
 .lectionary-card-note {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
     padding: 0.6rem 1.25rem 0.85rem;
     margin: 0;
@@ -2712,8 +2997,10 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 @media (prefers-color-scheme: dark) {
     .lectionary-card-head {
-        background: color-mix(in srgb, var(--season, var(--green-dark)) 18%, var(--white));
+        background: color-mix(in srgb, var(--season, var(--theme)) 18%, var(--white));
     }
+    /* 금색 절기 틴트 위에서도 AA 유지 */
+    .lectionary-card-label { color: color-mix(in srgb, var(--green-mid) 60%, var(--heading)); }
 }
 
 /* Worship Space (전례 공간 안내) */
@@ -2735,22 +3022,22 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 .space-icon { font-size: 1.7rem; line-height: 1.4; flex-shrink: 0; }
 .space-text { min-width: 0; }
 .space-name {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.45rem;
 }
 .space-en {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 600;
     color: var(--theme);
     letter-spacing: 0.02em;
     margin-left: 0.3rem;
 }
 .space-desc {
-    font-size: 0.88rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
-    line-height: 1.8;
+    line-height: 1.75;
 }
 
 /* Checklist */
@@ -2766,12 +3053,12 @@ button.season-ribbon-seg { border: none; padding: 0; font: inherit; cursor: poin
 }
 .check-icon {
     flex-shrink: 0;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     padding-top: 0.1rem;
 }
 .checklist-item p {
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     color: var(--text);
     line-height: 1.8;
     margin: 0;
@@ -2790,10 +3077,10 @@ footer {
     margin-bottom: 3.5rem;
 }
 .footer-col h2 {
-    font-size: 0.74rem;
+    font-size: var(--fs-label);
     font-weight: 700;
-    color: rgba(255,255,255,0.62);  /* 섹션 제목 대비 상향 */
-    letter-spacing: 0.18em;
+    color: var(--gold);  /* 세이지 — 숲 녹 위 6.5:1 */
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     margin-bottom: 1rem;
 }
@@ -2802,39 +3089,44 @@ footer {
 .footer-brand {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: 0.7rem;
     margin-bottom: 1.1rem;
 }
 .footer-logo-mark {
-    width: 38px; height: 38px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.14);
+    width: 26px; height: 35px;
+    color: #f0ece4;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
 }
+.footer-logo-mark svg { width: 100%; height: 100%; display: block; }
 .footer-brand-name {
     display: block;
-    font-size: 0.95rem;
+    font-family: var(--font-brand);
+    font-size: var(--fs-body);
     font-weight: 700;
+    letter-spacing: 0.01em;
     color: #fff;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 .footer-brand-sub {
     display: block;
-    font-size: 0.74rem;
-    color: rgba(255,255,255,0.65);
-    margin-top: 0.12rem;
+    font-family: var(--font-brand);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    line-height: 1.2;
+    color: var(--brand-sub);
+    margin-top: 0.1rem;
 }
 .footer-col .footer-brand-slogan {
-    font-size: 0.84rem;
+    font-size: var(--fs-md);
     font-style: italic;
     color: rgba(255,255,255,0.7);
     line-height: 1.75;
     margin: 0 0 0.85rem;
 }
 .footer-col .footer-brand-meta {
-    font-size: 0.8rem;
+    font-size: var(--fs-md);
     color: rgba(255,255,255,0.68);
     line-height: 1.9;
     margin: 0;
@@ -2848,7 +3140,7 @@ footer {
     gap: 1rem;
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.07);
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
 }
 .footer-service-label { color: rgba(255,255,255,0.75); }
 .footer-service-time {
@@ -2865,14 +3157,14 @@ footer {
 .footer-info-row {
     display: flex;
     gap: 0.7rem;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     padding: 0.28rem 0;
     color: rgba(255,255,255,0.8);  /* 연락처 본문 — AA 충족 */
     line-height: 1.65;
     align-items: flex-start;
 }
 .footer-info-label {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2881,7 +3173,7 @@ footer {
     flex-shrink: 0;
     padding-top: 0.2rem;
 }
-.footer-info-link { color: inherit; transition: color 0.2s; }
+.footer-info-link { color: inherit; transition: color var(--dur); display: inline-block; padding: 0.3rem 0; }
 .footer-info-link:hover { color: #fff; }
 .footer-addr-link { text-decoration: none; }
 .footer-addr-link::after {
@@ -2889,7 +3181,7 @@ footer {
     font-size: 0.68rem;
     opacity: 0;
     margin-left: 0.3rem;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity var(--dur), transform var(--dur);
 }
 .footer-addr-link:hover { text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); text-underline-offset: 3px; }
 .footer-addr-link:hover::after { opacity: 0.55; transform: translate(2px, -2px); }
@@ -2899,11 +3191,11 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     color: rgba(255,255,255,0.8);
     padding: 0.6rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.07);
-    transition: color 0.2s;
+    transition: color var(--dur);
     line-height: 1.4;
 }
 .footer-col .footer-ext-link:last-child { border-bottom: none; }
@@ -2911,7 +3203,7 @@ footer {
     content: '↗';
     font-size: 0.68rem;
     opacity: 0;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity var(--dur), transform var(--dur);
     flex-shrink: 0;
 }
 .footer-col .footer-ext-link:hover { color: #fff; }
@@ -2921,7 +3213,7 @@ footer {
 }
 .footer-col .footer-ext-link--dim {
     opacity: 0.78;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     margin-top: 0.65rem;
     border-bottom: none;
 }
@@ -2935,11 +3227,13 @@ footer {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.5rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     opacity: 0.78;
 }
-.footer-bottom-links { display: flex; align-items: center; gap: 1.25rem; }
-.footer-privacy-link { color: inherit; transition: opacity 0.2s; }
+.footer-visitors { display: block; margin-top: 0.25rem; white-space: nowrap; }   /* 저작권 문구 아래 한 줄로 분리 */
+.footer-bottom-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 1.25rem; row-gap: 0; }
+.footer-bottom-links a { white-space: nowrap; }   /* 좁은 화면에서 '봉헌/안내'처럼 단어 중간이 끊기지 않게 */
+.footer-privacy-link { color: inherit; transition: opacity var(--dur); display: inline-block; padding: 0.4rem 0; }
 .footer-privacy-link:hover { opacity: 1; }
 
 /* ── Utilities ───────────────────────────────────────────── */
@@ -2949,9 +3243,6 @@ footer {
 
 /* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    :root {
-        --section-pad: 3.5rem;
-    }
     .page-hero {
         padding-top: calc(var(--nav-h) + 2.5rem);
         padding-bottom: 2.5rem;
@@ -3007,13 +3298,13 @@ footer {
         color: rgba(255,255,255,0.65);
         cursor: pointer;
         flex-shrink: 0;
-        transition: background 0.15s, color 0.15s;
+        transition: background var(--dur-fast), color var(--dur-fast);
         padding: 0;
     }
     .nav-chevron:hover { background: rgba(255,255,255,0.06); color: #fff; }
     .nav-item.mobile-open .nav-chevron { color: #fff; }
     .nav-item.mobile-open .nav-chevron svg { transform: rotate(180deg); }
-    .nav-chevron svg { transition: transform 0.25s; }
+    .nav-chevron svg { transition: transform var(--dur-slow); }
     .dropdown {
         position: static;
         opacity: 1; visibility: visible; transform: none;
@@ -3034,7 +3325,7 @@ footer {
         color: rgba(255,255,255,0.82);  /* 대비 상향 (AA) */
         padding: 0.85rem 1.1rem;        /* 터치 타깃 ≥44px */
         border-bottom: 1px solid rgba(255,255,255,0.05);
-        font-size: 0.92rem;
+        font-size: var(--fs-sm);
     }
     .dropdown li a:hover {
         color: #fff;
@@ -3044,7 +3335,7 @@ footer {
     .nav-link.active { box-shadow: none; }
 
     /* Hero */
-    .hero { min-height: 100vh; min-height: 100svh; }
+    .hero { min-height: 100vh; min-height: max(100svh, 560px); }
 
     /* Clergy Card — 초상만 가운데, bio 텍스트는 좌측 정렬 유지 */
     .clergy-card { grid-template-columns: 1fr; gap: 1.25rem; padding: 2rem 1.75rem; }
@@ -3058,7 +3349,6 @@ footer {
     /* Logo intro */
     .logo-intro-grid { grid-template-columns: 1fr; gap: 2rem; }
     .logo-display { display: flex; flex-direction: column; align-items: center; }
-    .logo-colors { max-width: unset; text-align: center; }
     .logo-subtitle { text-align: center; }
     .logo-elements { grid-template-columns: 1fr; }
 
@@ -3077,19 +3367,38 @@ footer {
     .newcomer-intro { padding: 1.75rem 1.4rem; }
     .newcomer-intro-title { font-size: 1.3rem; }
     .newcomer-key-facts { padding: 1.1rem 1.1rem; gap: 0.6rem; }
-    .newcomer-key-row { gap: 0.7rem; font-size: 0.88rem; }
-    .newcomer-key-label { min-width: 38px; font-size: 0.7rem; }
+    .newcomer-key-row { gap: 0.7rem; font-size: var(--fs-sm); }
+    .newcomer-key-label { min-width: 38px; font-size: var(--fs-label); }
     .newcomer-cta { padding: 1.75rem 1.4rem; }
-    .newcomer-cta h3 { font-size: 1.05rem; }
+    .newcomer-cta h3 { font-size: var(--fs-body); }
     .newcomer-cta-link { width: 100%; max-width: 320px; justify-content: center; }
 
     /* Footer */
     .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
     .footer-bottom { flex-direction: column; text-align: center; }
-    .footer-service-row { font-size: 0.85rem; }
+    .footer-service-row { font-size: var(--fs-md); }
     .footer-col .footer-ext-link--dim { margin-top: 0.5rem; }
 }
 
+/* 교회 연혁 — 약력 타임라인 재사용, 제목·본문 760px 칼럼 */
+#history-full { max-width: 760px; margin: 0 auto; }
+/* 같은 해 둘째 항목부터 연도를 비우므로 연도 칸을 고정 폭으로 둬 점·세로선이 흔들리지 않게 */
+.history-timeline .bio-year { flex: 0 0 44px; min-width: 0; box-sizing: border-box; }
+.history-timeline::before { left: calc(44px + 0.6rem + 3px); }
+.history-timeline .bio-text { display: flex; gap: 0.75rem; }
+.history-date {
+    flex: 0 0 5.5em;
+    font-weight: 700;
+    color: var(--heading);
+    font-variant-numeric: tabular-nums;
+}
+#history-all[hidden] { margin: 0; }
+#history-all[hidden]:not([hidden="until-found"]) { display: none; }
+@media print { .history-toggle { display: none !important; } #history-key { display: none; } #history-all { content-visibility: visible !important; } }
+@media (max-width: 480px) {
+    .history-timeline .bio-text { display: block; }
+    .history-date { display: block; }
+}
 @media (max-width: 460px) {
     .footer-inner { grid-template-columns: 1fr; gap: 2.5rem; }
 }
@@ -3097,33 +3406,37 @@ footer {
 @media (max-width: 390px) {
     .clergy-card { padding: 1.75rem 1.25rem; }
     .bio-timeline::before { left: 38px; }
-    .bio-year { min-width: 30px; font-size: 0.68rem; }
+    .bio-year { min-width: 34px; font-size: var(--fs-label); }
 }
 
 @media (max-width: 480px) {
-    .hero h1 { font-size: 1.75rem; }
+    .hero h1 { font-size: 2rem; }
     .hero-actions { flex-direction: column; align-items: center; }
     .btn-live, .btn-outline { width: 100%; max-width: 280px; text-align: center; }
 }
 
 /* ── Community card note (footnote) ─────────────────────── */
-.community-card-note { font-size: 0.75rem; color: var(--text-muted); opacity: 0.7; margin-top: 0.5rem; }
+.community-card-note { font-size: var(--fs-label); color: var(--text-muted); margin-top: 0.5rem; }
 
 /* ── Community detail link ───────────────────────────────── */
 .community-detail-link {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    margin-top: 1.25rem;
+    margin-top: 1rem;
+    padding: 0.4rem 0;
     color: var(--theme);
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     font-weight: 700;
-    transition: color 0.2s, gap 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+    transition: color var(--dur), gap var(--dur-slow) cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 .community-detail-link:hover {
     color: var(--heading);
     gap: 0.55rem;
 }
+/* 카드 높이가 같은 행에서 '자세히 보기' 링크가 같은 높이에 놓이도록 하단 정렬 */
+#community-full .card { display: flex; flex-direction: column; align-items: center; }
+#community-full .card .community-detail-link { margin-top: auto; padding-top: 1.4rem; align-self: center; }   /* auto margin은 기존 1rem 간격을 대체하므로 padding으로 보존 */
 
 /* ── Emmaus page ─────────────────────────────────────────── */
 .emmaus-intro-grid {
@@ -3135,7 +3448,7 @@ footer {
 @media (max-width: 768px) { .emmaus-intro-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
 .emmaus-lead {
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     color: var(--text);
     line-height: 1.9;
     margin-bottom: 1.25rem;
@@ -3149,7 +3462,7 @@ footer {
     border-left: 4px solid var(--theme);
 }
 .emmaus-scripture-ref {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -3157,8 +3470,8 @@ footer {
     margin-bottom: 0.75rem;
 }
 .emmaus-scripture {
-    font-size: 1rem;
-    line-height: 1.85;
+    font-size: var(--fs-body);
+    line-height: 1.9;
     color: var(--heading);
     font-style: italic;
     margin-bottom: 1.25rem;
@@ -3166,9 +3479,9 @@ footer {
     padding: 0;
 }
 .emmaus-scripture-caption {
-    font-size: 0.83rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
-    line-height: 1.8;
+    line-height: 1.75;
 }
 
 /* Stage cards */
@@ -3194,13 +3507,13 @@ footer {
 .emmaus-stage-num {
     font-size: 2.8rem;
     font-weight: 800;
-    color: var(--green-soft);
+    color: var(--sage-ink);   /* 세이지 글자 토큰 — 라이트 7.06:1, 다크 자동 전환 */
     line-height: 1;
     margin-bottom: 0.5rem;
 }
 .emmaus-stage--featured .emmaus-stage-num { color: var(--theme); }
 .emmaus-stage-en {
-    font-size: 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -3208,7 +3521,7 @@ footer {
     margin-bottom: 0.25rem;
 }
 .emmaus-stage-ko {
-    font-size: 1.1rem;
+    font-size: var(--fs-lead);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 1rem;
@@ -3217,22 +3530,22 @@ footer {
     gap: 0.5rem;
 }
 .emmaus-badge {
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     background: var(--theme);
     color: var(--theme-on);
     padding: 0.15rem 0.55rem;
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     letter-spacing: 0.03em;
 }
 .emmaus-stage-desc {
-    font-size: 0.88rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
-    line-height: 1.8;
+    line-height: 1.75;
     margin-bottom: 1rem;
 }
 .emmaus-stage-note {
-    font-size: 0.75rem;
+    font-size: var(--fs-label);
     font-weight: 600;
     color: var(--theme);
     padding-top: 0.75rem;
@@ -3255,7 +3568,7 @@ footer {
     padding: 1.5rem;
 }
 .nurture-part-label {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -3263,7 +3576,7 @@ footer {
     margin-bottom: 0.4rem;
 }
 .nurture-part-title {
-    font-size: 0.92rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 1rem;
@@ -3275,9 +3588,9 @@ footer {
     margin: 0;
 }
 .nurture-sessions li {
-    font-size: 0.83rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
-    line-height: 1.85;
+    line-height: 1.9;
 }
 
 /* Join section */
@@ -3293,11 +3606,13 @@ footer {
 .emmaus-contact-link {
     display: block;
     color: var(--theme);
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     margin-top: 0.35rem;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
 }
-.emmaus-contact-link:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 /* Reference list */
 .reference-list {
@@ -3305,7 +3620,7 @@ footer {
     padding: 0;
 }
 .reference-list li {
-    font-size: 0.83rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border);
@@ -3328,7 +3643,7 @@ footer {
 }
 .placeholder-desc {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     line-height: 1.9;
     margin-bottom: 0;
 }
@@ -3337,13 +3652,13 @@ footer {
     margin-top: 1.75rem;
     padding: 0.7rem 1.75rem;
     border: 1.5px solid var(--theme);
-    border-radius: 50px;
+    border-radius: var(--radius-pill);
     color: var(--theme);
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
-    transition: background 0.15s, color 0.15s;
+    transition: background var(--dur-fast), color var(--dur-fast);
 }
-.placeholder-contact:hover { background: var(--theme); color: #fff; }
+.placeholder-contact:hover { background: var(--theme); color: var(--theme-on); }
 
 /* ── 교회 이야기 (clergy.html#identity, greenchurch.html) ─── */
 
@@ -3384,14 +3699,14 @@ footer {
 }
 .story-value-body { min-width: 0; }
 .story-value-num {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--theme);
     margin-bottom: 0.3rem;
 }
 .story-value-title {
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 0.5rem;
@@ -3400,15 +3715,15 @@ footer {
     overflow-wrap: break-word;
 }
 .story-value-text {
-    font-size: 0.92rem;
+    font-size: var(--fs-desc);
     color: var(--text);
     line-height: 1.75;
     word-break: keep-all;
     letter-spacing: -0.005em;
 }
 .story-value-text + .story-value-text { margin-top: 0.65rem; }
-.story-value-text a { color: var(--theme); font-weight: 600; }
-.story-value-text a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.story-value-text a,
+.logo-ref-text a { color: var(--theme); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
 
 @media (max-width: 768px) {
     .story-value { flex-direction: column; gap: 0.85rem; padding: 1.5rem 1.4rem; }
@@ -3430,12 +3745,17 @@ footer {
     overflow: hidden;
     position: relative;
 }
+/* 좁은 화면에서 구글 지도의 자체 버튼·저작권 표기가 지도 면적을 가리므로 높이를 키운다 */
+@media (max-width: 600px) {
+    .map-card:not(.map-card--compact) .map-preview { aspect-ratio: 4 / 3; }
+}
 .map-embed {
     width: 100%;
     height: 100%;
     border: 0;
     display: block;
 }
+.map-embed:focus-visible { outline: 2px solid var(--theme); outline-offset: -2px; }
 
 .map-card-addr {
     padding: 1.1rem 1.25rem;
@@ -3446,24 +3766,27 @@ footer {
 }
 .map-addr-row {
     display: flex;
+    flex-wrap: wrap;   /* 좁은 화면: 주소가 짓눌리지 않게 '복사' 버튼이 다음 줄로 */
     align-items: baseline;
-    gap: 0.75rem;
-    font-size: 0.92rem;
+    gap: 0.4rem 0.75rem;
+    font-size: var(--fs-sm);
     line-height: 1.5;
 }
 .map-addr-tag {
     flex-shrink: 0;
     width: 44px;
-    font-size: 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--theme);
     letter-spacing: 0.02em;
     padding-top: 0.05rem;
 }
 .map-addr-text {
+    flex: 1 1 9.5em;
     color: var(--text);
     font-weight: 500;
     word-break: keep-all;
+    text-wrap: balance; /* 번지 숫자만 다음 줄로 떨어지지 않게 */
 }
 
 .map-actions {
@@ -3487,13 +3810,13 @@ footer {
     border: 1px solid var(--border);
     background: var(--white);
     color: var(--text);
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
-    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    transition: transform var(--dur-fast), box-shadow var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
     text-decoration: none;
 }
 .map-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(var(--lift-1));
     box-shadow: var(--shadow-md);
     border-color: var(--green-soft);
 }
@@ -3507,77 +3830,81 @@ footer {
     background: #03c75a;       /* 네이버 그린 */
     color: #ffffff;
     font-weight: 800;
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     letter-spacing: -0.04em;
     flex-shrink: 0;
 }
 .map-btn-mark--kakao  { background: #fee500; color: #3c1e1e; }
 .map-btn-label { white-space: nowrap; }
-.map-btn-arrow { margin-left: auto; color: var(--text-muted); font-size: 0.9rem; }
+.map-btn-arrow { margin-left: auto; color: var(--text-muted); font-size: var(--fs-sm); }
 
 .map-copy-btn {
     margin-left: auto;
     flex-shrink: 0;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.68rem;
+    padding: 0.35rem 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 600;
     color: var(--theme);
     background: none;
     border: 1px solid var(--theme);
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: background var(--dur-fast), color var(--dur-fast);
     letter-spacing: 0.02em;
     line-height: 1.6;
 }
-.map-copy-btn:hover { background: var(--theme); color: #fff; }
+.map-copy-btn:hover { background: var(--theme); color: var(--theme-on); }
 
 /* Naver CTA */
 .map-btn--naver {
-    background: #03c75a;
+    /* 네이버 초록(#03c75a)은 흰 글자 대비 2.25 — 같은 계열의 짙은 초록으로 AA(4.8:1) 확보 */
+    background: #00843a;
     color: #fff;
     border-color: transparent;
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     font-weight: 700;
     padding: 0.95rem 1.1rem;
     box-shadow: 0 2px 8px rgba(3,199,90,0.20);
 }
 .map-btn--naver:hover {
-    background: #00b350;
+    background: #00702f;
     box-shadow: 0 4px 14px rgba(3,199,90,0.32);
     border-color: transparent;
 }
-.map-btn--naver .map-btn-mark { background: rgba(255,255,255,0.20); color: #fff; }
-.map-btn--naver .map-btn-arrow { color: rgba(255,255,255,0.80); }
+.map-btn--naver .map-btn-mark { background: rgba(0,0,0,0.18); color: #fff; }
+.map-btn--naver .map-btn-arrow { color: #fff; }
 
 /* Kakao CTA */
 .map-btn--kakao {
     background: #fee500;
     color: #3c1e1e;
     border-color: #f5db00;
-    font-size: 0.92rem;
+    font-size: var(--fs-sm);
     font-weight: 700;
     padding: 0.95rem 1.1rem;
 }
 .map-btn--kakao:hover { background: #fad900; border-color: #e8cc00; }
-.map-btn--kakao .map-btn-arrow { color: rgba(60,30,30,0.55); }
+.map-btn--kakao .map-btn-arrow { color: rgba(60,30,30,0.75); }
 
 /* Compact variant (index card) */
 .map-card--compact .map-preview { aspect-ratio: 400 / 180; }
 .map-card--compact .map-card-addr { padding: 0.85rem 1rem; }
-.map-card--compact .map-addr-row { font-size: 0.85rem; }
+.map-card--compact .map-addr-row { font-size: var(--fs-md); }
 .map-card--compact .map-actions { padding: 0.65rem; gap: 0.45rem; }
-.map-card--compact .map-btn { padding: 0.75rem 0.9rem; font-size: 0.86rem; }
-.map-card--compact .map-btn { padding: 0.7rem 0.9rem; font-size: 0.82rem; }
-.map-card--compact .map-btn--naver { padding: 0.85rem 1rem; font-size: 0.88rem; }
+.map-card--compact .map-btn { padding: 0.7rem 0.9rem; font-size: var(--fs-md); }
+.map-card--compact .map-btn--naver { padding: 0.85rem 1rem; font-size: var(--fs-sm); }
 
 @media (max-width: 480px) {
-    .map-btn-label { font-size: 0.85rem; }
+    .map-btn-label { font-size: var(--fs-md); }
 }
 
 /* ── Visit page utilities ────────────────────────────────── */
 .info-card--wide { max-width: 760px; margin-left: auto; margin-right: auto; }
 .info-card--wide + .info-card--wide { margin-top: 1.5rem; }
+/* 홈 예배 섹션 — 예배 카드 아래 다가오는 주일 카드 */
+.this-sunday { margin-top: 2rem; }
+.this-sunday .liturgy-season-badge { margin-bottom: var(--space-2); box-shadow: none; }
+.this-sunday .info-row strong { min-width: 72px; }
 
 .visit-contact { margin-top: 1.5rem; }
 
@@ -3585,7 +3912,7 @@ footer {
     margin-top: 1.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--border);
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     line-height: 1.7;
 }
@@ -3595,16 +3922,18 @@ footer {
 .detail-link {
     color: var(--theme);
     font-weight: 700;
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
 }
-.detail-link:hover { text-decoration: underline; }
 
 .link-plain { color: inherit; }
 .link-plain:hover { text-decoration: underline; }
 
 .bus-note {
     display: block;
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     margin-top: 0.4rem;
 }
@@ -3620,10 +3949,10 @@ footer {
 /* ── Links page ──────────────────────────────────────────── */
 .links-group { margin-bottom: 3rem; }
 .links-group-title {
-    font-size: 0.72rem;
+    font-size: var(--fs-lead);
     font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
     color: var(--theme);
     margin-bottom: 1rem;
     padding-bottom: 0.6rem;
@@ -3645,20 +3974,21 @@ footer {
     text-decoration: none;
     color: inherit;
     position: relative;
-    transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+    transition: box-shadow var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
 }
 .links-card:hover {
     border-color: var(--theme);
     box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-1));
 }
 .links-card-name {
-    font-size: 0.97rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
+    padding-right: 1.5rem;   /* 우상단 ↗ 아이콘과 겹치지 않게 */
 }
 .links-card-desc {
-    font-size: 0.82rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
     line-height: 1.6;
 }
@@ -3666,9 +3996,9 @@ footer {
     position: absolute;
     top: 1.1rem;
     right: 1.2rem;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
-    transition: color 0.15s;
+    transition: color var(--dur-fast);
 }
 .links-card:hover .links-card-arrow { color: var(--theme); }
 
@@ -3709,10 +4039,10 @@ footer {
     overflow: hidden;
     text-decoration: none;
     color: var(--text);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform var(--dur), box-shadow var(--dur);
 }
 .video-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(var(--lift-2));
     box-shadow: var(--shadow-md);
 }
 .video-thumb {
@@ -3726,7 +4056,7 @@ footer {
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: opacity 0.2s;
+    transition: opacity var(--dur);
 }
 .video-card:hover .video-thumb img {
     opacity: 0.85;
@@ -3740,8 +4070,8 @@ footer {
     font-size: 2.2rem;
     color: #fff;
     opacity: 0;
-    background: rgba(10, 31, 18, 0.45);
-    transition: opacity 0.2s;
+    background: rgba(13, 33, 26, 0.6);
+    transition: opacity var(--dur);
 }
 .video-card:hover .video-play-btn {
     opacity: 1;
@@ -3754,21 +4084,21 @@ footer {
     flex: 1;
 }
 .video-category {
-    font-size: 0.72rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--theme);
     text-transform: uppercase;
 }
 .video-title {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--heading);
-    line-height: 1.5;
+    line-height: var(--lh-snug);
     margin: 0;
 }
 .video-desc {
-    font-size: 0.87rem;
+    font-size: var(--fs-desc);
     color: var(--text-muted);
     line-height: 1.75;
     margin: 0;
@@ -3785,11 +4115,11 @@ footer {
     padding: 0.75rem 1.75rem;
     background: var(--green-deep);
     color: #fff;
-    border-radius: 50px;
-    font-size: 0.9rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
     font-weight: 700;
     text-decoration: none;
-    transition: background 0.2s, opacity 0.2s;
+    transition: background var(--dur), opacity var(--dur);
 }
 .video-channel-link:hover {
     opacity: 0.85;
@@ -3819,12 +4149,12 @@ footer {
 .draft-badge {
     flex-shrink: 0;
     background: var(--gold);
-    color: #fff;
+    color: var(--ink-on-sage);
     font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: var(--ls-label);
     padding: 0.15rem 0.55rem;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
 }
 
 /* ── Photo Gallery (gallery.html) ───────────────────────── */
@@ -3837,14 +4167,14 @@ footer {
 .photo-filter-btn {
     padding: 0.45rem 1.1rem;
     border: 1.5px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: transparent;
     color: var(--text-muted);
     font-size: var(--fs-sm);
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    transition: background var(--dur), border-color var(--dur), color var(--dur);
 }
 .photo-filter-btn:hover {
     border-color: var(--green-mid);
@@ -3853,7 +4183,7 @@ footer {
 .photo-filter-btn.is-active {
     background: var(--green-mid);
     border-color: var(--green-mid);
-    color: #fff;
+    color: var(--theme-on);
 }
 .photo-grid {
     display: grid;
@@ -3873,20 +4203,20 @@ footer {
     width: 100%;
     aspect-ratio: 3 / 2;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+    transition: transform var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out);
 }
 .photo-item:hover,
 .photo-item:focus-visible {
-    transform: translateY(-4px);
+    transform: translateY(var(--lift-2));
     box-shadow: var(--hover-shadow-sm);
-    outline: none;
 }
+.photo-item:focus-visible { outline-offset: 2px; }
 .photo-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.35s var(--ease-out), opacity 0.25s;
+    transition: transform var(--dur-slow) var(--ease-out), opacity var(--dur-slow);
 }
 .photo-item:hover img,
 .photo-item:focus-visible img {
@@ -3896,13 +4226,13 @@ footer {
 .photo-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10,31,18,0.82) 0%, transparent 55%);
+    background: linear-gradient(to top, rgba(13, 33, 26, 0.88) 0%, transparent 65%);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 1rem;
     opacity: 0;
-    transition: opacity 0.25s;
+    transition: opacity var(--dur-slow);
 }
 .photo-item:hover .photo-overlay,
 .photo-item:focus-visible .photo-overlay {
@@ -3911,7 +4241,7 @@ footer {
 .photo-cat-badge {
     font-size: var(--fs-label);
     font-weight: 600;
-    color: var(--green-soft);
+    color: rgba(255, 255, 255, 0.9);   /* 오버레이는 항상 어두우므로 모드와 무관하게 고정 */
     letter-spacing: var(--ls-label);
     margin-bottom: 0.3rem;
 }
@@ -3923,7 +4253,7 @@ footer {
 }
 .photo-date {
     font-size: var(--fs-label);
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.85);
     margin-top: 0.2rem;
 }
 .photo-count {
@@ -3964,12 +4294,12 @@ footer {
 .photo-placeholder-badge {
     display: inline-block;
     background: var(--green-mid);
-    color: #fff;
+    color: var(--theme-on);
     font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     padding: 0.3rem 1rem;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
 }
 
 /* Photo Lightbox */
@@ -3977,8 +4307,8 @@ footer {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 900;
-    background: rgba(10,31,18,0.93);
+    z-index: 9999; /* 고정 헤더(1000)에 닫기 버튼이 가려지지 않도록 #portrait-lightbox와 같은 층 */
+    background: rgba(13, 33, 26, 0.93);
     align-items: center;
     justify-content: center;
     padding: 2rem;
@@ -4036,15 +4366,15 @@ footer {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition: background var(--dur), color var(--dur), border-color var(--dur);
 }
 .gallery-lb-close:hover,
 .gallery-lb-close:focus-visible {
     background: rgba(255,255,255,0.15);
     color: #fff;
     border-color: rgba(255,255,255,0.7);
-    outline: none;
 }
+.gallery-lb-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 @media (max-width: 768px) {
     .photo-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -4067,33 +4397,35 @@ footer {
 @media (prefers-color-scheme: dark) {
     :root {
         /* Backgrounds — 짙은 숲 색 기반 다크 서피스 */
-        --cream:        #111a13;
-        --white:        #192216;
+        --cream:        #0f1b16;
+        --white:        #16241e;
         /* Text — 따뜻한 크림 계열 */
         --text:         #e6e2d6;
         --text-muted:   #a4a89a;
         /* 제목 — 어두운 서피스 위 밝은 녹빛 오프화이트 */
-        --heading:      #eaf2e8;
+        --heading:      #ecefe2;
         /* Borders */
-        --border:       #2f4434;
+        --border:       #2a4036;
         /* Green scale — 다크 배경에서 가독성 확보
            green-mid은 배지 배경(흰 글씨)으로도 쓰여 텍스트·배지 대비를 균형 조정 */
-        --green-deep:   #0a1f12;
-        --green-mid:    #62a073;
-        --green-light:  #1e3325;
-        --green-soft:   #355a3e;
+        --green-deep:   #10241d;   /* 페이지 바탕(#0f1b16)과 구분되는 어두운 숲 녹 띠 */
+        --green-mid:    #66a284;
+        --green-light:  #1b3029;
+        --green-soft:   #3b5a48;
         /* Theme — green-mid/green-light 값으로 자동 추종 */
-        --theme:        #62a073;
-        --theme-light:  #1e3325;
+        --theme:        #66a284;
+        --theme-light:  #1b3029;
+        --theme-on:     #0f1b16;   /* 밝은 녹 위 어두운 글자 */
         /* Gold — 다크 배경 대비 밝게 조정 */
-        --gold:         #d6ba8e;
-        --gold-bg:      #221d14;
+        --gold:         #b5c9b0;
+        --gold-bg:      #19221c;
+        --sage-ink:     #b5c9b0;
         /* Nav */
-        --nav-glass:    rgba(10, 31, 18, 0.95);
-        --surface-nav:  rgba(17, 26, 19, 0.96);
+        --nav-glass:    rgba(9, 26, 20, 0.96);
+        --surface-nav:  rgba(15, 27, 22, 0.96);
         /* Skeleton */
-        --skeleton-base: #1c2a1f;
-        --skeleton-mid:  #243528;
+        --skeleton-base: #1a2a23;
+        --skeleton-mid:  #22352d;
         /* Shadows */
         --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.40);
         --shadow-md:    0 3px 14px rgba(0, 0, 0, 0.50);
@@ -4104,14 +4436,14 @@ footer {
         서피스 틴트로 재계산한다.) 사진 히어로(.page-hero--photo)는 제외:
        background 단축속성이 background-image를 초기화하기 때문. */
     .page-hero:not(.page-hero--photo) {
-        background: linear-gradient(165deg, color-mix(in srgb, var(--season, var(--theme)) 24%, #0a1f12) 0%, color-mix(in srgb, var(--season, var(--theme)) 16%, var(--white)) 48%, var(--cream) 100%);
+        background: linear-gradient(165deg, color-mix(in srgb, var(--season, var(--theme)) 24%, #0c1d17) 0%, color-mix(in srgb, var(--season, var(--theme)) 16%, var(--white)) 48%, var(--cream) 100%);
     }
     /* 히어로 CTA 버튼 — 배경이 항상 흰색(#fff)이므로 텍스트·호버를 라이트 모드 값으로 고정 */
     .btn-hero-primary {
-        color: #0a1f12;
+        color: var(--ink-on-light);
     }
     .btn-hero-primary:hover {
-        background: #c8ddc9;
+        background: var(--green-hover);
     }
     /* 전례력 절기색 — JS가 주입하는 밝은 절기색(s.colorLight)은 다크모드에 적응하지
        않으므로, 절기 강조색을 어두운 서피스에 섞어 카드 배경을 어둡게 재계산한다.
@@ -4122,16 +4454,18 @@ footer {
     /* 절기색을 텍스트로 쓰는 요소 — 어두운 배경에서 가독성 확보 위해 밝게 보정 */
     .liturgy-guide .section-eyebrow,
     .liturgy-season-badge .season-name,
-    .liturgy-guide .resource-link {
+    .liturgy-guide .resource-link,
+    .liturgy-guide .check-icon {
         color: color-mix(in srgb, var(--season) 50%, var(--heading));
     }
+    /* 로고 색 칩 — 숲 녹 칩이 어두운 바탕에 묻히지 않게 밝은 테두리 */
+    .logo-swatch-chip { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); }
     /* 수상 배지 hover — 라이트 전용 하드코딩 배경 대신 어두운 톤으로 */
     .about-brief-award:hover {
-        background: var(--green-soft);
+        background: var(--green-light);
     }
     /* 버스 노선 칩 — 어두운 배경에서 칩 색이 묻히지 않도록 밝게 조정 */
-    .bus-chip.bus-blue  { background: #4585c7; }
-    .bus-chip.bus-green { background: #4e9967; }
+    .bus-chip { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22); }  /* 어두운 바탕과 칩 경계 */
 }
 
 /* ── Back To Top 버튼 (화이트 반투명, 아이콘 녹색) ───────────────── */
@@ -4146,11 +4480,11 @@ footer {
     background: var(--green-deep);
     border: none;
     border-radius: 50%;
-    box-shadow: 0 4px 16px rgba(10,31,18,0.22);
+    box-shadow: 0 4px 16px rgba(13, 33, 26, 0.22);
     opacity: 0;
     transform: translateY(10px);
     will-change: transform, opacity;
-    transition: opacity 180ms ease, transform 180ms ease, background 160ms ease;
+    transition: opacity var(--dur) ease, transform var(--dur) ease, background var(--dur-fast) ease;
     z-index: 1050;
     pointer-events: none;
 }
@@ -4162,8 +4496,7 @@ footer {
 }
 #back-to-top:hover, #back-to-top:focus-visible {
     background: var(--theme);
-    box-shadow: 0 6px 24px rgba(10,31,18,0.30);
-    outline: none;
+    box-shadow: 0 6px 24px rgba(13, 33, 26, 0.30);
 }
 #back-to-top svg {
     width: 20px;
@@ -4182,15 +4515,15 @@ footer {
     background: var(--white);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
-    border-top: 3px solid var(--gold);   /* 골드 상단 라인으로 주교 강조 */
+    border-top: 3px solid var(--gold);   /* 세이지 상단 라인으로 주교 강조 */
     box-shadow: var(--shadow-md);
 }
 .bishop-eyebrow {
-    font-size: 0.7rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--sage-ink);
     margin-bottom: 1rem;
 }
 .bishop-card-inner {
@@ -4205,8 +4538,8 @@ footer {
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    border: 3px solid rgba(192, 154, 96, 0.6);   /* 골드 링으로 주교 초상 강조 */
-    box-shadow: 0 6px 22px rgba(10,31,18,0.14);
+    border: 3px solid rgba(177, 184, 131, 0.6);   /* 세이지 링으로 주교 초상 강조 */
+    box-shadow: 0 6px 22px rgba(13, 33, 26, 0.14);
 }
 .bishop-portrait {
     width: 100%;
@@ -4234,24 +4567,24 @@ footer {
     letter-spacing: -0.01em;
 }
 .bishop-title {
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     color: var(--theme);
     font-weight: 600;
     margin-bottom: 0.1rem;
 }
 .bishop-ordained {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
     margin-bottom: 0.85rem;
 }
 .bishop-desc {
-    font-size: 0.9rem;
-    line-height: 1.85;
+    font-size: var(--fs-desc);
+    line-height: 1.9;
     color: var(--text);
     opacity: 0.85;
 }
 .bishop-note {
-    font-size: 0.78rem;
+    font-size: var(--fs-label);
     color: var(--text-muted);
     margin-top: 0.75rem;
     font-style: italic;
@@ -4268,7 +4601,7 @@ footer {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: rgba(10, 31, 18, 0.88);
+    background: rgba(13, 33, 26, 0.88);
     backdrop-filter: blur(6px);
     align-items: center;
     justify-content: center;
@@ -4305,52 +4638,60 @@ footer {
 }
 .gc-page-nav .container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 .gc-page-nav .container::-webkit-scrollbar { display: none; }
+/* 가운데 정렬은 auto 여백으로 — justify-content:center는 넘칠 때 왼쪽이 잘려 스크롤로도 못 본다 */
+.gc-page-nav .container > :first-child { margin-left: auto; }
+.gc-page-nav .container > :last-child  { margin-right: auto; }
 .gc-nav-link {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 0.35rem;
     padding: 0.85rem 1.2rem;
-    font-size: 0.84rem;
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--text-muted);
     text-decoration: none;
     border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color var(--dur), border-color var(--dur);
     white-space: nowrap;
 }
+/* 모든 섹션 탭 공통 — 테마색 단일 톤. 활성 탭만 진한 밑줄 + 옅은 배경 */
 .gc-nav-link.is-active {
-    color: var(--theme);
+    color: var(--heading);
     border-bottom-color: var(--theme);
+    background: color-mix(in srgb, var(--theme) 10%, var(--white));
 }
 /* 터치 기기에서 sticky-hover 오작동 방지 — 마우스 환경에서만 hover 적용 */
 @media (hover: hover) {
     .gc-nav-link:hover {
-        color: var(--theme);
-        border-bottom-color: var(--theme);
+        color: var(--heading);
+        border-bottom-color: color-mix(in srgb, var(--theme) 45%, transparent);
     }
 }
 @media (max-width: 640px) {
+    .gc-page-nav .container { padding-left: 0.25rem; padding-right: 0.25rem; }
     .gc-nav-link {
-        flex: 1;
+        /* 글자보다 좁아지지 않게 — 넘치면 겹치지 않고 가로 스크롤 */
+        flex: 1 0 auto;
         justify-content: center;
-        padding: 0.75rem 0.5rem;
-        font-size: 0.8rem;
+        padding: 0.75rem 0.45rem;
+        font-size: var(--fs-label);
     }
+}
+
+@media (max-width: 380px) {
+    .gc-nav-link { padding-left: 0.35rem; padding-right: 0.35rem; }
 }
 
 /* 외부 상세 페이지로 이어지는 섹션 내비 링크 (예: 녹색교회) */
 .gc-nav-link--ext { color: var(--theme); }
-@media (hover: hover) {
-    .gc-nav-link--ext:hover { color: var(--theme); border-bottom-color: var(--theme); }
-}
 
 /* ── 교회 소개 — 섹션 순차 연결('다음') 흐름 ──────────────── */
 .about-next {
@@ -4361,20 +4702,20 @@ footer {
     margin: 2.5rem auto 0;
     padding: 0.7rem 1.4rem;
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--white);
     text-decoration: none;
-    font-size: 0.88rem;
-    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    font-size: var(--fs-sm);
+    transition: border-color var(--dur-slow), transform var(--dur-slow), box-shadow var(--dur-slow);
 }
 .about-next:hover {
     border-color: var(--green-mid);
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-1));
     box-shadow: var(--shadow-md);
 }
 .about-next-label { color: var(--text-muted); font-weight: 500; }
 .about-next-target { color: var(--heading); font-weight: 700; }
-.about-next-arrow { color: var(--green-mid); font-weight: 700; transition: transform 0.25s; }
+.about-next-arrow { color: var(--green-mid); font-weight: 700; transition: transform var(--dur-slow); }
 .about-next:hover .about-next-arrow { transform: translateX(3px); }
 
 /* ── MenuOverlay (전체 메뉴 + 검색) ──────────────────────── */
@@ -4387,14 +4728,14 @@ footer {
     align-items: flex-start;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.22s var(--ease-out), visibility 0.22s var(--ease-out);
+    transition: opacity var(--dur) var(--ease-out), visibility var(--dur) var(--ease-out);
 }
 .menu-overlay.is-open { opacity: 1; visibility: visible; }
 
 .menu-overlay-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(10, 31, 18, 0.55);
+    background: rgba(13, 33, 26, 0.55);
     backdrop-filter: blur(2px);
 }
 
@@ -4411,7 +4752,7 @@ footer {
     box-shadow: var(--shadow-lg);
     overflow: hidden;
     transform: translateY(-12px);
-    transition: transform 0.22s var(--ease-out);
+    transition: transform var(--dur) var(--ease-out);
 }
 .menu-overlay.is-open .menu-overlay-panel { transform: translateY(0); }
 
@@ -4425,22 +4766,25 @@ footer {
 }
 .menu-search-box {
     flex: 1;
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 0.6rem;
     padding: 0.6rem 0.9rem;
     background: var(--cream);
     border: 1px solid var(--border);
-    border-radius: 50px;
-    transition: border-color 0.18s;
+    border-radius: var(--radius-pill);
+    transition: border-color var(--dur);
 }
 .menu-search-box:focus-within { border-color: var(--theme); }
 .menu-search-icon { width: 18px; height: 18px; color: var(--text-muted); flex-shrink: 0; }
 .menu-search-input {
     flex: 1;
+    min-width: 0;
     border: none;
     background: none;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);   /* iOS 확대 방지(16px) */
+    min-height: 2.5rem;
     color: var(--text);
     font-family: inherit;
 }
@@ -4458,10 +4802,10 @@ footer {
     color: var(--text-muted);
     border-radius: 50%;
     cursor: pointer;
-    transition: color 0.18s, background 0.18s;
+    transition: color var(--dur), background var(--dur);
 }
 .menu-overlay-close:hover,
-.menu-overlay-close:focus-visible { color: var(--green-deep); background: var(--green-light); outline: none; }
+.menu-overlay-close:focus-visible { color: var(--heading); background: var(--green-light); }
 
 .menu-overlay-scroll {
     overflow-y: auto;
@@ -4480,23 +4824,23 @@ footer {
 }
 .menu-sitemap-title {
     display: block;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     font-weight: 700;
-    color: var(--green-deep);
+    color: var(--heading);
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 2px solid var(--theme);
-    transition: color 0.15s;
+    transition: color var(--dur-fast);
 }
 .menu-sitemap-title:hover { color: var(--theme); }
 .menu-sitemap-list { list-style: none; }
 .menu-sitemap-list li a {
     display: block;
     padding: 0.45rem 0.5rem;
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     color: var(--text-muted);
     border-radius: var(--radius-sm);
-    transition: color 0.15s, background 0.15s, padding-left 0.15s;
+    transition: color var(--dur-fast), background var(--dur-fast), padding-left var(--dur-fast);
 }
 .menu-sitemap-list li a:hover {
     color: var(--theme);
@@ -4512,7 +4856,7 @@ footer {
     gap: 0.3rem;
     padding: 0.8rem 0.75rem;
     border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
+    transition: background var(--dur-fast);
 }
 .menu-results-list li a:hover { background: var(--green-light); }
 .menu-result-head {
@@ -4521,11 +4865,11 @@ footer {
     justify-content: space-between;
     gap: 1rem;
 }
-.menu-result-label { font-size: 0.95rem; color: var(--text); }
-mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; border-radius: 3px; }
-.menu-result-group { font-size: 0.78rem; color: var(--text-muted); flex-shrink: 0; }
+.menu-result-label { font-size: var(--fs-body); color: var(--text); }
+mark { background: var(--gold-bg); color: var(--heading); padding: 0 0.1em; border-radius: 3px; }
+.menu-result-group { font-size: var(--fs-label); color: var(--text-muted); flex-shrink: 0; }
 .menu-result-excerpt {
-    font-size: 0.82rem;
+    font-size: var(--fs-md);
     color: var(--text-muted);
     line-height: 1.6;
     display: -webkit-box;
@@ -4533,7 +4877,7 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.menu-results-empty { padding: 1.5rem 0.75rem; color: var(--text-muted); font-size: 0.9rem; text-align: center; }
+.menu-results-empty { padding: 1.5rem 0.75rem; color: var(--text-muted); font-size: var(--fs-sm); text-align: center; }
 
 @media (max-width: 768px) {
     .menu-overlay-panel {
@@ -4578,7 +4922,7 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     cursor: pointer;
     font-family: inherit;
     text-align: left;
-    transition: background 0.15s;
+    transition: background var(--dur-fast);
 }
 .bulletin-row:hover { background: var(--green-light); }
 .bulletin-row[aria-expanded="true"] { background: var(--green-light); }
@@ -4604,7 +4948,7 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
 }
 .bulletin-badge-new {
     display: inline-block;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.03em;
     color: var(--theme-on);
@@ -4635,7 +4979,7 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
 .bulletin-row-chevron {
     flex-shrink: 0;
     color: var(--text-muted);
-    transition: transform 0.22s var(--ease-out);
+    transition: transform var(--dur) var(--ease-out);
 }
 .bulletin-row[aria-expanded="true"] .bulletin-row-chevron {
     transform: rotate(180deg);
@@ -4667,7 +5011,7 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     cursor: zoom-in;
-    transition: box-shadow 0.18s, transform 0.18s var(--ease-out);
+    transition: box-shadow var(--dur), transform var(--dur) var(--ease-out);
 }
 .bulletin-page:hover {
     box-shadow: var(--hover-shadow-sm);
@@ -4724,14 +5068,14 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     background: rgba(255, 255, 255, 0.92);
     border: none;
     color: #1a1a1a;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-    transition: background 0.15s, transform 0.15s;
+    transition: background var(--dur-fast), transform var(--dur-fast);
     z-index: 1;
 }
 .bulletin-lb-close:hover { background: #fff; transform: scale(1.1); }
@@ -4744,12 +5088,12 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     padding: 0.5rem 1.1rem;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--heading);
     text-decoration: none;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    transition: background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast);
 }
 .bulletin-pdf-btn:hover {
     background: var(--theme);
@@ -4767,14 +5111,14 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
 .bulletin-pag-btn {
     padding: 0.45rem 1.25rem;
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--white);
     color: var(--text);
     font-size: var(--fs-sm);
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
 }
 .bulletin-pag-btn:hover:not(:disabled) {
     background: var(--theme);
@@ -4821,6 +5165,138 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
    감사성찬례 순서(worship.html) 등 본문 인쇄 대응.
    내비·푸터·오버레이·지도 등 화면 전용 요소를 제거하고
    잉크 절약을 위해 흰 배경·검정 텍스트로 단순화한다. */
+/* ── 접기·펼치기 (MoreToggle) ─────────────────────────────────
+   모든 곳에서 같은 모양·위치: 콘텐츠 폭의 가로 막대 버튼이 보이는 부분 바로 아래에 있고,
+   숨긴 부분(.more-body)은 버튼 바로 아래로 펼쳐진다. 버튼 위아래 간격은 같은 값으로 통일 */
+.more-toggle {
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    width: 100%;
+    min-height: 48px;   /* 터치 타깃 */
+    margin: 1.25rem 0 0;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--heading);
+    font-size: var(--fs-sm); font-weight: 600; font-family: inherit;
+    cursor: pointer;
+    transition: border-color var(--dur) ease, box-shadow var(--dur) ease;
+}
+/* 블록 맨 앞에 오는 버튼(사제 이력)은 블록 자체 여백이 있으므로 위 간격을 더하지 않음 */
+.more-toggle:first-child { margin-top: 0; }
+.more-toggle:hover { border-color: var(--theme); box-shadow: var(--hover-shadow-sm); }
+.more-toggle:focus-visible { outline: 2px solid var(--theme); outline-offset: 2px; }
+.more-toggle-icon { transition: transform var(--dur) ease; flex-shrink: 0; }
+.more-toggle[aria-expanded="true"] .more-toggle-icon { transform: rotate(180deg); }
+.more-body { margin-top: 1.25rem; }
+/* until-found는 display 대신 content-visibility로 숨겨 여백이 남으므로 접힌 동안 0으로 */
+.more-body[hidden] { margin: 0; padding: 0; border: 0; }
+.more-body[hidden]:not([hidden="until-found"]) { display: none; }
+.more-body > :first-child { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .more-toggle, .more-toggle-icon { transition: none; }
+}
+@media print {
+    .more-toggle { display: none !important; }
+    .more-body[hidden] { display: block !important; content-visibility: visible !important; margin-top: 1.25rem; }
+    .more-body.grid[hidden] { display: grid !important; }
+}
+
+/* ── PC 첫 화면(page-hero) 여백 균형 ──────────────────────────
+   히어로 하단 64px + 다음 섹션 상단 96px + 첫 블록 margin(40~64px)이 겹쳐
+   제목 아래 여백이 위쪽(약 80px)의 2~3배(155~222px)로 벌어지던 문제 정리.
+   모바일은 아래 '모바일 세로 리듬'에서 따로 다루므로 769px 이상에만 적용 */
+@media (min-width: 769px) {
+    .page-hero { padding-top: calc(var(--nav-h) + 2.6rem - 5px); padding-bottom: calc(2.2rem - 5px); }
+    .page-hero + .section,
+    .gc-page-nav + .section { padding-top: 2.5rem; }
+    .page-hero + .section > .container > :first-child,
+    .page-hero + .section > .container > [id$="-full"] > :first-child,
+    .gc-page-nav + .section > .container > :first-child { margin-top: 0; }
+}
+
+/* 섹션 가장자리 블록의 margin은 섹션 여백(--section-pad)에 한 번 더 더해지지 않게 */
+.section > .container > :first-child,
+.section > .container > [id$="-full"] > :first-child { margin-top: 0; }
+.section > .container > :last-child,
+.section > .container > :last-child > :last-child { margin-bottom: 0; }
+
+/* ── 좁은 PC·태블릿 가로(769~1099px) 내비 ──────────────────────
+   메뉴 7개를 데스크톱 간격 그대로 두면 1010px 아래에서 '오시는 길'과 검색 버튼이
+   화면 밖으로 잘리므로 간격을 줄이고, 더 좁으면 로고 글자를 숨겨 마크만 둔다 */
+@media (min-width: 769px) and (max-width: 1099px) {
+    .nav-link { padding: 0 0.7rem; font-size: var(--fs-md); }
+    /* 마지막 메뉴 드롭다운이 화면 오른쪽 밖으로 나가지 않게 */
+    .nav-item:last-child .dropdown { left: auto; right: 0; }
+}
+@media (min-width: 769px) and (max-width: 959px) {
+    .nav-logo-text { display: none; }
+}
+
+/* ── 모바일 세로 리듬 ─────────────────────────────────────────
+   데스크톱용 여백(섹션 96px·카드 40px·푸터 96px 등)이 모바일에 그대로 남아
+   여백이 겹겹이 쌓이던 문제(첫 화면→첫 카드 160px 등)를 한곳에서 정리한다.
+   기준: 섹션 40px · 섹션 제목 아래 24~28px · 카드 안쪽 24px · 블록 사이 28px */
+@media (max-width: 768px) {
+    :root { --section-pad: 2.5rem; }
+
+    /* 페이지 첫 화면과 바로 다음 섹션 — 하단·상단 여백이 겹치지 않게 */
+    .page-hero { padding-top: calc(var(--nav-h) + 1.5rem - 5px); padding-bottom: calc(1.25rem - 5px); }
+    .page-hero + .section,
+    .gc-page-nav + .section { padding-top: 1.75rem; }
+    /* 섹션 맨 앞 블록의 위쪽 margin이 섹션 여백에 한 번 더 더해지지 않게 */
+    .section > .container > :first-child,
+    .section > .container > [id$="-full"] > :first-child { margin-top: 0; }
+    .guide-banner { margin-top: 1.25rem; }
+
+    .section-header { margin-bottom: 1.75rem; }
+    .section-header:not(:has(.section-sub)) { margin-bottom: 1.25rem; }
+
+    /* 카드 안쪽 여백 */
+    .card, .info-card, .bishop-card { padding: 1.5rem 1.25rem; }
+    .emmaus-stage, .emmaus-scripture-block { padding: 1.5rem 1.25rem; }
+    .bishop-card { margin-bottom: 1.75rem; }
+
+    /* 블록 사이 간격 */
+    .liturgy-guide { margin-top: 1.5rem; }
+    .liturgy-section { margin-bottom: 2.25rem; }
+    .anglican-body, .minister-category, .philosophy-intro { margin-bottom: 1.75rem; }
+    .philosophy-closing, .logo-refs, .about-next, .emmaus-stages { margin-top: 1.75rem; }
+    .logo-anglican { margin-top: 2.25rem; padding-top: 1.75rem; }
+    .logo-lockup { padding: 1.1rem 1.25rem; }
+    .logo-lockup-name { font-size: var(--fs-lead); }
+    .faq-lead, .faq-cat, .links-group { margin-bottom: 2rem; }
+    .video-grid { margin-bottom: 1.75rem; }
+    .newcomer-intro { margin-bottom: 1.75rem; }
+    .newcomer-cta { margin-top: 2rem; }
+    .placeholder-wrap { margin: 2.5rem auto; }
+
+    /* 마무리 안내 띠 */
+    .next-step-cta { padding: 3rem 0; }
+    .next-step-cta-desc { margin-bottom: 1.5rem; }
+
+    /* 푸터 */
+    footer { padding: 2.5rem 0 2rem; }
+    .footer-inner { margin-bottom: 2rem; gap: 2rem; }
+}
+
+/* 홈 '처음 오셨나요?' 카드 — 선 아이콘, 모바일은 2×2 타일(설명 생략)로 세로 길이를 줄인다 */
+#home-guide .resource-icon { color: var(--theme); }
+.resource-icon svg { display: block; width: 1.9rem; height: 1.9rem; }
+@media (max-width: 768px) {
+    #home-guide .resource-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    #home-guide .resource-card {
+        align-items: center;
+        text-align: center;
+        padding: 1.1rem 0.6rem;
+    }
+    #home-guide .resource-icon { margin-bottom: 0.5rem; }
+    #home-guide .resource-icon svg { width: 1.7rem; height: 1.7rem; }
+    #home-guide .resource-title { margin-bottom: 0; }
+    #home-guide .resource-desc,
+    #home-guide .resource-link { display: none; }
+}
+
 @media print {
     :root {
         --cream: #fff;
@@ -4867,3 +5343,223 @@ mark { background: var(--gold-bg); color: var(--green-deep); padding: 0 0.1em; b
     details > *:not(summary) { display: block; }
     a { color: #000; text-decoration: underline; }
 }
+
+/* 복사 결과를 화면과 보조기술에 함께 전달한다. */
+.map-copy-status {
+    margin: 0.5rem 0 0;
+    font-size: var(--fs-md);
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+
+/* 탭 지연(더블탭 확대 대기) 제거 */
+a, button, summary, [role="button"] { touch-action: manipulation; }
+
+/* ── 아이콘 배지 — 컴포넌트별 font-size 뒤에 두어 크기를 통일 ── */
+/* 카드 속 큰 아이콘은 가는 원 배지 안에 — 선 아이콘이 허공에 뜨지 않게 */
+.story-value-icon, .resource-icon, .card-icon, .anglican-pillar-icon,
+.space-icon, .placeholder-icon, .emmaus-join-icon, .val-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7em;
+    height: 1.7em;
+    font-size: 1.6rem;
+    line-height: 1;
+    border-radius: 50%;
+    /* 반투명 틴트 — 흰 카드·크림 구역·다크모드 어디서든 아래 배경이 비쳐 자연스럽게 섞인다 */
+    border: 1px solid color-mix(in srgb, var(--theme) 24%, transparent);
+    background: color-mix(in srgb, var(--theme) 7%, transparent);
+}
+.story-value-icon .ico, .resource-icon .ico, .card-icon .ico, .anglican-pillar-icon .ico,
+.space-icon .ico, .placeholder-icon .ico, .emmaus-join-icon .ico, .val-icon .ico {
+    width: 0.9em;
+    height: 0.9em;
+    vertical-align: 0;
+}
+
+/* ── 터치 기기 탭 반응 ──────────────────────────────────────
+   hover의 떠오름·확대가 탭 뒤에 남아 카드가 튀고, 크기 변화(scale)는 스크롤 시작에도 걸려 버벅인다.
+   터치에서는 움직임을 없애고, 눌린 순간 색만 바로 바꾼다. */
+@media (hover: none) {
+    .card:hover, .card:hover .card-icon, .info-card:hover, .value-card:hover,
+    .anglican-pillar:hover, .anglican-pillar:hover .anglican-pillar-icon, .mission-mark:hover,
+    .btn-next:hover, .btn-live:hover, .btn-hero-primary:hover, .liturgy-step:hover, .map-btn:hover,
+    .links-card:hover, .video-card:hover, .photo-item:hover, .photo-item:hover img,
+    .about-next:hover, .about-next:hover .about-next-arrow, .bulletin-page:hover,
+    .iona-link-card:hover .iona-link-card__arrow {
+        transform: none;
+    }
+    a.resource-card:active, a.card:active, a.links-card:active, a.iona-link-card:active,
+    .video-card:active, .newcomer-cta-link:active, .about-next:active {
+        background-color: var(--green-light);
+        border-color: var(--theme);
+        transition: none;
+    }
+    /* 어두운 배경 위 버튼도 있어 배경색 대신 살짝 흐리게 */
+    .btn-next:active, .map-btn:active { opacity: 0.75; transition: none; }
+}
+
+/* ── 교회 소식 (news.html) — 목록은 .bulletin-list를 재사용 ── */
+.news-intro, .news-empty { max-width: 760px; margin: 0 auto 1rem; font-size: var(--fs-label); color: var(--text-muted); }
+.news-post { max-width: 40rem; }
+.news-post + .news-post { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+.news-post-title { font-size: var(--fs-body); line-height: var(--lh-snug); color: var(--heading); margin: 0 0 0.4rem; }
+.news-post p { margin: 0; line-height: 1.8; color: var(--text); }
+.news-post p + p { margin-top: 0.3rem; }
+.news-post-meta { margin: 0.5rem 0 0; display: grid; gap: 0.3rem; }
+.news-post-meta div { display: grid; grid-template-columns: 3rem 1fr; gap: 0.5rem; line-height: 1.7; }
+.news-post-meta dt { font-weight: 600; color: var(--text-muted); }
+.news-post-meta dd { margin: 0; color: var(--text); }
+
+/* ── 공용 보조 클래스 (인라인 style 대체) ───────────────────── */
+.section--tight-bottom { padding-bottom: var(--space-8); }
+.text-note { font-size: var(--fs-md); color: var(--text-muted); }
+.prose-list { margin: 0.75rem 0 0.75rem 1.2rem; font-size: var(--fs-desc); line-height: var(--lh-relaxed); color: var(--text); }
+
+/* 개인정보처리방침 */
+.privacy-doc { max-width: var(--content-read); margin: 0 auto; line-height: var(--lh-relaxed); }
+.privacy-lead { margin-bottom: 1.5rem; color: var(--text-muted); }
+.privacy-h2 { font-size: 1.3rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--heading); }
+.privacy-list { margin: 0.75rem 0 1rem 1.25rem; color: var(--text-muted); }
+.privacy-list li { margin-bottom: 0.5rem; }
+.privacy-foot { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: var(--fs-md); color: var(--text-muted); }
+.privacy-doc a { color: var(--theme); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* 최종 검수 보정 — 두 단계 안쪽 전례 안내의 가장자리 margin, 소제목 */
+.section .container > :first-child > .liturgy-guide:first-child { margin-top: 0; }
+.section .liturgy-section:last-child { margin-bottom: 0; }
+.section-title--sub { font-size: 1.3rem; }
+.liturgy-section .info-card h2.section-title--sub { margin: 0; }
+.nowrap { white-space: nowrap; }
+
+/* 4개 카드는 2×2로(community) */
+#community-full .grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 700px) { #community-full .grid { grid-template-columns: 1fr; } }
+
+/* 모바일 본문 폭 확보: keep-all 한글은 어절 단위로만 줄을 바꿔 좁은 칸에서 줄 끝이 들쭉날쭉해지므로 좌우 여백을 줄여 한 줄 글자 수를 늘린다 */
+@media (max-width: 480px) {
+    .container { padding-left: 1rem; padding-right: 1rem; }
+    .story-value { padding: 1.25rem 1rem; }
+    /* 모바일 본문: 양쪽 정렬은 한 줄 공백 몇 군데에 남는 폭을 몰아 넣어 어절 사이가 벌어지므로(iOS Safari는 글자 사이 분배 text-justify 미지원) 왼쪽 정렬로 둔다.
+       한글은 음절 단위로 줄을 바꿔 오른쪽 끝 차이를 한 글자 안쪽으로 줄이고, 숫자·영문 어절은 끊지 않는다 */
+    .story-value-text, .faq-a-text, .faq-a-lead, .info-card p, .liturgy-body, .anglican-para, .space-desc,
+    .emmaus-lead, .emmaus-stage-desc, .clergy-desc, .bishop-desc, .newcomer-intro-body,
+    .worship-card-desc, .worship-card-detail, .logo-desc, .logo-history, .bio-ministry-note {
+        text-align: left;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        hyphens: none;
+    }
+}
+
+/* 감사성찬례 순서(모바일): 번호를 제목 줄로 올려 목록이 카드 폭을 모두 쓰게 하고, 짧은 항목은 어절 단위로 끊되 마지막 줄에 한 단어만 남지 않게 한다 */
+@media (max-width: 480px) {
+    .liturgy-step {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        column-gap: 0.75rem;
+        row-gap: 0.4rem;
+        align-items: center;
+        padding: 1.15rem 1rem;
+    }
+    .liturgy-step .step-body { display: contents; }
+    .liturgy-step .step-title { margin: 0; }
+    .liturgy-step .step-list { grid-column: 1 / -1; }
+    .step-list li, .liturgy-body.liturgy-body--lead {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+    }
+}
+
+/* 어린이 예배는 그림의 흰 여백을 살리고 사진의 원래 비율을 유지한다. */
+.children-hero-inner { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); grid-template-areas: "art details"; align-items: center; column-gap: 3rem; row-gap: 1.5rem; }
+.children-hero-details { grid-area: details; align-self: center; min-width: 0; }
+.children-lead { max-width: var(--content-read); margin-inline: auto; font-size: var(--fs-lead); line-height: var(--lh-relaxed); color: color-mix(in srgb, var(--text) 72%, var(--white)); text-align: center; word-break: keep-all; overflow-wrap: break-word; }
+.children-join .next-step-cta-actions { justify-content: center; margin-top: 1.5rem; }
+.children-join .btn-next { min-height: 44px; }
+.children-illustration { grid-area: art; border-radius: var(--radius-md); overflow: hidden; }
+.children-illustration img { display: block; width: 100%; height: auto; }
+.children-service-summary { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 2rem; margin: 1.5rem 0 0; padding: 1rem 0; border-block: 1px solid var(--border); }
+.children-service-summary > div { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .65rem; }
+.children-service-summary dt { font-size: var(--fs-sm); color: var(--text-muted); }
+.children-service-summary dd { margin: 0; color: var(--heading); font-weight: 650; }
+.children-rhythm { padding-block: clamp(2.75rem, 5vw, 4.5rem); }
+.children-rhythm > .container > .section-title { text-align: center; }
+.children-rhythm-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2rem; margin-top: 2rem; }
+.children-rhythm-grid article { border-top: 1px solid var(--border); padding-top: 1.5rem; text-align: center; }
+.children-rhythm-grid article > div { display: flex; flex-direction: column; align-items: center; gap: .6rem; margin-bottom: .85rem; }
+.children-rhythm-grid .section-eyebrow { margin: 0; letter-spacing: var(--ls-label); flex-shrink: 0; display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: color-mix(in srgb, var(--heading) 9%, var(--white)); font-size: .85rem; }
+.children-rhythm-grid h3 { font-size: 1.2rem; color: var(--heading); margin: 0; line-height: 1.35; }
+.children-rhythm-grid article > p:last-child { max-width: 34rem; margin-inline: auto; color: color-mix(in srgb, var(--text) 72%, var(--white)); line-height: var(--lh-relaxed); word-break: keep-all; text-align: center; }
+.children-story { padding-block: clamp(3rem, 6vw, 5rem); }
+.children-story-heading { max-width: var(--content-read); margin: 0 auto 2.25rem; text-align: center; }
+.children-photo-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2rem 1.5rem; max-width: 960px; margin-inline: auto; }
+.children-photo-grid figure { margin: 0; min-width: 0; }
+.children-photo-grid img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); }
+.children-photo-grid figcaption { padding-top: .8rem; color: color-mix(in srgb, var(--text) 72%, var(--white)); font-size: var(--fs-sm); text-align: center; }
+.children-join { max-width: var(--content-read); }
+.children-join > div:first-child { text-align: center; }
+.children-join .children-service { max-width: 560px; margin: 1.75rem auto 0; }
+.children-join .next-step-cta-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); align-items: stretch; gap: .75rem; width: 100%; max-width: 560px; margin: 1.5rem auto 0; }
+.children-join .btn-next { min-width: 0; width: 100%; max-width: none; justify-content: center; padding: .85rem .75rem; text-align: center; text-decoration: none; }
+.children-join .btn-next--primary { grid-column: 1 / -1; }
+.children-service dl { margin: 0 0 1.5rem; }
+.children-service dl:last-child { margin-bottom: 0; }
+.children-service dl > div { display: grid; grid-template-columns: 2.5rem minmax(0,1fr); gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+.children-service dl > div:first-child { border-top: 1px solid var(--border); }
+.children-service dt { color: var(--text-muted); font-size: var(--fs-sm); }
+.children-service dd { margin: 0; font-weight: 600; color: var(--heading); }
+.children-service > p { line-height: var(--lh-relaxed); color: color-mix(in srgb, var(--text) 72%, var(--white)); text-align: center; }
+/* 광명 희망터 (hopecenter.html) — 어린이 예배 페이지의 lead·요약·참여 블록을 재사용 */
+.hope-intro { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+.hope-intro-photo { max-width: 1000px; margin: 0 auto 2rem; border-radius: var(--radius-md); overflow: hidden; }
+.hope-intro-photo img { display: block; width: 100%; height: auto; }
+.hope-facts { max-width: 560px; margin-inline: auto; }
+.hope-steps { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.75rem; max-width: 1080px; margin: 0 auto; padding: 0; counter-reset: none; }
+.hope-step { display: flex; flex-direction: column; min-width: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.hope-step figure { margin: 0; aspect-ratio: 3 / 2; overflow: hidden; }
+.hope-step img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hope-step-body { padding: 1.25rem 1.25rem 1.5rem; text-align: center; }
+.hope-step-num { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; margin-bottom: .7rem; border-radius: 50%; background: color-mix(in srgb, var(--heading) 9%, var(--white)); color: var(--heading); font-size: .85rem; font-weight: 650; }
+.hope-step h3 { margin: 0 0 .5rem; font-size: 1.15rem; line-height: 1.35; color: var(--heading); }
+.hope-step p { margin: 0; color: color-mix(in srgb, var(--text) 72%, var(--white)); line-height: var(--lh-relaxed); word-break: keep-all; }
+.hope-history { padding-block: clamp(3rem, 6vw, 5rem); }
+.hope-history-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 3rem; max-width: 1080px; }
+.hope-history-photo { margin: 0; min-width: 0; }
+.hope-history-photo img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+.hope-history-photo figcaption { padding-top: .8rem; color: color-mix(in srgb, var(--text) 72%, var(--white)); font-size: var(--fs-sm); text-align: center; }
+.hope-history-body { min-width: 0; }
+.hope-history-text { margin: 0 0 1.5rem; color: var(--text); line-height: var(--lh-relaxed); word-break: keep-all; }
+.hope-programs { list-style: none; margin: 0; padding: 0; }
+.hope-programs li { display: flex; align-items: center; gap: .85rem; padding: .9rem 0; border-bottom: 1px solid var(--border); color: var(--heading); font-weight: 600; }
+.hope-programs li:first-child { border-top: 1px solid var(--border); }
+.hope-program-icon { display: inline-grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: color-mix(in srgb, var(--heading) 9%, var(--white)); color: var(--heading); }
+.hope-vision { padding-block: clamp(3rem, 6vw, 4.5rem); }
+.hope-vision-quote { max-width: var(--content-read); margin: 0 auto; padding: 0; border: 0; text-align: center; }
+.hope-vision-quote p { margin: 0; color: var(--heading); font-size: clamp(1.125rem, 2.2vw, 1.35rem); line-height: 1.75; font-weight: 500; word-break: keep-all; }
+.hope-vision-quote::before { content: ""; display: block; width: 2.5rem; height: 2px; margin: 0 auto 1.5rem; background: currentColor; color: var(--heading); opacity: .35; }
+.hope-join .children-service dl > div { grid-template-columns: 5.5rem minmax(0,1fr); }
+@media (max-width: 900px) {
+    .hope-steps { grid-template-columns: minmax(0, 1fr); max-width: 560px; gap: 1.25rem; }
+    .hope-history-inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; max-width: 560px; }
+    .hope-history-body { text-align: center; }
+    .hope-programs li { justify-content: center; }
+}
+@media (max-width: 768px) {
+    .hope-intro-photo { margin-bottom: 1.5rem; }
+}
+@media (max-width: 768px) {
+    .children-hero-inner { grid-template-columns: minmax(0,1fr); grid-template-areas: "art" "details"; gap: 1.25rem; }
+    .children-illustration { width: 100%; max-width: 560px; margin-inline: auto; }
+    .children-hero-details { max-width: 560px; margin-inline: auto; }
+    .children-lead { font-size: 1rem; }
+    .children-rhythm-grid { grid-template-columns: minmax(0,1fr); gap: 1.5rem; max-width: 560px; margin-inline: auto; }
+    .children-rhythm-grid h3 { font-size: 1.125rem; }
+    .children-photo-grid { gap: 1.5rem .75rem; }
+    .children-photo-grid figcaption { font-size: var(--fs-label); padding-top: .6rem; }
+    .children-story-heading { margin-bottom: 1.75rem; }
+    .children-service-summary { gap: .5rem 1.25rem; }
+}
+
