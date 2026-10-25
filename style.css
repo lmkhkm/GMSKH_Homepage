@@ -1310,6 +1310,17 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     }
 }
 
+/* 교회력 페이지 PC 정렬 — 다른 페이지처럼 제목은 왼쪽 정렬을 유지하되,
+   폭 560px 위젯(달력·전례독서)이 왼쪽에만 붙어 오른쪽이 비어 보이던 문제를
+   '가운데 칼럼 안에서 제목과 본문이 같은 왼쪽선'으로 해결한다(예배 페이지 단락과 같은 방식).
+   절기·특별 주일처럼 전체 폭 그리드는 제목이 컨테이너 왼쪽선과 같아 그대로 둔다.
+   PC(769px~)에서만 적용하고 모바일은 변경 없다. */
+@media (min-width: 769px) {
+    .sundays-page #sundays-monthly,
+    .sundays-page #sundays-lectionary { max-width: 560px; margin-left: auto; margin-right: auto; }
+    .sundays-page .sundays-season-hero { max-width: var(--content-read); margin-left: auto; margin-right: auto; }
+}
+
 /* Quote Block */
 .quote-block {
     background: var(--gold-bg);
