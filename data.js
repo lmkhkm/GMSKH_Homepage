@@ -1517,6 +1517,16 @@ const CHURCH_DATA = {
                 src: "images/gallery/community/children-painting-together.webp",
                 thumb: "images/gallery/community/children-painting-together-thumb.webp",
                 alt: "여러 색으로 칠한 벽에 붓질하는 어린이"
+            },
+            {
+                id: "p20",
+                title: "비건 짜장도 함께 준비한 애찬",
+                desc: "예배 후 애찬에 비건 짜장과 일반 짜장을 따로 마련했습니다.",
+                category: "공동체",
+                date: "",
+                src: "images/gallery/community/agape-vegan-jjajang.webp",
+                thumb: "images/gallery/community/agape-vegan-jjajang-thumb.webp",
+                alt: "비건(채식) 짜장과 논-비건(채식X) 짜장 안내문이 놓인 애찬 배식대"
             }
         ]
     },
