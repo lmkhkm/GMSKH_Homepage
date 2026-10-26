@@ -186,6 +186,8 @@ echo "Done: $TODAY"
 >
 > **추측 금지 — 주보 예배 순서면에 인쇄된 값만 기록한다.**
 >
+> **작업 시작 전 위키 먼저** — 주보를 읽기 전에 `docs/wiki/church.md`(사람·직함)와 `docs/church-glossary.md`를 읽는다. **사람 이름·세례명은 이미지에서 읽은 글자를 그대로 믿지 말고** 위키·`data.js`(`clergy`·`officers`)와 대조해 맞춘다(2026-10-25 `민숙희`를 `민속희`로 잘못 읽은 사례). 위키·`data.js`에 없는 이름(평신도 봉독자·봉헌자 등)은 읽은 대로 적고 완료 보고에 `미확인`으로 알린다.
+>
 > **자동 처리 원칙** — 사용자가 주보 이미지를 올리면(또는 `bulletins/`에 이미지가 push되면) 확인을 묻지 말고 아래 1~7을 끝까지 진행한다. 주보 예배 순서면과 4면 '교회소식'을 이미지에서 직접 읽어 `lectionary-overrides.json`·`bulletin-news.json`·`bulletin-verses.json`을 작성하고, 아래 **교회소식 검수 기준**으로 스스로 검수한 뒤 PR을 만들어 머지한다. 검수에서 고친 내용과 불확실한 부분(흐려서 읽기 어려운 글자 등)만 완료 보고에 짧게 적는다.
 
 1. 이미지 복사: `bulletins/YYYYMMDD_N.jpg` (표지부터 순서대로)
@@ -199,7 +201,7 @@ echo "Done: $TODAY"
 4. **핵심구절** → `data/bulletin-verses.json`의 `weeks`에 그 주 항목 추가 (`{ ref, text }`). 주보에 핵심구절이 인쇄돼 있으면 그것을, 없으면 그 주 본문 말씀(주로 복음)에서 중심이 되는 1~3절을 직접 골라 알린다(되묻지 않는다). 본문은 `bible/`의 공동번역 PDF에서 `pdftotext -layout`으로 뽑아 **글자를 대조해 그대로** 옮기고(요약·변형 금지), `text`에는 절 번호·각주 기호·줄바꿈을 넣지 않는다(출처는 `ref`에 `마태 22:37-40` 형식으로). 주보에 다른 번역이 인쇄돼 있으면 인쇄된 문구를 따른다. 주보 페이지 맨 위 '이번 주 말씀' 카드와 각 주보 펼침 영역에 표시된다
 5. `node scripts/sync-bulletins.js` 실행 → PDF 생성 + data.js 자동 갱신
    - 끝에 **⚠️ 트랙 미기록 / ℹ️ 시편 미기록 / ℹ️ 교회소식 미기록 / ℹ️ 핵심구절 미기록** 경고가 뜨면 해당 주 기록을 보완
-6. **예배 슬라이드** → 3면 예배 순서를 `data/worship-order.json`의 `weeks`에 그 주 항목으로 옮긴다(주보에 인쇄된 값만, 항목 앞 `†`는 `stand`, 오른쪽 칸은 `by` 그대로). 성가·기도서가 새 번호·쪽이면 `data/worship-texts/hymns.json`·`bcp.json`에 있는지 확인한다(없으면 더미를 추가하거나 성가집·기도서 파일로 채운다). `node scripts/build-worship-slides.js`가 성경 본문을 `bible/` PDF에서 뽑아 채우고(`readings.json`) `data/worship/YYYYMMDD.json`을 만든다. ⚠️ 더미 경고가 뜨면 보고에 적는다. 확인은 `python3 -m http.server 8000` → `/presentation/worship/`
+6. **예배 슬라이드** → 3면 예배 순서를 `data/worship-order.json`의 `weeks`에 그 주 항목으로 옮긴다(주보에 인쇄된 값만, 항목 앞 `†`는 `stand`, 오른쪽 칸은 `by` 그대로, 위치 막대 칸 `stage`·`sub`은 지난 주 항목을 따른다). 슬라이드에는 주제 그림·회중 응답·가사·위치 막대만 들어가며 독서 본문·사제 기도문은 싣지 않는다. 새 기도서 쪽·성가 가사는 `data/worship-texts/`에 추가하고(교회 슬라이드에서 옮기고 `source` 기록) `node scripts/build-worship-slides.js`로 슬라이드(`data/worship/YYYYMMDD.json`)와 예식문(`YYYYMMDD.book.json`)을 만든다. 성시 악보는 주보 3면 이미지에서 잘라 `data/worship/scores/`에 두고 `score`로 연결한다. 그 주에 따로 알릴 안내(광고)는 사용자가 `announce.html`로 만든 `images/worship/notices/YYYYMMDD-N.jpg`를 올리면 뷰어가 자동으로 넣는다(설정 불필요, 고정 안내만 `defaults.announcements`) ℹ️ 안내(가사 미등록·응답 문구 미입력·주제 그림 미지정)는 보고에 적는다. 확인은 `python3 -m http.server 8000` → `/presentation/worship/`(슬라이드), `/presentation/worship/book.html`(예식문). 상세는 `docs/wiki/liturgy.md` "예배 슬라이드"
 7. `npm test` (병합·표기·overrides·교회소식·핵심구절·예배 슬라이드 형식 검증 포함)
 8. **보관 규칙: 최근 8개 주보 이내 + 8주(56일) 이내(가장 최근 1건은 기간이 지나도 보관)** — 넘긴 주보의 이미지·PDF·교회소식·핵심구절은 sync가 삭제한다. 새 주보를 안 올려도 `bulletin-sync.yml`이 매일 03:00(KST) 실행되어 자동 삭제·커밋한다(수동 실행: Actions > Sync Sunday Bulletins > Run workflow). 다시 필요하면 이미지를 `bulletins/`에 되돌려 놓고 sync. overrides의 과거 항목은 그대로 둬도 무방
 
