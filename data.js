@@ -1348,6 +1348,7 @@ const CHURCH_DATA = {
         note: "예배 전에 미리 열어 두시면 도움이 됩니다.",
         newsIntro: "최근 8주분의 교회소식을 보관합니다.",
         newsEmpty: "등록된 교회소식이 없습니다.",
+        // 모바일 주보(jubo/)는 홈페이지에서 연결하지 않는다(교우에게만 주소 안내, 2026-11-01). 다시 연결하려면 mobile: { href, label, desc }
         items: [
             {
                 date: "2026-11-01",
