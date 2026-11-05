@@ -8,7 +8,7 @@ GitHub (lmkhkm/GMSKH_Homepage)
         │  push
         ▼
   [ main 브랜치 ]
-        │  서버가 2시간마다 git fetch
+        │  서버가 2시간마다 git fetch (주일 10:00~11:10은 10분마다)
         ▼
 NCP 서버 /srv/gmchurch  ──rsync──▶  /var/www/gmchurch  ──▶  nginx  ──▶  방문자
 ```
@@ -136,7 +136,7 @@ chmod +x setup-server.sh
 2. 저장소를 `/srv/gmchurch` 에 clone
 3. nginx 설정 배치 (도메인 자동 치환)
 4. 웹에 공개할 파일만 골라 `/var/www/gmchurch` 로 복사
-5. **2시간마다 git 을 확인해서 자동 배포하는 systemd 타이머 등록**
+5. **2시간마다(주일 10:00~11:10은 10분마다) git 을 확인해서 자동 배포하는 systemd 타이머 등록**
 6. 도메인이 이미 서버를 가리키고 있으면 HTTPS 인증서까지 자동 발급
 
 여러 번 실행해도 안전합니다.
@@ -209,9 +209,27 @@ systemctl restart ssh
 지금까지 하던 것과 똑같습니다. `data.js` 를 고쳐서 `main` 에 push 하면
 서버가 **최대 2시간 안에** 알아서 받아갑니다.
 
+주일 아침은 주보가 올라오므로 **10:00부터 11:10까지 10분마다** 확인합니다
+(한국시간 기준, 10:00·10:10·…·11:10 모두 8번). 주보를 그 사이에 올리면 10분 안에 반영됩니다.
+
+### 타이머 주기 바꾸기
+
+`deploy/gmchurch-publish.timer` 를 고쳐 `main` 에 머지하면 됩니다. 서버에 접속할 필요가 없습니다.
+`publish.sh` 가 저장소의 타이머·서비스 설정이 서버와 다른 걸 보면 검사한 뒤 새로 설치합니다.
+검사에 실패하거나 새 타이머가 안 살아나면 이전 설정을 그대로 둡니다. 설치·실패 기록은
+`journalctl -u gmchurch-publish.service` 에 남고, 다음 실행 시각은 아래로 확인합니다.
+
+```bash
+systemctl list-timers gmchurch-publish.timer
+```
+
+> 이 자동 설치는 2026-11-05에 처음 넣었습니다. 그 변경이 머지된 직후 한 번은 설치 기능이 없는
+> 옛 `publish.sh` 가 돌기 때문에 그다음 차례(머지 후 최대 4시간)에 설치됩니다.
+> 그 뒤로는 타이머를 고쳐 머지하면 서버가 받아 가는 그 차례에 바로 적용됩니다.
+
 ### 바로 반영하고 싶을 때
 
-주보를 올린 주일 아침처럼 2시간을 기다릴 수 없을 때는 서버에 접속해서:
+평일에 2시간을 기다릴 수 없을 때는 서버에 접속해서:
 
 ```bash
 systemctl start gmchurch-publish.service
@@ -294,7 +312,7 @@ deploy/
 ├── publish.sh                 git → 문서 루트 반영 (타이머가 호출)
 ├── nginx-gmchurch.conf        nginx 사이트 설정
 ├── gmchurch-publish.service   systemd 서비스
-└── gmchurch-publish.timer     systemd 타이머 (2시간 간격)
+└── gmchurch-publish.timer     systemd 타이머 (2시간 간격, 주일 10:00~11:10은 10분 간격)
 
 scripts/
 └── set-site-url.js            사이트 절대주소 일괄 변경

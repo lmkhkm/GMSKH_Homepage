@@ -1,5 +1,5 @@
 [Unit]
-Description=광명교회 홈페이지 git 배포 타이머 (2시간마다 확인)
+Description=광명교회 홈페이지 git 배포 타이머 (2시간마다, 주일 10:00~11:10은 10분마다 확인)
 
 [Timer]
 # 부팅 1분 뒤 첫 실행, 이후 2시간 간격
@@ -8,6 +8,12 @@ Description=광명교회 홈페이지 git 배포 타이머 (2시간마다 확인
 #   systemctl start gmchurch-publish.service
 OnBootSec=1min
 OnUnitActiveSec=2h
+
+# 주일 아침에는 주보가 올라오므로 10:00~11:10에 10분마다 확인합니다.
+# 서버 시간대와 상관없이 한국시간으로 맞추려고 시간대를 적어 둡니다.
+OnCalendar=Sun *-*-* 10:00/10 Asia/Seoul
+OnCalendar=Sun *-*-* 11:00,10 Asia/Seoul
+
 # 서버가 꺼져 있던 동안 놓친 실행을 부팅 후 한 번 따라잡습니다
 Persistent=true
 

@@ -6,13 +6,14 @@
 #   1) git 저장소에서 main 최신 상태를 받아옵니다
 #   2) 웹에 공개할 파일만 골라 문서 루트로 복사합니다
 #   3) 바뀐 게 있을 때만 로그를 남깁니다
+#   4) 저장소의 타이머·서비스 설정이 서버와 다르면 서버에 새로 설치합니다
 #
 # .git 디렉터리나 내부 문서(docs/, tests/, scripts/)는 문서 루트로
 # 복사하지 않습니다. 저장소를 그대로 서빙하면 .git 이 통째로 노출되어
 # 위험하기 때문에, 저장소와 문서 루트를 분리합니다.
 #
 # 수동 실행:  sudo /srv/gmchurch/deploy/publish.sh
-# 자동 실행:  systemd 타이머가 2시간마다 호출합니다
+# 자동 실행:  systemd 타이머가 2시간마다, 주일 10:00~11:10에는 10분마다 호출합니다
 
 set -euo pipefail
 
@@ -28,6 +29,55 @@ STATE_FILE="${STATE_FILE:-/var/lib/gmchurch/deployed-commit}"
 
 log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
+# 타이머 주기를 바꿔도 서버에 접속하지 않고 git 만으로 반영되게 합니다.
+# 잘못된 설정이 깔려 타이머가 멈추면 다시는 원격으로 고칠 수 없으므로
+# 설치 전에 검사하고, 설치 뒤 타이머가 살아 있지 않으면 이전 설정으로 되돌립니다.
+UNIT_DIR="${UNIT_DIR:-/etc/systemd/system}"
+UNITS=(gmchurch-publish.service gmchurch-publish.timer)
+
+sync_units() {
+  # 최초 설치는 setup-server.sh 가 맡습니다. 여기서는 이미 깔린 것만 갱신합니다.
+  [ "$(id -u)" -eq 0 ] || return 0
+  [ -f "${UNIT_DIR}/gmchurch-publish.timer" ] || return 0
+
+  local u changed=0
+  for u in "${UNITS[@]}"; do
+    cmp -s "${REPO_DIR}/deploy/${u}" "${UNIT_DIR}/${u}" || changed=1
+  done
+  [ "$changed" -eq 1 ] || return 0
+
+  local check backup out
+  check="$(mktemp -d)"
+  backup="$(mktemp -d)"
+  for u in "${UNITS[@]}"; do
+    cp "${REPO_DIR}/deploy/${u}" "${check}/"
+    cp "${UNIT_DIR}/${u}" "${backup}/" 2>/dev/null || true
+  done
+
+  # 우리 설정에 대한 경고가 한 줄이라도 나오면 설치하지 않습니다
+  # (systemd 는 잘못된 줄을 경고만 하고 건너뛰기 때문)
+  if ! out="$(systemd-analyze verify "${check}/gmchurch-publish.timer" 2>&1)" \
+     || grep -q 'gmchurch-publish' <<<"$out"; then
+    log "타이머 설정 검사 실패 — 서버 설정은 그대로 둡니다: ${out}"
+    rm -rf "$check" "$backup"
+    return 0
+  fi
+
+  cp "${check}/"* "${UNIT_DIR}/"
+  systemctl daemon-reload
+  systemctl restart gmchurch-publish.timer || true
+
+  if systemctl is-active --quiet gmchurch-publish.timer; then
+    log "타이머·서비스 설정 갱신: $(systemctl show -p NextElapseUSecRealtime --value gmchurch-publish.timer)"
+  else
+    cp "${backup}/"* "${UNIT_DIR}/"
+    systemctl daemon-reload
+    systemctl restart gmchurch-publish.timer || true
+    log "새 타이머가 동작하지 않아 이전 설정으로 되돌렸습니다"
+  fi
+  rm -rf "$check" "$backup"
+}
+
 cd "$REPO_DIR"
 
 # 원격 최신 상태 확인
@@ -39,6 +89,9 @@ DEPLOYED="$(cat "$STATE_FILE" 2>/dev/null || true)"
 
 if [ "$REMOTE" = "$DEPLOYED" ] && [ -s "${WEB_ROOT}/index.html" ]; then
   # 변경 없음 — 조용히 종료 (로그를 남기지 않습니다)
+  # 직전 배포에서 받은 타이머 설정은 이 차례에 설치됩니다
+  # (그때 돌던 publish.sh 는 갱신 전 판이라 설치 단계가 없을 수 있음)
+  sync_units
   exit 0
 fi
 
@@ -77,3 +130,5 @@ mkdir -p "$(dirname "$STATE_FILE")"
 printf '%s\n' "$REMOTE" > "$STATE_FILE"
 
 log "배포 완료: $(git log -1 --pretty='%h %s')  파일 $(find "$WEB_ROOT" -type f | wc -l)개"
+
+sync_units
