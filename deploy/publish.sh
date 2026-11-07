@@ -104,8 +104,17 @@ git clean --quiet -fd
 
 mkdir -p "$WEB_ROOT"
 
+# 성가집 스캔은 순서지가 쓰는 쪽만 웹에 올립니다. 비공개 목록은 개발 저장소의
+# scripts/hymnal-web-exclude.js 가 만들고, 목록 파일이 없으면 평소처럼 동작합니다.
+HYMNAL_EXCLUDE="${REPO_DIR}/scripts/hymnal-web-exclude.txt"
+RSYNC_EXTRA=()
+if [ -f "$HYMNAL_EXCLUDE" ]; then
+  RSYNC_EXTRA+=(--exclude-from="$HYMNAL_EXCLUDE")
+fi
+
 # 웹에 올릴 것만 동기화합니다.
 rsync -a --delete \
+  ${RSYNC_EXTRA[@]+"${RSYNC_EXTRA[@]}"} \
   --exclude '.git/' \
   --exclude '.github/' \
   --exclude '.vscode/' \
@@ -120,6 +129,15 @@ rsync -a --delete \
   --exclude 'package-lock.json' \
   --exclude '.gitignore' \
   "${REPO_DIR}/" "${WEB_ROOT}/"
+
+# 제외 목록은 이미 올라간 파일을 지워 주지 않으므로(rsync 규칙) 따로 지웁니다.
+if [ -f "$HYMNAL_EXCLUDE" ] && [ -n "$WEB_ROOT" ]; then
+  while IFS= read -r p; do
+    case "$p" in
+      /data/hymnal-2015/*) rm -rf -- "${WEB_ROOT}${p%/}" ;;
+    esac
+  done < "$HYMNAL_EXCLUDE"
+fi
 
 chown -R www-data:www-data "$WEB_ROOT"
 find "$WEB_ROOT" -type d -exec chmod 755 {} +
