@@ -200,6 +200,20 @@ systemctl restart ssh
 > ⚠️ 공개키 접속이 되는 걸 **먼저 확인한 뒤에** 비밀번호 로그인을 끄세요.
 > 순서를 바꾸면 서버에 못 들어갑니다.
 
+### HTTPS 강제 헤더 (HSTS, 2026-11-07 점검에서 빠져 있던 항목)
+
+2026-11-07 점검에서 `https://gmskh.or.kr/` 응답에 `Strict-Transport-Security`가 없었습니다
+(`X-Content-Type-Options`·`X-Frame-Options`·`Referrer-Policy`는 있었음). certbot이 만든
+**443(HTTPS) server 블록**의 보안 헤더 줄 옆에 아래 한 줄을 넣고 `nginx -t && systemctl reload nginx` 하세요.
+80 포트 블록에 넣으면 브라우저가 무시합니다. 문제가 생기면 줄을 지우면 되도록 처음에는 기간을 짧게(6개월) 둡니다.
+
+```nginx
+add_header Strict-Transport-Security "max-age=15552000" always;
+```
+
+CSP(`Content-Security-Policy`)는 Cloudflare Web Analytics·jsDelivr 글꼴·Abacus 카운터·지도·유튜브를 허용하는 목록을
+만들어 시험해야 해서 지금은 넣지 않습니다.
+
 ---
 
 ## 10. 평소 운영
