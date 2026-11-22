@@ -5,7 +5,7 @@
 ## 프로젝트
 - 대한성공회 광명교회 홈페이지. 바닐라 HTML·CSS·JS, 빌드 없음. 콘텐츠는 `data.js`의 `CHURCH_DATA` → `app.js` 렌더러가 채운다.
 - 개발: `frpsy/gmchurch_web` → https://frpsy.github.io/gmchurch_web/ (머지 후 1~2분)
-- 공식: `lmkhkm/GMSKH_Homepage` → https://gmskh.or.kr/ (공식 `main` 머지 후 최대 2시간)
+- 공식: `lmkhkm/GMSKH_Homepage` → https://gmskh.or.kr/ (공식 `main` 머지 후 평소 최대 2시간. 주일 오전 10시~11시 사이에는 10분 간격으로 반영되고, 11시 이후에는 평소 주기로 돌아간다. 2026-11-22 공식 담당자 안내)
 - 테스트 `npm test`(Vitest), 미리보기 `python3 -m http.server 8000`. Netlify는 종료됨 — `netlify[bot]` 코멘트는 무시한다.
 
 ## 저장소 2개 운영
@@ -54,6 +54,6 @@
 - 주보제작에서 `book.json`을 만든 뒤 `node scripts/hymnal-web-exclude.js`를 실행한다(순서지가 쓰는 성가 악보만 웹에 공개, 나머지 스캔은 비공개 — `docs/REPO-STRUCTURE.md` 끝).
 - 순서지는 휴대폰 앱 화면 전용이다. 인쇄는 고려하지 않는다(2026-11-22 사용자 확정).
 - 교회소식 표기: 여러 줄 내용은 `- ` 점 목록으로(소그룹 명단은 `- 소그룹N 인도자 : 이름 (층) / 명단`). 줄 표기만 바꾸고 인쇄된 글은 고치지 않는다. 굵은 글씨·제목 등 새 표기는 디자인 승인 뒤에만(2026-11-22).
-- **성가 악보 검은 테두리(2026-11-22 사용자 지시)** — 순서지에 쓰는 악보 이미지는 가장자리의 검은 스캔 띠를 잘라서 쓴다(밝기 평균 100 미만인 가장자리 줄 제거, 악보 내용은 그대로). 새 악보도 같은 처리를 한다.
+- **성가 악보 검은 테두리(2026-11-22 사용자 지시)** — 순서지에 쓰는 악보 이미지는 가장자리의 검은 스캔 띠를 잘라서 쓴다(밝기 평균 100 미만인 가장자리 줄 제거, 악보 내용은 그대로). 새 악보도 같은 처리를 한다. 원본 스캔(`hymnal-2015/images`)을 자르면 `manifest.json`의 해당 쪽 `sha256`·`bytes`·`width`·`height`와 `imageBytes`를 새 파일 기준으로 갱신한다(`tests/hymnalImages.test.js`가 원본 해시를 검사). 공식 반영까지 확인되었다(2026-11-22).
 - **기도서·성가·성서 출처(2026-11-22 사용자 확정)** — 기도서 본문은 `data/worship-texts/bcp.json`에 쪽마다 기록된 출처(교회 예배 슬라이드 또는 온라인 기도서 `dulkuka12.github.io/kbcp/ucharist-form1.html`)만 쓴다. 따로 받은 예식문 PDF가 있는 주는 그 글을 따른다. 쪽 번호는 항상 주보 인쇄 값을 따른다(성체나눔 포함, 2026-11-22 사용자 지시). 어디에도 없는 본문은 추측으로 채우지 않고 비워 두고 보고한다. 온라인 기도서는 교회 공식 자료가 아니므로 주소가 바뀌면 직접 확인한다. 상세 `docs/bulletin-procedure.md` 6-1.
 - 완료 보고 링크: https://gmskh.or.kr/jubo/ , https://frpsy.github.io/gmchurch_web/jubo/ (날짜별 링크는 요청 시에만).
