@@ -23,7 +23,7 @@ description: 광명교회 순서지(모바일 주보 jubo/) 제작 요청 시 �
 4. **독서 본문**: `node scripts/extract-bible.js "<구절>" --write`로 `data/worship-texts/readings.json`에 넣는다. 쉼표로 이은 구절은 `에제키엘 34:11-16,20-24`처럼 공백 없이 쓴다.
 5. **성시**: 비우지 않는다. `node scripts/extract-psalm.js <편> --write`로 본문을 뽑고, `lines`를 `worship-order.json`에 넣는다(1~6절 + 영광송). PDF 절 번호가 빠지면(예: 100편은 5절로 나온다) 인쇄된 주보의 절 번호를 따른다. 악보는 주보 3면에서 잘라 `data/worship/scores/YYYYMMDD-psalm.png`로 연결한다.
 6. **성가**: `data/hymnal-2015/` 악보를 단성판 우선으로 쓴다. 번호만 넣으면 악보가 연결된다. `worship-texts/hymns.json`에 없는 곡은 `title`과 `pdfPage`(악보 이미지 쪽 번호와 같음)를 추가한다. `book.json` 생성 뒤 `node scripts/hymnal-web-exclude.js`를 실행한다.
-7. **교회소식과 핵심구절**: `data/bulletin-news.json`·`data/bulletin-verses.json`을 채운다. 교회소식은 인쇄된 글과 줄 단위로 대조해 빠진 줄이 없게 한다. 교회소식 마지막 항목은 「애찬」 칸의 그 주 이름이다(아래 상시 규칙).
+7. **교회소식**: `data/bulletin-news.json`을 채운다. 핵심구절(`bulletin-verses.json`)은 2026-11-22부터 생략하고, 주일 주보 화면에 「이번 주 말씀」 카드를 두지 않는다. 교회소식은 인쇄된 글과 줄 단위로 대조해 빠진 줄이 없게 한다. 교회소식 마지막 항목은 「애찬」 칸의 그 주 이름이다(아래 상시 규칙).
 8. **주보 게시판**: 주보 이미지를 `bulletins/YYYYMMDD_N.jpg`(표지부터 순서대로)로 두고 `node scripts/sync-bulletins.js`를 실행한다. 최근 8개만 유지한다.
 9. **검증**: `npm test`가 통과해야 한다. 브랜치 → 커밋(한국어 메시지, `git add -A` 금지, 파일 지정) → PR → CI 확인 → squash 머지까지 묻지 않고 끝낸다.
 10. **공식 반영**: 개발 머지 뒤 같은 작업 안에서 `scripts/release-official.sh` → 공식 PR → squash 머지. 주보·교회소식 포함 두 곳 모두 반영한다.
@@ -49,6 +49,7 @@ description: 광명교회 순서지(모바일 주보 jubo/) 제작 요청 시 �
 
 ## 기도서·성가·성서 출처 (2026-11-22 사용자 확정)
 - **기도서 본문 출처**: `data/worship-texts/bcp.json`에 쪽마다 기록된 출처만 쓴다. 교회 예배 슬라이드(`TalkFile_YYYYMMDD 슬라이드 N`, 대부분) 또는 온라인 기도서 `dulkuka12.github.io/kbcp/ucharist-form1.html`이다. 온라인 기도서는 개인 운영 사이트라 교회 공식 자료가 아니다.
+- **본문 검수 주체**: 기도서 본문 검수는 Claude가 직접 한다. 외부 AI에는 기도서 본문을 보내지 않는다.
 - **대조**: 주보 제작 때 `bcp.json`·`responses.json`의 기도서 줄을 온라인 기도서와 줄 단위로 대조한다. 일치 여부만 확인하고 본문은 옮겨 적지 않는다. 불일치는 줄 수와 위치만 보고하고, 사용자가 정한다.
 - **예식문 PDF**: 따로 받은 예식문이 있으면 그 글을 따른다.
 - **출처 없는 본문**: 추측하지 않고 비워 두고 보고한다(예: 특정문 본기도).
@@ -76,6 +77,8 @@ description: 광명교회 순서지(모바일 주보 jubo/) 제작 요청 시 �
 - 본기도 항목은 기도서 쪽의 순서를 따른다: 사제 인사 → 집전자 "기도합시다" → 본기도(기도자가 읽음) → 회중 응답(아멘).
 - 기도서 본문은 저장소에 옮겨 적지 않는다. 쪽 번호와 순서 구조만 기록한다. 본문 대조는 온라인 기도서와 줄 단위로만 한다.
 - 순서지에는 본기도 본문을 싣지 않고, 사제·회중 응답만 싣는다(위 상시 규칙).
+
+배운 점은 `docs/bulletin-lessons.md`에 누적하고, 같은 실수가 반복되면 테스트나 규칙으로 막는다.
 
 ## 제작 후 누락 점검 (매번)
 - 순서지의 성시·기도서 쪽·성가·성서 본문이 빠지지 않았는지 확인한다. 본문은 저장소에 있다(`data/worship-texts/`, `bible/`, `data/hymnal-2015/`).
