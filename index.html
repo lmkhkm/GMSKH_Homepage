@@ -25,9 +25,10 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" as="style">
+    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="images/hero/home.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
     <link rel="preload" href="fonts/brand-serif.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="style.css?v=e3f7274">
+    <link rel="stylesheet" href="style.css?v=38568c9">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -72,17 +73,19 @@
 
     <main id="main-content">
     <header class="hero">
+        <div class="hero-fallback"></div>
+        <div class="hero-overlay"></div>
         <div class="container hero-content">
             <div id="hero-label" class="hero-label"></div>
             <h1 id="hero-title"></h1>
             <p class="hero-sub" id="hero-sub"></p>
             <div class="hero-actions" id="hero-actions"></div>
         </div>
-        <nav class="hero-stats" id="hero-stats" aria-label="방문 안내 바로가기"></nav>
+        <div class="hero-stats" id="hero-stats"></div>
     </header>
 
     <!-- 교회 소개 (간략) -->
-    <section class="section" id="about-brief" aria-labelledby="about-brief-header-title">
+    <section class="section" id="about-brief">
         <div class="container">
             <div class="section-header" id="about-brief-header"></div>
             <div id="about-brief-content"></div>
@@ -90,25 +93,21 @@
     </section>
 
     <!-- 예배 -->
-    <section class="section section--white" id="worship" aria-labelledby="worship-header-title">
+    <section class="section section--white" id="worship">
         <div class="container">
             <div class="section-header" id="worship-header"></div>
-            <div class="home-worship-layout">
-                <div>
-                    <div id="worship-grid" class="grid"></div>
-                    <div class="guide-banner" id="worship-guide"></div>
-                </div>
-                <div class="info-card this-sunday" id="this-sunday" hidden></div>
-            </div>
-            <div id="worship-more"></div>
+            <div id="worship-grid" class="grid"></div>
+            <div class="guide-banner" id="worship-guide"></div>
+            <div class="info-card info-card--wide this-sunday" id="this-sunday" hidden></div>
+            <div class="about-brief visit-detail-wrap" id="worship-more"></div>
         </div>
     </section>
 
-    <!-- 방문 안내 -->
-    <section class="section" id="visit-preview" aria-labelledby="visit-header-title">
+    <!-- 처음 오신 분 · 방문 안내 (예배 시간·주소·바로가기·지도를 한 카드로) -->
+    <section class="section section--white" id="visit-preview">
         <div class="container">
             <div class="section-header" id="visit-header"></div>
-            <div id="location-card"></div>
+            <div class="info-card info-card--wide" id="location-card"></div>
         </div>
     </section>
 
@@ -116,7 +115,7 @@
 
     <footer id="main-footer"></footer>
 
-    <script src="data.js?v=e3f7274"></script>
-    <script src="app.js?v=e3f7274"></script>
+    <script src="data.js?v=38568c9"></script>
+    <script src="app.js?v=38568c9"></script>
 </body>
 </html>
