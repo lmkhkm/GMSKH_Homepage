@@ -108,6 +108,27 @@
     --radius-xs: 4px;
     --lift-1: -2px;   /* 작은 컨트롤 hover 이동 */
     --lift-2: -4px;   /* 카드 hover 이동 */
+
+    /* ── Material 3 역할 토큰 (docs/design-material-plan.md 1단계) ──
+       색 이름이 아니라 "쓰임"으로 부른다. 절기색(--theme)과 달리 늘 숲녹이다.
+       다크 값은 아래 다크 :root에 함께 둔다. */
+    --md-primary:                #285a47;  /* 흰 면 7.9:1 */
+    --md-on-primary:             #ffffff;
+    --md-secondary-container:    #d4e6d9;
+    --md-on-secondary-container: #173a2e;  /* 9.6:1 */
+    --md-outline:                #707973;  /* 버튼 테두리 — 흰 면 4.5:1 */
+    /* 상태 레이어 투명도 (M3: hover 8%, focus·pressed 10%) */
+    --md-state-hover:   0.08;
+    --md-state-focus:   0.10;
+    --md-state-pressed: 0.10;
+    /* 높이 1단계 그림자 */
+    --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --md-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --md-button-height: 44px;  /* M3 기본 40px보다 조금 크게 — 터치 영역 확보 */
+    /* 카드 상태 레이어 — 면 위를 primary로 덮는 inset 그림자(가상요소를 쓰지 않아 기존 ::before와 겹치지 않음) */
+    --md-layer-hover:   inset 0 0 0 100vmax color-mix(in srgb, var(--md-primary) 8%, transparent);
+    --md-layer-focus:   inset 0 0 0 100vmax color-mix(in srgb, var(--md-primary) 10%, transparent);
+    --md-layer-pressed: inset 0 0 0 100vmax color-mix(in srgb, var(--md-primary) 10%, transparent);
 }
 
 /* ── Reset ───────────────────────────────────────────────── */
@@ -501,57 +522,79 @@ button:focus:not(:focus-visible) { outline: none; }
     display: flex; gap: 0.8rem;
     justify-content: center; flex-wrap: wrap;
 }
+/* ── M3 공통 버튼 문법 ─────────────────────────────────────
+   모든 버튼은 알약 모양이고, hover·focus·pressed를 떠오름 대신
+   상태 레이어(글자색을 8~10% 덮는 막)로 보여 준다. 터치 기기에서도 똑같이 눌림이 보인다. */
+.btn-outline, .btn-live, .btn-hero-primary, .btn-next {
+    position: relative;
+    isolation: isolate;
+    min-height: var(--md-button-height);
+    border-radius: var(--radius-pill);
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-outline::before, .btn-live::before, .btn-hero-primary::before, .btn-next::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur) var(--md-ease-standard);
+}
+.btn-outline:hover::before, .btn-live:hover::before,
+.btn-hero-primary:hover::before, .btn-next:hover::before { opacity: var(--md-state-hover); }
+.btn-outline:focus-visible::before, .btn-live:focus-visible::before,
+.btn-hero-primary:focus-visible::before, .btn-next:focus-visible::before { opacity: var(--md-state-focus); }
+.btn-outline:active::before, .btn-live:active::before,
+.btn-hero-primary:active::before, .btn-next:active::before { opacity: var(--md-state-pressed); transition: none; }
+
+/* 첫 화면 보조 버튼 — 사진 위 outlined */
 .btn-outline {
-    display: inline-block;
-    border: 1px solid rgba(255,255,255,0.50);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.70);
     background: rgba(255,255,255,0.10);
     color: #fff;
-    padding: 0.68rem 1.75rem;
-    border-radius: var(--radius-sm);
+    padding: 0 1.5rem;
     font-size: var(--fs-sm);
     font-weight: 600;
     letter-spacing: 0.01em;
-    transition: background var(--dur) ease, border-color var(--dur) ease,
-                transform var(--dur) ease, box-shadow var(--dur) ease;
+    transition: border-color var(--dur) var(--md-ease-standard);
 }
-.btn-outline:hover {
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.85);
-    transform: translateY(var(--lift-1));
-    box-shadow: 0 6px 20px rgba(177, 184, 131, 0.22);
-}
+.btn-outline:hover { border-color: #fff; }
 
 /* Hero — 실시간 예배 버튼 (히어로 외부 영역용) */
 .btn-live {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--red);
     color: #fff;
-    padding: 0.8rem 1.8rem;
-    border-radius: var(--radius-pill);
+    padding: 0 1.75rem;
     font-weight: 700;
     font-size: var(--fs-sm);
-    transition: background var(--dur), transform var(--dur);
+    transition: box-shadow var(--dur) var(--md-ease-standard);
 }
-.btn-live:hover { background: var(--red-hover); transform: translateY(var(--lift-1)); box-shadow: 0 6px 18px rgba(155, 28, 28, 0.30); }
+.btn-live:hover { box-shadow: var(--md-elevation-1); }
 
-/* Hero — solid primary CTA */
+/* Hero — 첫 화면 주 버튼 — 사진 위 filled(밝은 면). 사진 위라 모드와 무관하게 고정색 */
 .btn-hero-primary {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #f6f4ee;
-    color: var(--heading);
-    padding: 0.68rem 1.75rem;
-    border-radius: var(--radius-sm);
+    color: var(--ink-on-light);
+    padding: 0 1.75rem;
     font-size: var(--fs-sm);
     font-weight: 600;
     letter-spacing: 0.01em;
-    transition: background var(--dur) ease, transform var(--dur) ease, box-shadow var(--dur) ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    box-shadow: var(--md-elevation-1);
+    transition: box-shadow var(--dur) var(--md-ease-standard);
 }
-.btn-hero-primary:hover {
-    background: var(--green-hover);
-    transform: translateY(var(--lift-1));
-    box-shadow: 0 8px 24px rgba(177, 184, 131, 0.26);
-}
+.btn-hero-primary:hover { box-shadow: 0 2px 6px 2px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.30); }
 
 /* Hero — 첫 화면 방문 안내 */
 .hero-stats {
@@ -838,7 +881,7 @@ button:focus:not(:focus-visible) { outline: none; }
     .section.gc-section-alt { background: color-mix(in srgb, var(--theme) 20%, var(--white)); }
     /* 녹색 틴트 배경 위 eyebrow(--theme)는 3.9:1 — 밝게 섞어 AA 확보 */
     .section.gc-section-alt .section-eyebrow,
-    .section.gc-section-alt a:not(.btn) { color: color-mix(in srgb, var(--theme) 60%, var(--heading)); }
+    .section.gc-section-alt a:not(.btn):not(.btn-next) { color: color-mix(in srgb, var(--theme) 60%, var(--heading)); }
 }
 
 .section-eyebrow {
@@ -889,15 +932,6 @@ button:focus:not(:focus-visible) { outline: none; }
     transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
     will-change: transform, opacity;
 }
-.card:hover {
-    border-color: var(--theme);
-    box-shadow: var(--hover-shadow);
-    transform: translateY(var(--lift-2));
-}
-@media (prefers-reduced-motion: reduce) {
-    .card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
-    .card:hover { transform: none; }
-}
 .card h3 {
     font-size: var(--fs-lead);
     font-weight: 700;
@@ -923,7 +957,6 @@ button:focus:not(:focus-visible) { outline: none; }
     display: inline-block;
     transition: transform var(--dur-slow) var(--ease-out);
 }
-.card:hover .card-icon { transform: scale(1.18) translateY(-3px); }
 
 /* Info Card */
 .info-card {
@@ -932,15 +965,6 @@ button:focus:not(:focus-visible) { outline: none; }
     border: 1px solid var(--border);
     padding: 2.5rem 2.25rem;
     transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
-}
-.info-card:hover {
-    border-color: var(--theme);
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(var(--lift-2));
-}
-@media (prefers-reduced-motion: reduce) {
-    .info-card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
-    .info-card:hover { transform: none; }
 }
 .info-card h3 {
     font-size: var(--fs-lead);
@@ -1330,11 +1354,6 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     transition: transform var(--dur-slow) cubic-bezier(.2,.7,.3,1),
                 box-shadow var(--dur-slow) cubic-bezier(.2,.7,.3,1),
                 border-color var(--dur-slow);
-}
-.value-card:hover {
-    transform: translateY(var(--lift-1));
-    box-shadow: var(--shadow-md);
-    border-color: var(--green-soft);
 }
 .value-card .val-icon { font-size: 1.8rem; margin-bottom: 0.85rem; }
 .value-card h3 { font-size: var(--fs-body); font-weight: 700; color: var(--heading); margin-bottom: 0.5rem; }
@@ -1920,22 +1939,12 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     text-align: center;
     transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
 }
-.anglican-pillar:hover {
-    border-color: var(--theme);
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(var(--lift-2));
-}
-@media (prefers-reduced-motion: reduce) {
-    .anglican-pillar { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
-    .anglican-pillar:hover { transform: none; }
-}
 .anglican-pillar-icon {
     font-size: 2rem;
     margin-bottom: 0.75rem;
     display: inline-block;
     transition: transform var(--dur-slow) var(--ease-out);
 }
-.anglican-pillar:hover .anglican-pillar-icon { transform: scale(1.15) translateY(-2px); }
 @media (prefers-reduced-motion: reduce) {
     .anglican-pillar-icon { transition: none; }
 }
@@ -2037,14 +2046,6 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     border-radius: var(--radius-sm);
     border-left: 3px solid var(--theme);
     transition: box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
-}
-.mission-mark:hover {
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(var(--lift-2));
-}
-@media (prefers-reduced-motion: reduce) {
-    .mission-mark { transition: box-shadow var(--dur-slow); }
-    .mission-mark:hover { transform: none; }
 }
 .mission-mark__num { flex-shrink: 0; width: 1.75rem; height: 1.75rem; background: var(--theme); color: var(--theme-on); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-label); font-weight: 700; }
 .mission-mark__body { flex: 1; min-width: 0; }
@@ -2485,60 +2486,38 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     justify-content: center;
     gap: 0.8rem;
 }
+/* M3 outlined 버튼 — 투명 면 + outline 테두리 + primary 글자.
+   상태 레이어는 위 "M3 공통 버튼 문법"에서 함께 정의한다. */
 .btn-next {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.85rem 1.7rem;
-    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.5rem;
     font-size: var(--fs-sm);
     font-weight: 600;
-    background: var(--white);
-    border: 1px solid var(--border);
-    color: var(--text);
-    transition: transform var(--dur) ease, box-shadow var(--dur) ease,
-                border-color var(--dur) ease, background var(--dur) ease, color var(--dur) ease;
+    background: transparent;
+    border: 1px solid var(--md-outline);
+    color: var(--md-primary);
+    transition: box-shadow var(--dur) var(--md-ease-standard);
 }
-.btn-next:hover {
-    transform: translateY(var(--lift-1));
-    border-color: var(--theme);
-    box-shadow: var(--hover-shadow-sm);
-}
-@media (prefers-reduced-motion: reduce) {
-    .btn-next:hover { transform: none; }
-}
+/* M3 filled 버튼 — primary 면. hover 때 높이 1단계 */
 .btn-next--primary {
-    background: var(--green-deep);
-    border-color: var(--heading);
-    color: #fff;
+    background: var(--md-primary);
+    border-color: transparent;
+    color: var(--md-on-primary);
 }
-.btn-next--primary:hover {
-    background: var(--theme);
-    border-color: var(--theme);
-    color: var(--theme-on);
-}
-/* Dark CTA — 다크 패널 안에서 버튼 재정의 (전역 btn-next 불변) */
+.btn-next--primary:hover { box-shadow: var(--md-elevation-1); }
+/* Dark CTA — 늘 어두운 숲녹 패널 위. 모드와 무관하게 밝은 글자 */
 .next-step-cta .btn-next {
-    background: rgba(255,255,255,0.10);
-    border-color: rgba(255,255,255,0.22);
-    color: rgba(255,255,255,0.88);
-}
-.next-step-cta .btn-next:hover {
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.48);
+    background: transparent;
+    border-color: rgba(255,255,255,0.55);
     color: #fff;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.28);
 }
 .next-step-cta .btn-next--primary {
     background: var(--gold);
-    border-color: var(--gold);
+    border-color: transparent;
     color: var(--ink-on-sage);   /* 세이지 위 숲 녹 글자 (흰 글자는 대비 미달) */
-}
-.next-step-cta .btn-next--primary:hover {
-    background: color-mix(in srgb, var(--gold) 78%, white);
-    border-color: color-mix(in srgb, var(--gold) 78%, white);
-    color: var(--ink-on-sage);
-    box-shadow: 0 8px 28px rgba(177, 184, 131, 0.35);
 }
 
 @media (max-width: 560px) {
@@ -2588,13 +2567,6 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     text-wrap: balance;
     text-decoration: none;
     transition: border-color var(--dur), color var(--dur), background var(--dur), transform var(--dur), box-shadow var(--dur);
-}
-.newcomer-cta-link:hover {
-    border-color: var(--theme);
-    color: var(--heading);
-    background: var(--green-light);
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(var(--lift-1));
 }
 
 .liturgy-section { margin-bottom: 3.5rem; }
@@ -2657,15 +2629,6 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     padding: 1.5rem 1.75rem;
     border: 1px solid var(--border);
     transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease;
-}
-.liturgy-step:hover {
-    border-color: var(--green-soft);
-    box-shadow: var(--hover-shadow-sm);
-    transform: translateY(var(--lift-2));
-}
-@media (prefers-reduced-motion: reduce) {
-    .liturgy-step { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
-    .liturgy-step:hover { transform: none; }
 }
 .step-num {
     flex-shrink: 0;
@@ -2757,23 +2720,12 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     color: inherit;
     transition: border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, transform var(--dur-slow) var(--ease-out), opacity 0.6s ease, background-color var(--dur-slow) ease;
 }
-/* 터치 기기는 hover가 탭과 동시에 걸려 카드가 뜨며 어색하므로 마우스에서만 적용 */
-@media (hover: hover) {
-    .resource-card:hover {
-        border-color: var(--theme);
-        box-shadow: var(--hover-shadow-sm);
-        transform: translateY(var(--lift-2));
-    }
-}
 .resource-card { -webkit-tap-highlight-color: transparent; }
 .resource-icon {
     font-size: 1.9rem;
     margin-bottom: 0.8rem;
     display: inline-block;
     transition: transform var(--dur-slow) var(--ease-out);
-}
-@media (hover: hover) {
-    .resource-card:hover .resource-icon { transform: scale(1.12) translateY(-2px); }
 }
 .resource-title {
     font-size: var(--fs-body);
@@ -2794,12 +2746,6 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     overflow-wrap: break-word;
 }
 .resource-link { font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.01em; }
-@media (prefers-reduced-motion: reduce) {
-    .resource-card { transition: border-color var(--dur-slow), box-shadow var(--dur-slow); }
-    .resource-card:hover { transform: none; }
-    .resource-icon { transition: none; }
-    .resource-card:hover .resource-icon { transform: none; }
-}
 
 /* Lectionary Calendar */
 .lectionary-cal-wrap {
@@ -3811,11 +3757,6 @@ footer {
     transition: transform var(--dur-fast), box-shadow var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
     text-decoration: none;
 }
-.map-btn:hover {
-    transform: translateY(var(--lift-1));
-    box-shadow: var(--shadow-md);
-    border-color: var(--green-soft);
-}
 .map-btn-mark {
     display: inline-flex;
     align-items: center;
@@ -3972,11 +3913,6 @@ footer {
     position: relative;
     transition: box-shadow var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
 }
-.links-card:hover {
-    border-color: var(--theme);
-    box-shadow: var(--shadow-md);
-    transform: translateY(var(--lift-1));
-}
 .links-card-name {
     font-size: var(--fs-body);
     font-weight: 700;
@@ -4036,10 +3972,6 @@ footer {
     text-decoration: none;
     color: var(--text);
     transition: transform var(--dur), box-shadow var(--dur);
-}
-.video-card:hover {
-    transform: translateY(var(--lift-2));
-    box-shadow: var(--shadow-md);
 }
 .video-thumb {
     position: relative;
@@ -4426,6 +4358,12 @@ footer {
         --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.40);
         --shadow-md:    0 3px 14px rgba(0, 0, 0, 0.50);
         --shadow-lg:    0 12px 40px rgba(0, 0, 0, 0.60);
+        /* Material 3 역할 토큰 — 다크 */
+        --md-primary:                #66a284;  /* 카드 면 5.4:1 */
+        --md-on-primary:             #0f1b16;  /* 5.9:1 */
+        --md-secondary-container:    #1f3a30;
+        --md-on-secondary-container: #ecefe2;
+        --md-outline:                #8a948d;  /* 카드 면 5.1:1 */
     }
     /* 페이지 히어로 — 라이트 전용 하드코딩 그라데이션을 다크 톤으로 대체.
        (--theme-light는 항상 밝은 토큰이라 다크에서 밝은 띠가 생기므로, 어두운
@@ -4433,13 +4371,6 @@ footer {
        background 단축속성이 background-image를 초기화하기 때문. */
     .page-hero:not(.page-hero--photo) {
         background: linear-gradient(165deg, color-mix(in srgb, var(--season, var(--theme)) 24%, #0c1d17) 0%, color-mix(in srgb, var(--season, var(--theme)) 16%, var(--white)) 48%, var(--cream) 100%);
-    }
-    /* 히어로 CTA 버튼 — 배경이 항상 흰색(#fff)이므로 텍스트·호버를 라이트 모드 값으로 고정 */
-    .btn-hero-primary {
-        color: var(--ink-on-light);
-    }
-    .btn-hero-primary:hover {
-        background: var(--green-hover);
     }
     /* 전례력 절기색 — JS가 주입하는 밝은 절기색(s.colorLight)은 다크모드에 적응하지
        않으므로, 절기 강조색을 어두운 서피스에 섞어 카드 배경을 어둡게 재계산한다.
@@ -4703,11 +4634,6 @@ footer {
     text-decoration: none;
     font-size: var(--fs-sm);
     transition: border-color var(--dur-slow), transform var(--dur-slow), box-shadow var(--dur-slow);
-}
-.about-next:hover {
-    border-color: var(--green-mid);
-    transform: translateY(var(--lift-1));
-    box-shadow: var(--shadow-md);
 }
 .about-next-label { color: var(--text-muted); font-weight: 500; }
 .about-next-target { color: var(--heading); font-weight: 700; }
@@ -5423,26 +5349,55 @@ a, button, summary, [role="button"] { touch-action: manipulation; }
     vertical-align: 0;
 }
 
+/* ── M3 카드 상호작용 (docs/design-material-plan.md 2단계) ──────
+   정보만 담은 카드(.card, .info-card, .value-card, .anglican-pillar, .mission-mark, .liturgy-step)는
+   누를 수 없으므로 hover에 반응하지 않는다.
+   누르는 카드·링크 상자는 떠오르지 않고, 면 위에 primary 상태 레이어(inset 그림자)를 덮는다.
+   썸네일이 있는 카드는 그림 위가 아니라 글자 영역에만 막이 보인다. */
+.newcomer-cta-link, .resource-card, .map-btn, .links-card, .video-card, .shorts-card,
+.about-next, .value-card--link {
+    -webkit-tap-highlight-color: transparent;
+    /* opacity·transform은 스크롤 등장(.reveal)용 — 이 선언이 .reveal의 transition을 덮으므로 함께 둔다 */
+    transition: box-shadow var(--dur) var(--md-ease-standard), border-color var(--dur) var(--md-ease-standard),
+                opacity 0.6s ease, transform var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) {
+    .newcomer-cta-link:hover, .resource-card:hover, .map-btn:hover, .links-card:hover,
+    .video-card:hover, .shorts-card:hover, .about-next:hover, .value-card--link:hover {
+        border-color: var(--md-outline);
+        box-shadow: var(--md-elevation-1), var(--md-layer-hover);
+    }
+}
+.newcomer-cta-link:focus-visible, .resource-card:focus-visible, .map-btn:focus-visible,
+.links-card:focus-visible, .video-card:focus-visible, .shorts-card:focus-visible,
+.about-next:focus-visible, .value-card--link:focus-visible {
+    box-shadow: var(--md-layer-focus);
+}
+.newcomer-cta-link:active, .resource-card:active, .map-btn:active, .links-card:active,
+.video-card:active, .shorts-card:active, .about-next:active, .value-card--link:active {
+    box-shadow: var(--md-layer-pressed);
+    transition: none;
+}
+
 /* ── 터치 기기 탭 반응 ──────────────────────────────────────
-   hover의 떠오름·확대가 탭 뒤에 남아 카드가 튀고, 크기 변화(scale)는 스크롤 시작에도 걸려 버벅인다.
-   터치에서는 움직임을 없애고, 눌린 순간 색만 바로 바꾼다. */
+   hover의 떠오름·확대가 탭 뒤에 남지 않게 움직임을 없앤다. 눌림은 위 상태 레이어가 보여 준다. */
 @media (hover: none) {
-    .card:hover, .card:hover .card-icon, .info-card:hover, .value-card:hover,
-    .anglican-pillar:hover, .anglican-pillar:hover .anglican-pillar-icon, .mission-mark:hover,
-    .btn-next:hover, .btn-live:hover, .btn-hero-primary:hover, .liturgy-step:hover, .map-btn:hover,
-    .links-card:hover, .video-card:hover, .photo-item:hover, .photo-item:hover img,
-    .about-next:hover, .about-next:hover .about-next-arrow, .bulletin-page:hover,
+    .btn-next:hover, .btn-live:hover, .btn-hero-primary:hover,
+    .photo-item:hover, .photo-item:hover img,
+    .about-next:hover .about-next-arrow, .bulletin-page:hover,
     .iona-link-card:hover .iona-link-card__arrow {
         transform: none;
     }
-    a.resource-card:active, a.card:active, a.links-card:active, a.iona-link-card:active,
-    .video-card:active, .newcomer-cta-link:active, .about-next:active {
+    a.iona-link-card:active {
         background-color: var(--green-light);
         border-color: var(--theme);
         transition: none;
     }
-    /* 어두운 배경 위 버튼도 있어 배경색 대신 살짝 흐리게 */
-    .btn-next:active, .map-btn:active { opacity: 0.75; transition: none; }
+    /* 터치 뒤 hover 상태가 남아 막이 덮인 채로 보이지 않게 한다(눌린 순간만 표시) */
+    .btn-outline:hover::before, .btn-live:hover::before,
+    .btn-hero-primary:hover::before, .btn-next:hover::before { opacity: 0; }
+    .btn-outline:active::before, .btn-live:active::before,
+    .btn-hero-primary:active::before, .btn-next:active::before { opacity: var(--md-state-pressed); }
 }
 
 /* ── 교회 소식 (news.html) — 목록은 .bulletin-list를 재사용 ── */
