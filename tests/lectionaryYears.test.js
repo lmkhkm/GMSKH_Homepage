@@ -2,12 +2,29 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { createContext, runInContext } from 'node:vm';
+import { LiturgicalCalendar } from './helpers/loadData.js';
 import { STANDARD_FILES, mergeStandards, resolveReadings } from '../scripts/lib/lectionary.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const read = f => JSON.parse(readFileSync(join(__dirname, '..', 'data', f), 'utf-8'));
 const files = STANDARD_FILES.map(read);
 const all = mergeStandards(files);
+
+it('교회력 달력은 전례독서의 대림 제1주일을 추모 주일보다 먼저 표시한다', () => {
+    const sandbox = createContext({ window: { addEventListener() {} }, LiturgicalCalendar });
+    runInContext(readFileSync(join(__dirname, '..', 'app.js'), 'utf-8'), sandbox);
+    const sunday = files.flatMap(file => file.sundays).find(entry => entry.date === '2026-11-29');
+    const renderer = runInContext('SundaysRenderer', sandbox);
+    const html = renderer._monthlyGrid(2026, 10, renderer._specialDates(2026),
+        new Map([[sunday.date, sunday.koreanName]]));
+    expect(html).toContain('aria-label="29일 대림 제1주일 · 에이즈 추모 주일"');
+    const cell = html.match(/aria-label="29일 대림 제1주일[^>]*>([\s\S]*?)<\/div>/)[1];
+    expect(cell).toContain('lit-cal-commemoration-dot');
+    expect(cell).toContain('<span class="lit-cal-label">대림 제1주일</span>');
+    expect(cell).not.toContain('에이즈 추모 주일');
+    expect(html).toContain('29일 에이즈 추모 주일</li>');
+});
 
 // 연도별 표준 파일이 끊김 없이 이어져야 대림절(해 바뀜)에도 전례독서가 멈추지 않는다
 describe('표준 전례독서 연도 파일', () => {
