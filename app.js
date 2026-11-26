@@ -701,6 +701,9 @@ const HopeCenterRenderer = {
         if (!el) return;
         const d = CHURCH_DATA.hopeCenter;
         const officer = (CHURCH_DATA.officers || []).find(o => o.role === d.officerRole);
+        // 원본보다 큰 1440w 후보를 내지 않도록 실제 너비를 쓴다
+        const picture = (img, sizes, w = 1440, h = 960, eager = false) => `<img src="images/hopecenter/${img.src}.webp?v=${d.imageVersion}" srcset="images/hopecenter/${img.src}-sm.webp?v=${d.imageVersion} 720w, images/hopecenter/${img.src}.webp?v=${d.imageVersion} ${w}w" sizes="${sizes}" alt="${img.alt}" width="${w}" height="${h}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+        const stepSize = { prayer: [960, 640], dishes: [1440, 960], handoff: [1055, 703] };
         el.innerHTML = `
             <div class="page-hero">
                 <p class="section-eyebrow">${d.heroEyebrow}</p>
@@ -708,6 +711,7 @@ const HopeCenterRenderer = {
                 <p>${d.summary}</p>
             </div>
             <section class="section hope-intro"><div class="container">
+                <figure class="hope-intro-photo">${picture(d.heroImage, '(max-width: 1040px) 100vw, 1000px', d.heroImage.width, d.heroImage.height, true)}</figure>
                 <p class="children-lead hope-intro-lead">${d.intro}</p>
                 <dl class="children-service-summary hope-facts">
                     ${d.facts.map(f => `<div><dt>${f.label}</dt><dd>${f.value}</dd></div>`).join('')}
@@ -715,10 +719,13 @@ const HopeCenterRenderer = {
             </div></section>
             <section class="section gc-section-alt hope-weekly" id="weekly"><div class="container">
                 <div class="children-story-heading"><p class="section-eyebrow">${d.weeklyEyebrow}</p><h2 class="section-title">${d.weeklyTitle}</h2><p class="children-lead">${d.weeklyIntro}</p></div>
-                <ol class="hope-steps">${d.steps.map((st, i) => `<li class="hope-step"><div class="hope-step-body"><span class="hope-step-num" aria-hidden="true">0${i + 1}</span><h3>${st.title}</h3><p>${st.desc}</p></div></li>`).join('')}</ol>
-                <div class="next-step-cta-actions"><a class="btn-next" href="gallery.html">${d.galleryLabel}</a></div>
+                <ol class="hope-steps">${d.steps.map((st, i) => {
+                    const [w, h] = stepSize[st.image.src] || [1440, 960];
+                    return `<li class="hope-step"><figure>${picture(st.image, '(max-width: 768px) 100vw, 33vw', w, h)}</figure><div class="hope-step-body"><span class="hope-step-num" aria-hidden="true">0${i + 1}</span><h3>${st.title}</h3><p>${st.desc}</p></div></li>`;
+                }).join('')}</ol>
             </div></section>
             <section class="section hope-history" id="history"><div class="container hope-history-inner">
+                <figure class="hope-history-photo">${picture(d.historyImage, '(max-width: 768px) 100vw, 50vw', 1280, 853)}<figcaption>${d.historyImage.caption}</figcaption></figure>
                 <div class="hope-history-body">
                     <p class="section-eyebrow">${d.historyEyebrow}</p>
                     <h2 class="section-title">${d.historyTitle}</h2>
@@ -799,7 +806,7 @@ const WorshipRenderer = {
                 <div class="liturgy-section">
                     <p class="section-eyebrow">Order of Service</p>
                     <h2 class="section-title">감사성찬례 순서</h2>
-                    <p class="liturgy-body liturgy-body--lead">성공회 기도서에 따른 감사성찬례는 크게 <strong>네&nbsp;부분</strong>으로 구성됩니다.</p>
+                    <p class="liturgy-body liturgy-body--lead">감사성찬례는 성공회 기도서에 따라 <strong>네&nbsp;부분</strong>으로 이루어집니다.</p>
                     <div class="liturgy-steps">
                         ${eucharistOrder.map((step, i) => `
                             <div class="liturgy-step">
@@ -866,7 +873,7 @@ const WorshipRenderer = {
                 <div class="liturgy-section" id="intercession">
                     <p class="section-eyebrow">Anglican Cycle of Prayer</p>
                     <h2 class="section-title">세계성공회 중보기도</h2>
-                    <p class="liturgy-body liturgy-body--lead">세계성공회(Anglican Communion)는 날마다 특정 교구와 지역 교회를 위해 함께 기도하는 기도 달력을 발행합니다. 전 세계 165개 이상의 나라에 퍼져 있는 성공회 공동체와 하나로 이어지는 기도입니다.</p>
+                    <p class="liturgy-body liturgy-body--lead">세계성공회(Anglican Communion)는 기도 달력을 펴냅니다. 날마다 정해진 교구와 지역 교회를 함께 기억하며 기도합니다. 이 기도로 165개 이상의 나라에 있는 성공회 공동체와 하나로 이어집니다.</p>
                     <div class="resource-grid resource-grid--single">
                         <a class="resource-card" href="${prayer.intercession.url}" target="_blank" rel="noopener noreferrer">
                             <span class="resource-icon" aria-hidden="true">${icon(prayer.intercession.icon)}</span>
@@ -2972,6 +2979,30 @@ const SermonsRenderer = {
     }
 };
 
+/* ── NextStepRenderer ────────────────────────────────────── */
+// 페이지 끝 「다음 걸음」 영역. HTML에는 <section data-next-step="페이지키">만 두고 문구·버튼은 data.js nextStep에서 채운다.
+const NextStepRenderer = {
+    render() {
+        const d = CHURCH_DATA.nextStep;
+        if (!d) return;
+        document.querySelectorAll('[data-next-step]').forEach(el => {
+            const p = d.pages[el.dataset.nextStep];
+            if (!p) return;
+            const actions = p.actions.map((key, i) => {
+                const l = d.links[key];
+                return `<a href="${l.href}" class="btn-next${i === 0 ? ' btn-next--primary' : ''}">${icon(l.icon)} ${l.label}</a>`;
+            }).join('');
+            el.innerHTML = `
+                <div class="container">
+                    <p class="next-step-cta-eyebrow">${p.eyebrow || d.eyebrow}</p>
+                    <h2 class="next-step-cta-title" id="next-step-title">${p.title}</h2>
+                    <p class="next-step-cta-desc">${p.desc}</p>
+                    <div class="next-step-cta-actions">${actions}</div>
+                </div>`;
+        });
+    }
+};
+
 /* ── NewsRenderer ────────────────────────────────────────── */
 const NewsRenderer = {
     // "일시 : …"처럼 라벨이 짧은 줄은 항목표로 보여 일정·장소를 한눈에 찾게 한다
@@ -3837,6 +3868,7 @@ const App = {
         NewsRenderer.render();
         SermonsRenderer.render(signal);
         SundaysRenderer.render(signal);
+        NextStepRenderer.render();
         MoreToggle.render();
         if (animateReveal) ScrollReveal.init(signal);
     },
