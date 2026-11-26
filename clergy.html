@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>교회 소개 — 대한성공회 광명교회</title>
     <meta name="description" content="성공회와 대한성공회 소개, 광명교회 사제, 교회 철학, 언론 보도.">
-    <meta name="theme-color" content="#173a2e">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1d1f22" media="(prefers-color-scheme: dark)">
     <link rel="canonical" href="https://gmskh.or.kr/clergy.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="대한성공회 광명교회">
@@ -24,11 +25,9 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" as="style">
-    <link rel="preload" as="image" fetchpriority="high" href="images/hero/clergy.webp" media="(min-width: 769px)">
-    <link rel="preload" as="image" fetchpriority="high" href="images/hero/clergy-m.webp" media="(max-width: 768px)">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
     <link rel="preload" href="fonts/brand-serif.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="style.css?v=e515061">
+    <link rel="stylesheet" href="style.css?v=ce0ce50">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -66,16 +65,39 @@
       ]
     }
     </script>
+    <script>
+        try {
+            if (sessionStorage.getItem('menu-swipe-transition')) {
+                const ready = document.createElement('link');
+                ready.rel = 'expect';
+                ready.href = '#swipe-ready';
+                ready.setAttribute('blocking', 'render');
+                document.head.append(ready);
+            }
+        } catch {}
+    </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">본문으로 바로가기</a>
     <nav id="main-nav" class="nav-header"></nav>
 
     <main id="main-content">
-    <div class="page-hero page-hero--photo page-hero--clergy">
-        <p class="section-eyebrow">About the Church</p>
-        <h1>교회 소개</h1>
-        <p>성공회와 광명교회, 우리가 지향하는 신앙을 안내합니다.</p>
+    <div class="page-hero page-hero--illustrated">
+        <div class="container page-hero-layout">
+            <div>
+                <p class="section-eyebrow">About the Church</p>
+                <h1>교회 소개</h1>
+                <p>성공회의 전통과 오늘의 광명교회를 소개합니다.</p>
+            </div>
+            <img class="hero-illustration"
+                 src="images/hero/church-exterior-glass-672.webp"
+                 srcset="images/hero/church-exterior-glass-672.webp 672w,
+                         images/hero/church-exterior-glass-1344.webp 1344w"
+                 sizes="(max-width: 480px) calc(100vw - 2rem), (max-width: 799px) 90vw, (max-width: 1040px) 45vw, 500px"
+                 width="672" height="420"
+                 alt="붉은 벽돌동과 회색 석재 외벽이 있는 광명교회 일러스트"
+                 fetchpriority="high">
+        </div>
     </div>
 
     <!-- 교회 소개 섹션 둘러보기 (sticky) — AboutNavRenderer -->
@@ -135,7 +157,7 @@
 
                 <!-- 01 -->
                 <div class="story-value">
-                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#cross"/></svg></span>
+                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#cross"/></svg></span>
                     <div class="story-value-body">
                         <p class="story-value-num">01</p>
                         <h3 class="story-value-title">전례 전통과 깊이 있는 영성</h3>
@@ -154,7 +176,7 @@
 
                 <!-- 02 -->
                 <div class="story-value">
-                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#scales"/></svg></span>
+                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#scales"/></svg></span>
                     <div class="story-value-body">
                         <p class="story-value-num">02</p>
                         <h3 class="story-value-title">모두가 선교의 주체인 평등한 공동체</h3>
@@ -172,7 +194,7 @@
 
                 <!-- 03 -->
                 <div class="story-value">
-                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#sunrise"/></svg></span>
+                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#sunrise"/></svg></span>
                     <div class="story-value-body">
                         <p class="story-value-num">03</p>
                         <h3 class="story-value-title">부활을 고백하는 사도적 신앙</h3>
@@ -189,7 +211,7 @@
 
                 <!-- 04 -->
                 <div class="story-value">
-                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#bowl"/></svg></span>
+                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#bowl"/></svg></span>
                     <div class="story-value-body">
                         <p class="story-value-num">04</p>
                         <h3 class="story-value-title">밥상 공동체와 주일 애찬</h3>
@@ -204,7 +226,7 @@
 
                 <!-- 05 -->
                 <div class="story-value">
-                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#leaf"/></svg></span>
+                    <span class="story-value-icon" aria-hidden="true"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#leaf"/></svg></span>
                     <div class="story-value-body">
                         <p class="story-value-num">05</p>
                         <h3 class="story-value-title">약자를 섬기고 창조세계를 돌보는 신앙</h3>
@@ -214,7 +236,7 @@
                             지역 나눔 사역 <a href="community.html#hopecenter">광명 희망터</a>가 그 자리입니다.
                         </p>
                         <p class="story-value-text">
-                            하느님이 지으신 모든 생명을 소중히 여기는 <strong><a href="greenchurch.html">녹색교회</a></strong>로서,
+                            하느님이 지으신 모든 생명을 소중히 여기는 <strong>녹색교회</strong>로서,
                             동물복지·환경보호·반려동물 축복식으로 창조세계를 돌보는 책임을 이어가고 있습니다.
                         </p>
                     </div>
@@ -254,11 +276,11 @@
         <div class="container">
             <p class="next-step-cta-eyebrow">다음 단계</p>
             <h2 class="next-step-cta-title">예배에서 직접 만나요</h2>
-            <p class="next-step-cta-desc">광명교회의 이야기가 마음에 닿으셨나요? 주일 감사성찬례에서 함께 기도하고 나누겠습니다.</p>
+            <p class="next-step-cta-desc">주일 감사성찬례에 오셔서 함께 기도해 주세요.</p>
             <div class="next-step-cta-actions">
-                <a href="worship.html" class="btn-next btn-next--primary"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#church"/></svg> 예배 안내</a>
-                <a href="newcomer.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#dove"/></svg> 처음 오신 분</a>
-                <a href="visit.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#map"/></svg> 오시는 길</a>
+                <a href="worship.html" class="btn-next btn-next--primary"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#church"/></svg> 예배 안내</a>
+                <a href="newcomer.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#dove"/></svg> 처음 오신 분</a>
+                <a href="visit.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#map"/></svg> 오시는 길</a>
             </div>
         </div>
     </section>
@@ -267,7 +289,8 @@
 
     <footer id="main-footer"></footer>
 
-    <script src="data.js?v=e515061"></script>
-    <script src="app.js?v=e515061"></script>
+    <script src="data.js?v=ce0ce50"></script>
+    <script src="app.js?v=ce0ce50"></script>
+    <span id="swipe-ready" hidden></span>
 </body>
 </html>

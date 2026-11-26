@@ -143,7 +143,6 @@ const CHURCH_DATA = {
 
   home: {                           // index.html 전용 문구 (예배 시간·위치는 worship.main/info에서 파생)
     heroActions: [{ label, href, primary? }],
-    quickLinks: [{ label, href, detail?, worshipTime? }],  // 첫 화면 방문 안내
     about:   { eyebrow, title, facts: [{ label, key }], more },  // key = info의 필드명
     worship: { eyebrow, title, sub, more },     // 카드는 worship.main[].summary(없으면 desc)
     thisSunday: { title, labels: { season, first, second, gospel }, more, bulletin },  // 다가오는 주일 카드
@@ -418,7 +417,6 @@ window DOMContentLoaded
       │
       ├── AboutNavRenderer.render()   → clergy.html 전용
       │     #about-section-nav → sticky 섹션 내비(gc-page-nav 재사용) + 스크롤 스파이
-      │     섹션 끝마다 .about-next 순차 연결('다음') — 마지막은 greenchurch.html로 유도
       │     데이터원: navigation[0].items, aboutJourney
       │
       ├── MediaRenderer.render()      → #media-full (videos.html)
@@ -479,9 +477,6 @@ window DOMContentLoaded
       ├── TapFeedback.init()          (모든 페이지)
       │     iOS :active(눌림 색)용 touchstart 리스너만 — 이동 지연 없음. 터치 기기 hover 이동 제거는 style.css 끝 @media (hover: none)
       │
-      ├── HeroNav.init()              (.page-hero--photo가 있고 navigation 최상위 메뉴인 페이지)
-      │     히어로 좌·우에 이전/다음 메뉴 버튼(.hero-nav) 추가 — 메뉴 순서는 CHURCH_DATA.navigation, 양 끝은 순환
-      │
       └── MenuOverlay.init()          (모든 페이지)
             nav-menu-trigger 버튼으로 여는 전체 메뉴 + 검색 오버레이
             CHURCH_DATA.navigation을 사이트맵으로 펼침
@@ -510,7 +505,7 @@ window DOMContentLoaded
 <nav id="main-nav">                         ← NavRenderer
 <main id="main-content">
 <header class="hero">
-  #hero-title / #hero-sub                   ← IndexRenderer._hero()
+  #hero-title / #hero-sub / #hero-actions   ← IndexRenderer._hero()
 <section id="about-brief">
   #about-brief-header / #about-brief-content           ← IndexRenderer._about()
 <section id="worship">
@@ -675,8 +670,8 @@ window DOMContentLoaded
 | `.nav-header` | 고정 헤더 (--nav-glass), scroll 시 `.scrolled` |
 | `.nav-chevron` | 모바일 드롭다운 토글 화살표 버튼 (desktop: hidden) |
 | `.nav-item.mobile-open` | 모바일 드롭다운 열림 상태 |
-| `.hero` / `.hero-fallback` | Ken Burns 애니메이션 배경 (Unsplash 이미지) |
-| `.page-hero` | 서브 페이지 상단 헤더 (높이 통일: PC `min-height` 350px · 모바일 291px, 내용은 세로 가운데 정렬) |
+| `.hero` | 이미지 없는 홈 소개와 방문 바로가기 |
+| `.page-hero` | 서브 페이지 상단 헤더 (가운데 정렬, 제목과 설명에 맞춰 높이 조정) |
 | `.section` / `.section-header` | 섹션 레이아웃 |
 | `.container` | 최대폭 1200px, 패딩 clamp |
 | `.grid` | auto-fit minmax(280px) 그리드 |
@@ -731,8 +726,7 @@ window DOMContentLoaded
 | `.footer-logo-mark` | 푸터 캔터베리 십자가 컨테이너 (38×38px, 흰색 SVG) |
 | `.ico` | 아이콘 팩 SVG (`images/icons.svg` 심볼, 1em 크기·가는 단색 선) |
 | `.reveal` | ScrollReveal 애니메이션 대상 (fade-in on scroll) |
-| `.hero-nav` / `.hero-nav--prev` / `--next` | 메뉴 히어로 좌·우 이전/다음 메뉴 버튼 (모바일 44px, 데스크톱 48px) |
-| `.page-hero--{clergy,worship,bulletin,altar,sundays,newcomer,community,media,visit}` | 메뉴별 상징 이미지 히어로 (`images/hero/*.webp`, 모바일은 `-m` 경량본. `bulletin`=주보 페이지, `altar`=예배와 기도 페이지). 글자 배치는 전부 `.page-hero--photo` 공통 규칙 |
+| `.page-hero--{clergy,community,greenchurch}` | 교회 정체성과 공동체를 소개하는 사진 상단. 다른 페이지에는 콘텐츠 높이에 맞는 공통 제목 영역을 사용 |
 
 ### 반응형 브레이크포인트
 
@@ -785,7 +779,7 @@ window DOMContentLoaded
 3. `App.init()` 메서드에서 조건부로 렌더러 호출
    - 페이지별 렌더러는 해당 HTML 페이지에서만 실행 (예: `if (document.getElementById('media-full'))`)
 4. `data.js`의 `navigation` 배열에 새 메뉴 항목 추가
-5. 필요 시 greenchurch.html처럼 `page-hero--photo` 별도 대문 이미지 제공
+5. 첫 화면 이미지가 필요한 페이지는 `page-hero--illustrated`와 `picture`를 사용해 제목과 사진을 분리하고 모바일용 파일을 제공
 6. ARCHITECTURE.md와 docs/ 작업 지시서 동기화
 
 ### Git 워크플로
