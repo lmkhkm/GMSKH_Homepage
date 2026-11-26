@@ -939,7 +939,7 @@ const NewcomerRenderer = {
                     <p class="liturgy-body">예배는 <strong>성공회 기도서(Book of Common Prayer)</strong>에 따라 드립니다. 이 기도서는 1549년 캔터베리 대주교 토마스 크랜머가 펴냈습니다. 라틴어 대신 자기 나라 말로 예배하게 해서 <strong>모든 신자가 전례에 직접 참여</strong>할 수 있게 했습니다. 종교개혁이 남긴 중요한 유산입니다.</p>
                     <div class="liturgy-card">
                         <h3 class="liturgy-card-title">전례의 의미</h3>
-                        <p class="liturgy-body"><strong>'전례(典禮, Liturgy)'</strong>는 그리스어 <em>레이투르기아(λειτουργία)</em>에서 온 말입니다. '공동체를 위해 하는 일'이라는 뜻입니다. 전례는 <strong>그리스도인이 함께 드리고 함께 살아가는 신앙의 실천</strong>입니다.</p>
+                        <p class="liturgy-body"><strong>'전례(典禮, Liturgy)'</strong>는 그리스어 <em>레이투르기아(λειτουργία)</em>에서 온 말입니다. '공동체를 위해 수행하는 일'을 뜻합니다. 전례는 <strong>그리스도인이 함께 드리고 함께 살아가는 신앙의 실천</strong>입니다.</p>
                         <ul class="liturgy-list">
                             <li>예배는 회중이 <strong>함께 기도하고 응답하는 대화 형식</strong>입니다.</li>
                             <li>모든 신자가 성직자와 함께 <strong>예배를 드리는 주체</strong>가 됩니다.</li>
@@ -973,7 +973,7 @@ const NewcomerRenderer = {
                     <div class="communion-grid">
                         <div class="communion-card communion-season">
                             <h3>세례받으신 분</h3>
-                            <p class="liturgy-body">성공회의 성찬은 교파와 관계없이 열려 있습니다. <strong>세례받은 그리스도인이라면 누구나</strong> 그리스도의 몸과 피를 모실 수 있습니다.</p>
+                            <p class="liturgy-body">성공회의 성찬은 모든 그리스도인에게 열려 있습니다. 교파에 관계없이 <strong>세례받은 그리스도인이라면 누구나</strong> 그리스도의 몸과 피를 모실 수 있습니다.</p>
                             <ul class="liturgy-list">
                                 <li>제대 앞으로 나와 두 손을 펴고 빵을 받으십시오.</li>
                                 <li>받은 빵은 포도주에 찍어 <strong>영하십시오</strong>.<br><small style="color:var(--text-muted); font-size:0.82em;">영하다: 성체를 받아 모시다</small></li>
@@ -3186,7 +3186,7 @@ const SundaysRenderer = {
             <div class="section-header">
                 <p class="section-eyebrow">Lectionary</p>
                 <h2 class="section-title">전례독서</h2>
-                <p class="section-sub">교회력에 따라 정해진 주일 성서 본문입니다. 제1독서·제2독서·복음을 봉독하며, 본문을 누르면 공동번역 성서가 열립니다.</p>
+                <p class="section-sub">교회력에 따라 정해진 주일 성서 본문입니다. 제1독서·제2독서·복음을 봉독합니다.</p>
             </div>`;
         el.innerHTML = header + '<p class="lectionary-loading">불러오는 중…</p>';
 
@@ -3686,7 +3686,7 @@ const SundaysRenderer = {
             <div class="section-header">
                 <p class="section-eyebrow">Liturgical Year</p>
                 <h2 class="section-title">교회력 절기</h2>
-                <p class="section-sub">성공회는 교회력에 따라 그리스도의 생애를 한 해 동안 함께 기억합니다. 교회력의 새해는 1월이 아니라 대림절에 시작하며, 아래 ①~⑧의 순서로 이어집니다. 각 절기의 색은 기도서 전례색입니다.</p>
+                <p class="section-sub">성공회는 교회력에 따라 그리스도의 생애를 한 해 동안 함께 기억합니다. 교회력의 새해는 1월이 아니라 대림절에 시작합니다. 아래 ①~⑧의 순서로 이어집니다. 각 절기의 색은 기도서 전례색입니다.</p>
             </div>
             <div class="resource-grid">${cards}</div>`;
     },
