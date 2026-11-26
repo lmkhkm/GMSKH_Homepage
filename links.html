@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>관련 기관 — 대한성공회 광명교회</title>
     <meta name="description" content="대한성공회 관련 기관 및 세계성공회 링크 모음. 서울교구, 대한성공회 관구, 성공회대학교, 수도회 등 안내.">
-    <meta name="theme-color" content="#173a2e">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1d1f22" media="(prefers-color-scheme: dark)">
     <link rel="canonical" href="https://gmskh.or.kr/links.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="대한성공회 광명교회">
@@ -26,7 +27,18 @@
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" as="style">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
     <link rel="preload" href="fonts/brand-serif.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="style.css?v=e515061">
+    <link rel="stylesheet" href="style.css?v=ce0ce50">
+    <script>
+        try {
+            if (sessionStorage.getItem('menu-swipe-transition')) {
+                const ready = document.createElement('link');
+                ready.rel = 'expect';
+                ready.href = '#swipe-ready';
+                ready.setAttribute('blocking', 'render');
+                document.head.append(ready);
+            }
+        } catch {}
+    </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">본문으로 바로가기</a>
@@ -34,16 +46,15 @@
 
     <main id="main-content">
     <div class="page-hero">
-        <p class="section-eyebrow">Organizations</p>
         <h1>관련 기관</h1>
-        <p>대한성공회와 세계성공회의 기관·공동체 안내</p>
+        <p>국내외 성공회 교구와 수도회, 교육·선교 기관의 링크를 모았습니다.</p>
     </div>
 
-    <nav class="gc-page-nav" aria-label="미디어·자료 페이지 이동">
+    <nav class="gc-page-nav" aria-label="미디어·자료 페이지 이동" data-swipe-tabs>
         <div class="container">
             <a href="videos.html" class="gc-nav-link">영상 갤러리</a>
             <a href="gallery.html" class="gc-nav-link">사진 갤러리</a>
-            <a href="links.html" class="gc-nav-link is-active">관련 기관</a>
+            <a href="links.html" class="gc-nav-link is-active" aria-current="page">관련 기관</a>
         </div>
     </nav>
 
@@ -57,10 +68,10 @@
         <div class="container">
             <p class="next-step-cta-eyebrow">광명교회의 실천</p>
             <h2 class="next-step-cta-title">기관 너머, 우리 교회의 이야기</h2>
-            <p class="next-step-cta-desc">기독교환경운동연대·성공회 환경연대와 함께하는 광명교회의 녹색교회 실천을 더 자세히 알아보세요.</p>
+            <p class="next-step-cta-desc">광명교회가 기독교환경운동연대와 성공회 환경연대와 함께하는 활동을 소개합니다.</p>
             <div class="next-step-cta-actions">
-                <a href="greenchurch.html" class="btn-next btn-next--primary"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#leaf"/></svg> 녹색교회 자료</a>
-                <a href="worship.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=e515061#church"/></svg> 예배 안내</a>
+                <a href="greenchurch.html" class="btn-next btn-next--primary"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#leaf"/></svg> 녹색교회 자료</a>
+                <a href="worship.html" class="btn-next"><svg class="ico" aria-hidden="true" focusable="false"><use href="images/icons.svg?v=ce0ce50#church"/></svg> 예배 안내</a>
             </div>
         </div>
     </section>
@@ -69,7 +80,8 @@
 
     <footer id="main-footer"></footer>
 
-    <script src="data.js?v=e515061"></script>
-    <script src="app.js?v=e515061"></script>
+    <script src="data.js?v=ce0ce50"></script>
+    <script src="app.js?v=ce0ce50"></script>
+    <span id="swipe-ready" hidden></span>
 </body>
 </html>

@@ -96,9 +96,6 @@ const MapHelper = {
         const jibun = CHURCH_DATA.info.addressJibun;
         return `
             <div class="map-card${compact ? ' map-card--compact' : ''}">
-                <div class="map-preview">
-                    <iframe class="map-embed" src="${this._embedSrc()}" title="대한성공회 광명교회 위치 — Google 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-                </div>
                 <div class="map-card-addr">
                     <div class="map-addr-row">
                         <span class="map-addr-tag">도로명</span>
@@ -114,14 +111,16 @@ const MapHelper = {
                     <a href="${this.naverUrl}" target="_blank" rel="noopener" class="map-btn map-btn--naver">
                         <span class="map-btn-mark">N</span>
                         <span class="map-btn-label">네이버 길찾기</span>
-                        <span class="map-btn-arrow" aria-hidden="true">→</span>
                     </a>
                     <a href="${this.kakaoUrl}" target="_blank" rel="noopener" class="map-btn map-btn--kakao">
                         <span class="map-btn-mark map-btn-mark--kakao">K</span>
                         <span class="map-btn-label">카카오 길찾기</span>
-                        <span class="map-btn-arrow" aria-hidden="true">→</span>
                     </a>
                 </div>
+                ${compact ? '' : `
+                <div class="map-preview">
+                    <iframe class="map-embed" src="${this._embedSrc()}" title="대한성공회 광명교회 위치 — Google 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                </div>`}
             </div>
         `;
     }
@@ -394,7 +393,6 @@ const FooterRenderer = {
                         <a href="${sns.youtube}"           target="_blank" rel="noopener" class="footer-ext-link">유튜브 채널</a>
                         <a href="${sns.instagram}"         target="_blank" rel="noopener" class="footer-ext-link">인스타그램</a>
                         <a href="${sns['naver blog']}"     target="_blank" rel="noopener" class="footer-ext-link">네이버 블로그</a>
-                        <a href="${sns.diocesan}"          target="_blank" rel="noopener" class="footer-ext-link footer-ext-link--dim">성공회 서울교구</a>
                     </div>
                 </div>
                 <div class="footer-bottom">
@@ -480,43 +478,31 @@ const IndexRenderer = {
         this._visit();
     },
 
-    _header(id, { eyebrow, title, sub }) {
+    _header(id, { title, sub }) {
         const el = document.getElementById(id);
         if (!el) return;
         el.innerHTML = `
-            <p class="section-eyebrow">${eyebrow}</p>
-            <h2 class="section-title">${title}</h2>
+            <h2 class="section-title" id="${id}-title">${title}</h2>
             ${sub ? `<p class="section-sub">${sub}</p>` : ''}
         `;
     },
 
     _hero() {
         const { name, slogan, vision } = CHURCH_DATA.info;
-        const { heroActions, quickLinks } = CHURCH_DATA.home;
+        const { heroActions } = CHURCH_DATA.home;
 
         const label = document.getElementById('hero-label');
         const title = document.getElementById('hero-title');
         const sub   = document.getElementById('hero-sub');
         const acts  = document.getElementById('hero-actions');
-        const links = document.getElementById('hero-stats');
 
         if (label) label.textContent = name;
         if (title) title.textContent = slogan;
         if (sub)   sub.textContent   = vision;
 
         if (acts) acts.innerHTML = heroActions.map(a =>
-            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}</a>`
+            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}${a.primary ? ` <span class="home-link-arrow">${icon('arrow-right')}</span>` : ''}</a>`
         ).join('');
-
-        if (!links) return;
-        const mainTime = CHURCH_DATA.worship.main[0].time;
-        const worshipTime = mainTime.replace(/^매주 일요일\s*/, '');
-        links.innerHTML = quickLinks.map(({ label, href, detail, worshipTime: showTime }) => `
-            <a href="${href}" class="hero-stat hero-stat--link">
-                <span class="hero-stat-val">${label}</span>
-                <span class="hero-stat-lbl">${showTime ? worshipTime : detail}</span>
-            </a>
-        `).join('');
     },
 
     _about() {
@@ -527,7 +513,15 @@ const IndexRenderer = {
         const about = CHURCH_DATA.home.about;
         this._header('about-brief-header', about);
         el.innerHTML = `
-            <div class="about-brief">
+            <div class="home-about-copy">
+                <p class="about-brief-lead">${aboutLead}</p>
+                <p class="about-brief-desc">${aboutDesc}</p>
+                <a href="clergy.html" class="about-brief-link">${about.more}</a>
+            </div>
+            <div class="home-about-facts">
+                <ul class="about-brief-facts">
+                    ${about.facts.map(f => `<li><strong>${f.label}</strong><span>${info[f.key]}</span></li>`).join('')}
+                </ul>
                 ${award ? `
                 <a href="${award.href}" class="about-brief-award">
                     <span class="about-brief-award-icon" aria-hidden="true">${icon('leaf')}</span>
@@ -535,14 +529,7 @@ const IndexRenderer = {
                         <strong>${award.year} ${award.title}</strong>
                         <span>${award.org}</span>
                     </span>
-                    <span class="about-brief-award-arrow" aria-hidden="true">→</span>
                 </a>` : ''}
-                <p class="about-brief-lead">${aboutLead}</p>
-                <p class="about-brief-desc">${aboutDesc}</p>
-                <ul class="about-brief-facts">
-                    ${about.facts.map(f => `<li><strong>${f.label}</strong><span>${info[f.key]}</span></li>`).join('')}
-                </ul>
-                <a href="clergy.html" class="about-brief-link">${about.more} →</a>
             </div>
         `;
     },
@@ -569,7 +556,7 @@ const IndexRenderer = {
             }
         }
         const more = document.getElementById('worship-more');
-        if (more) more.innerHTML = `<a href="worship.html" class="about-brief-link">${home.more} →</a>`;
+        if (more) more.innerHTML = `<a href="worship.html" class="about-brief-link">${home.more}</a>`;
     },
 
     /* 다가오는 주일(오늘이 주일이면 오늘) 전례 정보 — 독서 파일을 못 불러오면 블록을 숨긴다 */
@@ -602,29 +589,26 @@ const IndexRenderer = {
         el.hidden = false;
     },
 
-    /* 방문 정보 한 카드: 예배 시간·소요 → 주소·전화 → 방문 바로가기 → 지도 */
+    /* 홈에서는 주소와 길찾기 링크를 가장 먼저 보여 준다. */
     _visit() {
         const locationEl = document.getElementById('location-card');
         if (!locationEl) return;
         const { phone } = CHURCH_DATA.info;
         const v = CHURCH_DATA.home.visit;
-        const main = CHURCH_DATA.worship.main[0];
         const g = CHURCH_DATA.home.guide;
         this._header('visit-header', v);
         locationEl.innerHTML = `
-            <div class="visit-facts">
-                <div class="info-row"><strong>${v.worshipLabel}</strong><span>${main.time} · ${main.duration}</span></div>
-                <div class="info-row"><strong>${v.phoneLabel}</strong><span><a href="tel:${phone}" class="link-plain">${phone}</a></span></div>
-            </div>
-            <ul class="visit-quick" aria-label="방문 안내 바로가기">
-                ${g.cards.map(c => `
-                    <li><a href="${c.href}">${c.title}${c.en ? ` <span class="term-en" lang="en">${c.en}</span>` : ''} →</a></li>
-                `).join('')}
-            </ul>
             ${MapHelper.html(true)}
-            <p class="visit-detail-wrap">
-                <a href="visit.html" class="detail-link">${v.more} →</a>
-            </p>
+            <div class="home-visit-details">
+                <div class="visit-facts">
+                    <div class="info-row"><strong>${v.phoneLabel}</strong><span><a href="tel:${phone}">${phone}</a></span></div>
+                </div>
+                <ul class="visit-quick" aria-label="방문 안내 바로가기">
+                    ${g.cards.map(c => `
+                        <li><a href="${c.href}"><span>${c.title}${c.en ? ` <span class="term-en" lang="en">${c.en}</span>` : ''}</span></a></li>
+                    `).join('')}
+                </ul>
+            </div>
         `;
     }
 };
@@ -658,11 +642,6 @@ const ChildrenRenderer = {
         const d = CHURCH_DATA.childrenWorship;
         const service = CHURCH_DATA.worship.main.find(w => w.id === 'children');
         const parents = (CHURCH_DATA.community.smallgroups?.groups || []).find(g => g.id === 'parents');
-        const picture = (name, alt, eager = false, portrait = false) => name === 'welcome'
-            ? `<img src="images/children/welcome.jpg" alt="${alt}" width="600" height="302" fetchpriority="high" decoding="async">`
-            : portrait
-            ? `<img src="images/children/${name}.webp" srcset="images/children/${name}-sm.webp 480w, images/children/${name}.webp 640w" sizes="(max-width: 768px) 50vw, 400px" alt="${alt}" width="640" height="914" loading="lazy" decoding="async">`
-            : `<img src="images/children/${name}.webp" srcset="images/children/${name}-sm.webp 720w, images/children/${name}.webp 1440w" sizes="(max-width: 768px) 100vw, 50vw" alt="${alt}" width="1440" height="1080" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
         el.innerHTML = `
             <div class="page-hero">
                 <p class="section-eyebrow">${d.heroEyebrow}</p>
@@ -671,7 +650,7 @@ const ChildrenRenderer = {
             </div>
             <section class="section children-intro">
                 <div class="container children-hero-inner">
-                    <div class="children-illustration">${picture('welcome', d.heroAlt, true)}<p class="children-illustration-credit">${d.heroCredit}</p></div>
+                    <div class="children-illustration"><img src="images/children/welcome.jpg" alt="${d.heroAlt}" width="600" height="302" fetchpriority="high" decoding="async"><p class="children-illustration-credit">${d.heroCredit}</p></div>
                     <div class="children-hero-details">
                         <p class="children-lead">${d.intro}</p>
                         <dl class="children-service-summary">
@@ -687,9 +666,8 @@ const ChildrenRenderer = {
             </div></section>
             <section class="section gc-section-alt children-story"><div class="container">
                 <div class="children-story-heading"><p class="section-eyebrow">${d.storyEyebrow}</p><h2 class="section-title">${d.storyTitle}</h2><p class="children-lead">${d.storyIntro}</p></div>
-                <div class="children-photo-grid">${d.photos.map(p => `<figure>${picture(p.src,p.alt)}<figcaption>${p.caption}</figcaption></figure>`).join('')}</div>
                 <div class="children-story-heading children-card-heading"><h2 class="section-title">${d.cardTitle}</h2><p class="children-lead">${d.cardIntro}</p></div>
-                <div class="children-photo-grid children-photo-grid--portrait">${d.cardPhotos.map(p => `<figure>${picture(p.src,p.alt,false,true)}<figcaption>${p.caption}</figcaption></figure>`).join('')}</div>
+                <div class="next-step-cta-actions"><a class="btn-next" href="gallery.html">${d.galleryLabel}</a></div>
             </div></section>
             <section class="section" id="join"><div class="container children-join">
                 <div><p class="section-eyebrow">${d.eyebrow}</p><h2 class="section-title">${d.joinTitle}</h2><p class="children-lead">${d.joinIntro}</p></div>
@@ -720,9 +698,6 @@ const HopeCenterRenderer = {
         if (!el) return;
         const d = CHURCH_DATA.hopeCenter;
         const officer = (CHURCH_DATA.officers || []).find(o => o.role === d.officerRole);
-        // 원본보다 큰 1440w 후보를 내지 않도록 실제 너비를 쓴다
-        const picture = (img, sizes, w = 1440, h = 960, eager = false) => `<img src="images/hopecenter/${img.src}.webp?v=${d.imageVersion}" srcset="images/hopecenter/${img.src}-sm.webp?v=${d.imageVersion} 720w, images/hopecenter/${img.src}.webp?v=${d.imageVersion} ${w}w" sizes="${sizes}" alt="${img.alt}" width="${w}" height="${h}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
-        const stepSize = { prayer: [960, 640], dishes: [1440, 960], handoff: [1055, 703] };
         el.innerHTML = `
             <div class="page-hero">
                 <p class="section-eyebrow">${d.heroEyebrow}</p>
@@ -730,7 +705,6 @@ const HopeCenterRenderer = {
                 <p>${d.summary}</p>
             </div>
             <section class="section hope-intro"><div class="container">
-                <figure class="hope-intro-photo">${picture(d.heroImage, '(max-width: 1040px) 100vw, 1000px', d.heroImage.width, d.heroImage.height, true)}</figure>
                 <p class="children-lead hope-intro-lead">${d.intro}</p>
                 <dl class="children-service-summary hope-facts">
                     ${d.facts.map(f => `<div><dt>${f.label}</dt><dd>${f.value}</dd></div>`).join('')}
@@ -738,13 +712,10 @@ const HopeCenterRenderer = {
             </div></section>
             <section class="section gc-section-alt hope-weekly" id="weekly"><div class="container">
                 <div class="children-story-heading"><p class="section-eyebrow">${d.weeklyEyebrow}</p><h2 class="section-title">${d.weeklyTitle}</h2><p class="children-lead">${d.weeklyIntro}</p></div>
-                <ol class="hope-steps">${d.steps.map((st, i) => {
-                    const [w, h] = stepSize[st.image.src] || [1440, 960];
-                    return `<li class="hope-step"><figure>${picture(st.image, '(max-width: 768px) 100vw, 33vw', w, h)}</figure><div class="hope-step-body"><span class="hope-step-num" aria-hidden="true">0${i + 1}</span><h3>${st.title}</h3><p>${st.desc}</p></div></li>`;
-                }).join('')}</ol>
+                <ol class="hope-steps">${d.steps.map((st, i) => `<li class="hope-step"><div class="hope-step-body"><span class="hope-step-num" aria-hidden="true">0${i + 1}</span><h3>${st.title}</h3><p>${st.desc}</p></div></li>`).join('')}</ol>
+                <div class="next-step-cta-actions"><a class="btn-next" href="gallery.html">${d.galleryLabel}</a></div>
             </div></section>
             <section class="section hope-history" id="history"><div class="container hope-history-inner">
-                <figure class="hope-history-photo">${picture(d.historyImage, '(max-width: 768px) 100vw, 50vw', 1280, 853)}<figcaption>${d.historyImage.caption}</figcaption></figure>
                 <div class="hope-history-body">
                     <p class="section-eyebrow">${d.historyEyebrow}</p>
                     <h2 class="section-title">${d.historyTitle}</h2>
@@ -858,7 +829,7 @@ const WorshipRenderer = {
                                 <span class="resource-icon" aria-hidden="true">${icon(r.icon)}</span>
                                 <h3 class="resource-title">${r.title}</h3>
                                 <p class="resource-desc">${r.desc}</p>
-                                <span class="resource-link">바로가기 <span aria-hidden="true">↗</span></span>
+                                <span class="resource-link">바로가기</span>
                             </a>
                         `).join('')}
                     </div>
@@ -884,7 +855,7 @@ const WorshipRenderer = {
                                 <h3 class="resource-title">${o.title}</h3>
                                 <p class="resource-desc resource-en">${o.en}</p>
                                 <p class="resource-desc">${o.desc}</p>
-                                <span class="resource-link">기도서 열기 <span aria-hidden="true">↗</span></span>
+                                <span class="resource-link">기도서 열기</span>
                             </a>
                         `).join('')}
                     </div>
@@ -899,7 +870,7 @@ const WorshipRenderer = {
                             <h3 class="resource-title">${prayer.intercession.title}</h3>
                             <p class="resource-desc resource-en">${prayer.intercession.en}</p>
                             <p class="resource-desc">${prayer.intercession.desc}</p>
-                            <span class="resource-link">PDF 내려받기 <span aria-hidden="true">↗</span></span>
+                            <span class="resource-link">PDF 내려받기</span>
                         </a>
                     </div>
                 </div>
@@ -921,8 +892,8 @@ const NewcomerRenderer = {
             <div class="liturgy-guide" id="newcomer">
 
                 <div class="newcomer-intro">
-                    <h2 class="newcomer-intro-title">예배 전에 알아두시면 좋아요</h2>
-                    <p class="newcomer-intro-body">광명교회에 오신 것을 환영합니다. 성공회 예배는 회중이 함께 기도하고 응답하는 전례 예배입니다. 처음에는 흐름이 낯설 수 있으니, 익숙하지 않은 부분은 편안히 지켜보셔도 좋습니다.</p>
+                    <h2 class="newcomer-intro-title">처음 오시는 분을 위한 예배 안내</h2>
+                    <p class="newcomer-intro-body">광명교회에 오신 것을 환영합니다. 성공회 예배에서는 회중이 함께 기도하고 응답합니다. 순서가 낯설다면 처음에는 지켜보셔도 괜찮습니다.</p>
                     <div class="newcomer-key-facts">
                         <div class="newcomer-key-row">
                             <span class="newcomer-key-label">예배</span>
@@ -942,13 +913,13 @@ const NewcomerRenderer = {
                 <div class="liturgy-section" id="firsttime">
                     <p class="section-eyebrow">First Visit</p>
                     <h2 class="section-title">참여 안내</h2>
-                    <p class="liturgy-body" style="margin-bottom:1rem;">처음 참석하실 때 알아두시면 도움이 되는 내용을 정리했습니다.</p>
+                    <p class="liturgy-body" style="margin-bottom:1rem;">주보와 기도서를 보며 예배 순서를 따라가실 수 있습니다.</p>
                     <div class="liturgy-checklist">
-                        <div class="checklist-item"><span class="check-icon">✓</span><p><strong>앉고 서는</strong> 순서가 있지만, 몸이 불편하시면 그대로 앉아 계셔도 됩니다.</p></div>
-                        <div class="checklist-item"><span class="check-icon">✓</span><p><strong>주보</strong>에 예배 순서가 안내되어 있고, <strong>회중석의 기도서</strong>를 함께 펴고 응답하시면 됩니다.</p></div>
+                        <div class="checklist-item"><span class="check-icon">✓</span><p>예배 중 <strong>앉고 서는</strong> 순서가 있습니다. 몸이 불편하시면 앉아 계셔도 됩니다.</p></div>
+                        <div class="checklist-item"><span class="check-icon">✓</span><p>예배 순서는 <strong>주보</strong>에서 확인하세요. <strong>자리에 놓인 기도서</strong>를 함께 펴고 응답하시면 됩니다.</p></div>
                         <div class="checklist-item"><span class="check-icon">✓</span><p>회중이 함께 부르는 <strong>성가</strong>는 따라 부르지 않으셔도 괜찮습니다.</p></div>
-                        <div class="checklist-item"><span class="check-icon">✓</span><p>처음에는 낯설어도 한두 번 참여하시면 자연스럽게 익숙해지실 수 있습니다.</p></div>
-                        <div class="checklist-item"><span class="check-icon">✓</span><p>궁금하신 점은 옆자리 교우나 안내위원에게 편하게 물어보세요.</p></div>
+                        <div class="checklist-item"><span class="check-icon">✓</span><p>처음부터 모든 순서를 따라 하실 필요는 없습니다.</p></div>
+                        <div class="checklist-item"><span class="check-icon">✓</span><p>도움이 필요하면 옆자리 교우나 안내위원에게 말씀해 주세요.</p></div>
                     </div>
                 </div>
 
@@ -1013,8 +984,8 @@ const NewcomerRenderer = {
                 </div>
 
                 <div class="newcomer-cta" id="contact">
-                    <h3>더 궁금하신 점이 있으신가요?</h3>
-                    <p>성공회 예배나 광명교회에 대해 궁금하신 점이 있으시면 편하게 문의해 주세요.</p>
+                    <h3>예배 문의</h3>
+                    <p>예배와 교회 생활이 궁금하시면 아래로 연락해 주세요.</p>
                     <div class="newcomer-cta-actions">
                         ${primary.contact ? `<a href="mailto:${primary.contact}" class="newcomer-cta-link">${icon('mail')} ${primary.name} 사제에게 이메일</a>` : ''}
                         <a href="tel:${info.phone}" class="newcomer-cta-link">${icon('phone')} 교회 사무실 ${info.phone}</a>
@@ -1039,7 +1010,7 @@ const CommunityRenderer = {
                         <p style="color:var(--text-muted); font-size:var(--fs-desc);">${g.desc}</p>
                         ${g.note ? `<p style="font-size:var(--fs-desc); color:var(--text-muted); margin-top:0.5rem;">${g.note}</p>` : ''}
                         ${g.footnote ? `<p class="community-card-note">${g.footnote}</p>` : ''}
-                        ${g.detailUrl ? `<a href="${g.detailUrl}" class="community-detail-link"><span>자세히 보기</span><span aria-hidden="true">→</span></a>` : ''}
+                        ${g.detailUrl ? `<a href="${g.detailUrl}" class="community-detail-link">자세히 보기</a>` : ''}
                     </div>
                 `).join('')}
             </div>
@@ -1147,7 +1118,7 @@ const VisitRenderer = {
                 </div>
                 <div class="info-row">
                     <strong>${L.parking}</strong>
-                    <span>${v.parking.replace('{phone}', tel)}</span>
+                    <span>${v.parking}</span>
                 </div>
                 <p class="visit-note">${v.note}</p>
             </div>
@@ -1168,7 +1139,6 @@ const LinksRenderer = {
                         <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="links-card">
                             <span class="links-card-name">${item.name}</span>
                             <span class="links-card-desc">${item.desc}</span>
-                            <span class="links-card-arrow" aria-hidden="true">↗</span>
                         </a>
                     `).join('')}
                 </div>
@@ -1267,7 +1237,6 @@ const AnglicanRenderer = {
                             <span class="iona-link-card__label">${iona.label}</span>
                             <span class="iona-link-card__desc">${iona.desc}</span>
                         </span>
-                        <span class="iona-link-card__arrow" aria-hidden="true">↗</span>
                     </a>
                     ` : ''}
                     ${korea.incheonLink ? `
@@ -1278,7 +1247,6 @@ const AnglicanRenderer = {
                             <span class="iona-link-card__label">${korea.incheonLink.label}</span>
                             <span class="iona-link-card__desc">${korea.incheonLink.desc}</span>
                         </span>
-                        <span class="iona-link-card__arrow" aria-hidden="true">↗</span>
                     </a>
                     ` : ''}
                     ${korea.cathedralLink ? `
@@ -1289,7 +1257,6 @@ const AnglicanRenderer = {
                             <span class="iona-link-card__label">${korea.cathedralLink.label}</span>
                             <span class="iona-link-card__desc">${korea.cathedralLink.desc}</span>
                         </span>
-                        <span class="iona-link-card__arrow" aria-hidden="true">↗</span>
                     </a>
                     ` : ''}
                 </div>
@@ -1407,9 +1374,7 @@ const ClergyRenderer = {
             <div class="bishop-card">
                 <p class="bishop-eyebrow">Diocese of Seoul</p>
                 <div class="bishop-card-inner">
-                    ${bishop.photo
-                        ? `<div class="bishop-portrait-wrap"><img src="${bishop.photoThumb || bishop.photo}" data-full="${bishop.photo}" alt="${bishop.name} 주교 초상" class="bishop-portrait" loading="lazy"></div>`
-                        : `<div class="bishop-portrait-wrap bishop-portrait-fallback" aria-hidden="true">${icon('mitre')}</div>`}
+                    <div class="bishop-portrait-wrap bishop-portrait-fallback" aria-hidden="true">${icon('mitre')}</div>
                     <div class="bishop-card-body">
                         <p class="bishop-name">${bishop.name} 주교</p>
                         <p class="bishop-title">${bishop.title}</p>
@@ -1430,11 +1395,7 @@ const ClergyRenderer = {
                     if (isFirstPriest) firstPriestRendered = true;
                     return `
                     <div class="clergy-card" ${isFirstPriest ? 'id="priest"' : ''}>
-                        <div class="clergy-avatar${c.photo ? '' : ' clergy-avatar--fallback'}">
-                            ${c.photo
-                                ? `<img src="${c.photoThumb || c.photo}" data-full="${c.photo}" alt="${c.name} 사제" loading="lazy" class="clergy-avatar-img">`
-                                : icon('cross')}
-                        </div>
+                        <div class="clergy-avatar clergy-avatar--fallback" aria-hidden="true">${icon('cross')}</div>
                         <div>
                             <div class="clergy-name">${c.name} 사제</div>
                             <div class="clergy-title">${c.title}</div>
@@ -1529,7 +1490,7 @@ const ClergyRenderer = {
                         <div class="val-icon">${icon(v.icon)}</div>
                         <h3>${v.title}</h3>
                         <p>${v.desc}</p>
-                        ${v.href && v.cta ? `<span class="value-card-cta">${v.cta} <span aria-hidden="true">→</span></span>` : ''}`;
+                        ${v.href && v.cta ? `<span class="value-card-cta">${v.cta}</span>` : ''}`;
                     return v.href
                         ? `<a class="value-card value-card--link" href="${v.href}">${inner}</a>`
                         : `<div class="value-card">${inner}</div>`;
@@ -1540,7 +1501,7 @@ const ClergyRenderer = {
     }
 };
 
-/* ── AboutNavRenderer — 교회 소개 섹션 둘러보기 + 순차 연결 흐름 ─── */
+/* ── AboutNavRenderer — 교회 소개 섹션 둘러보기 ───────────────── */
 const AboutNavRenderer = {
     render() {
         const host = document.getElementById('about-section-nav');
@@ -1548,37 +1509,15 @@ const AboutNavRenderer = {
         const about = (CHURCH_DATA.navigation || []).find(n => n.href === 'clergy.html');
         if (!about || !about.items) return;
         const cfg = CHURCH_DATA.aboutJourney || {};
-        const items = about.items;
-        const onPage = it => it.href.startsWith('clergy.html') && it.href.includes('#');
+        const items = about.items.filter(it => it.href.startsWith('clergy.html#'));
         const anchorOf = it => it.href.split('#')[1];
 
-        // 1) sticky 섹션 내비게이션 — 스크롤 내내 하위 메뉴를 노출
         host.innerHTML = `
             <nav class="gc-page-nav" aria-label="${cfg.navLabel || '교회 소개 둘러보기'}">
                 <div class="container">
-                    ${items.map(it => onPage(it)
-                        ? `<a href="#${anchorOf(it)}" class="gc-nav-link" data-about-section="${anchorOf(it)}">${it.short || it.label}</a>`
-                        : `<a href="${it.href}" class="gc-nav-link gc-nav-link--ext">${it.short || it.label}</a>`
-                    ).join('')}
+                    ${items.map(it => `<a href="#${anchorOf(it)}" class="gc-nav-link" data-about-section="${anchorOf(it)}">${it.short || it.label}</a>`).join('')}
                 </div>
             </nav>`;
-
-        // 2) 섹션 끝마다 '다음' 연결 — 순차적으로 모든 하위 메뉴를 거치게
-        items.forEach((it, i) => {
-            const next = items[i + 1];
-            if (!onPage(it) || !next) return;
-            const section = document.getElementById(anchorOf(it));
-            if (!section) return;
-            const container = section.querySelector('.container') || section;
-            const a = document.createElement('a');
-            a.className = 'about-next';
-            a.href = next.href;
-            a.innerHTML =
-                `<span class="about-next-label">${cfg.nextLabel || '다음'}</span>` +
-                `<span class="about-next-target">${next.label}</span>` +
-                `<span class="about-next-arrow" aria-hidden="true">→</span>`;
-            container.appendChild(a);
-        });
 
         this._bindSpy(host);
     },
@@ -1639,7 +1578,7 @@ const MediaRenderer = {
             ${this._shorts(shorts)}
             <div class="video-channel-cta">
                 <a href="${channelUrl}" target="_blank" rel="noopener noreferrer" class="video-channel-link">
-                    유튜브 채널 전체 보기 ↗
+                    유튜브 채널 전체 보기
                 </a>
             </div>
         `;
@@ -1718,11 +1657,11 @@ const MediaHubRenderer = {
         el.innerHTML = `
             <div class="resource-grid">
                 ${CHURCH_DATA.media.hub.cards.map(c => `
-                    <a class="resource-card" href="${c.href}" style="border-top-color: var(--green-mid);">
+                    <a class="resource-card" href="${c.href}">
                         <span class="resource-icon" aria-hidden="true">${icon(c.icon)}</span>
                         <p class="resource-title">${c.title}</p>
                         <p class="resource-desc">${c.desc}</p>
-                        <span class="resource-link" style="color:var(--green-mid);">${c.action} →</span>
+                        <span class="resource-link">${c.action}</span>
                     </a>
                 `).join('')}
             </div>
@@ -1933,7 +1872,7 @@ const FaqRenderer = {
 
         const refsHtml = (refs) => (refs && refs.length)
             ? `<p class="faq-refs"><span class="faq-refs-label">출처</span>${refs.map(r =>
-                  `<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="faq-ref">${r.label} <span aria-hidden="true">↗</span></a>`
+                  `<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="faq-ref">${r.label}</a>`
               ).join('')}</p>`
             : '';
 
@@ -2171,17 +2110,100 @@ const ScrollProgress = {
     }
 };
 
+/* ── SwipePageTransition ────────────────────────────────── */
+const SwipePageTransition = {
+    _key: 'menu-swipe-transition',
+    _type: 'menu-swipe',
+
+    _read() {
+        try {
+            const state = JSON.parse(sessionStorage.getItem(this._key));
+            if (state?.expires > Date.now()) return state;
+        } catch { /* 저장소를 사용할 수 없으면 일반 이동 */ }
+        return null;
+    },
+
+    prepare(link, travel) {
+        if (!window.PageSwapEvent || !window.PageRevealEvent) return false;
+        const url = new URL(link.href);
+        if (url.origin !== window.location.origin || url.href === window.location.href) return false;
+        try {
+            sessionStorage.setItem(this._key, JSON.stringify({
+                from: window.location.href, to: url.href, travel, expires: Date.now() + 4000,
+            }));
+            return true;
+        } catch {
+            return false;
+        }
+    },
+
+    _activate(transition, travel) {
+        const style = document.documentElement.style;
+        style.setProperty('--menu-swipe-travel', travel + 'px');
+        transition.finished.finally(() => {
+            if (style.getPropertyValue('--menu-swipe-travel') === travel + 'px') {
+                style.removeProperty('--menu-swipe-travel');
+            }
+        }).catch(() => {});
+    },
+
+    init() {
+        window.addEventListener('pageswap', event => {
+            const transition = event.viewTransition;
+            if (!transition) return;
+            transition.ready.catch(() => {});
+            const state = this._read();
+            if (state?.from === window.location.href && (!event.activation?.entry?.url || state.to === event.activation.entry.url)) {
+                transition.types.add(this._type);
+            } else {
+                transition.skipTransition();
+            }
+        });
+        window.addEventListener('pagereveal', event => {
+            const transition = event.viewTransition;
+            transition?.ready.catch(() => {});
+            const state = this._read();
+            try { sessionStorage.removeItem(this._key); } catch {}
+            if (transition && state?.to === window.location.href) {
+                transition.types.add(this._type);
+                this._activate(transition, state.travel);
+            } else {
+                transition?.skipTransition();
+            }
+        });
+    },
+
+    update(travel, callback) {
+        const transition = document.startViewTransition({ update: callback, types: [this._type] });
+        transition.ready.catch(() => {});
+        this._activate(transition, travel);
+        return transition.finished;
+    },
+};
+
+SwipePageTransition.init();
+
 /* ── PageSwitch (주보 ↔ 교회 소식, 전체 새로고침 없이 본문만 전환) ─────── */
 // 같은 메뉴 묶음의 두 페이지를 상단 버튼으로 오갈 때 쓴다. 링크의 새 페이지를 받아
 // <main>만 바꿔 끼우고, 그 페이지의 렌더러를 다시 돌린다. 주소와 뒤로 가기도 따라간다.
 const PageSwitch = {
+    _request: null,
     _ROUTES: {
-        'bulletin.html': () => BulletinRenderer.render(),
-        'news.html': () => NewsRenderer.render(),
+        'bulletin.html': hash => BulletinRenderer.render(hash),
+        'news.html': hash => NewsRenderer.render(hash),
     },
 
     _file(href) {
         return href.split('/').pop() || 'index.html';
+    },
+
+    pendingFile() {
+        return this._request?.file;
+    },
+
+    cancel() {
+        this._request?.controller.abort();
+        this._request = null;
     },
 
     init() {
@@ -2194,101 +2216,257 @@ const PageSwitch = {
             const file = this._file(url.pathname);
             if (!this._ROUTES[file]) return;
             e.preventDefault();
-            if (file === this._file(location.pathname)) return;
+            if (file === this._file(location.pathname)) {
+                this.cancel();
+                return;
+            }
             this.go(file + url.hash, true);
         });
         window.addEventListener('popstate', () => {
             const file = this._file(location.pathname);
             if (this._ROUTES[file]) this.go(file + location.hash, false);
+            else this.cancel();
         });
     },
 
-    async go(target, push) {
+    async go(target, push, travel = 0) {
         const file = target.split('#')[0];
         const hash = target.includes('#') ? '#' + target.split('#')[1] : '';
+        // 연속 입력이나 뒤로 가기 뒤에 늦게 도착한 응답이 화면을 덮지 않게 한다.
+        this.cancel();
         if (!this._ROUTES[file]) { location.href = target; return; }
+        const controller = new AbortController();
+        const request = { file, controller };
+        this._request = request;
         let html;
         try {
-            const res = await fetch(file, { cache: 'no-cache' });
+            const res = await fetch(file, { cache: 'no-cache', signal: controller.signal });
             if (!res.ok) throw new Error(String(res.status));
             html = await res.text();
         } catch (err) {
-            location.href = target; // 가져오지 못하면 일반 이동
+            if (!controller.signal.aborted) location.href = target; // 가져오지 못하면 일반 이동
             return;
+        } finally {
+            if (this._request === request) this._request = null;
         }
+        if (controller.signal.aborted) return;
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const newMain = doc.querySelector('main');
         const oldMain = document.querySelector('main');
         if (!newMain || !oldMain) { location.href = target; return; }
+        const update = () => this._replaceMain(doc, newMain, oldMain, file, hash, push);
+        if (travel) return SwipePageTransition.update(travel, update);
+        update();
+    },
+
+    _replaceMain(doc, newMain, oldMain, file, hash, push) {
+        if (!oldMain.isConnected) return;
+        const tabWasFocused = oldMain.querySelector('.page-switch')?.contains(document.activeElement);
         oldMain.replaceWith(document.importNode(newMain, true));
         document.title = doc.title;
         const canon = document.querySelector('link[rel="canonical"]');
         const newCanon = doc.querySelector('link[rel="canonical"]');
         if (canon && newCanon) canon.href = newCanon.href;
         // 화면을 먼저 그리고, 주소 바꾸기는 따로 감싼다(주소를 못 바꾸는 환경에서도 목록이 보이도록)
-        this._ROUTES[file]();
-        // 본문이 바뀌었으니 히어로의 이전·다음 화살표도 새 페이지 기준으로 다시 붙인다(교회소식으로 가면 사라지던 문제)
-        HeroNav.init(file);
+        this._ROUTES[file](hash);
+        if (tabWasFocused) document.querySelector('.page-switch [aria-current="page"]')?.focus({ preventScroll: true });
         if (push) {
             try { history.pushState({}, '', file + hash); } catch (err) { /* 주소 표시만 그대로 둔다 */ }
         }
-        if (!hash) window.scrollTo({ top: 0, behavior: 'auto' });
+        if (hash) App._scrollToHash(hash);
+        else window.scrollTo({ top: 0, behavior: 'auto' });
     }
 };
 
-/* ── Portrait Lightbox ───────────────────────────────────── */
-const PortraitLightbox = {
+/* ── SwipeNavigation — 본문은 상위 메뉴, 탭은 관련 페이지 사이 이동 ── */
+const SwipeNavigation = {
+    _controls: 'button, summary, input, select, textarea, label, iframe, video, audio, [contenteditable], [role="button"], [role="dialog"], .shorts-track',
+
+    _context(target) {
+        const main = target.closest('main');
+        if (!main) return null;
+        const tabs = target.closest('nav[data-swipe-tabs]');
+        const nav = tabs || document.getElementById('nav-menu');
+        if (!nav) return null;
+        const onHome = !tabs && document.body.classList.contains('home');
+        if (tabs) {
+            const strip = tabs.querySelector('.container') || tabs;
+            if (strip.scrollWidth > strip.clientWidth + 1) return null;
+        } else if (target.closest('nav') || target.closest(this._controls) || (!onHome && !nav.querySelector('.nav-link[aria-current="page"]'))) {
+            return null;
+        }
+        return { main, nav, onTabs: Boolean(tabs), onHome };
+    },
+
+    _destination({ nav, onTabs, onHome }, dx) {
+        if (!nav.isConnected || dx === 0) return null;
+        const selector = onTabs ? 'a[href]' : ':scope > .nav-item > .nav-link';
+        const links = Array.from(nav.querySelectorAll(selector));
+        if (onHome) return dx < 0 ? links[0] : null;
+        const pending = onTabs && PageSwitch.pendingFile();
+        const current = links.findIndex(link => pending
+            ? link.getAttribute('href') === pending
+            : link.getAttribute('aria-current') === 'page');
+        return current < 0 ? null : links[current + (dx < 0 ? 1 : -1)];
+    },
+
     init() {
-        const overlay = document.createElement('div');
-        overlay.id = 'portrait-lightbox';
-        overlay.setAttribute('role', 'dialog');
-        overlay.setAttribute('aria-label', '초상 확대 보기');
-        overlay.setAttribute('aria-modal', 'true');
-        const img = document.createElement('img');
-        img.id = 'portrait-lightbox-img';
-        img.alt = '';
-        overlay.appendChild(img);
-        document.body.appendChild(overlay);
-
-        const SELECTOR = '.clergy-avatar-img, .bishop-portrait';
-        // 마우스 전용이던 확대를 키보드·스크린리더로도 열 수 있게 한다 (화면 모양은 그대로)
-        document.querySelectorAll(SELECTOR).forEach(el => {
-            if (el.tagName !== 'IMG') return;
-            el.tabIndex = 0;
-            el.setAttribute('role', 'button');
-            el.setAttribute('aria-label', `${el.alt} 확대 보기`);
-        });
-        overlay.tabIndex = -1;
-
-        let opener = null;
-        const open = (el) => {
-            opener = el;
-            img.src = el.dataset.full || el.src; // 목록은 작은 썸네일, 확대는 원본
-            img.alt = el.alt;
-            overlay.classList.add('is-open');
-            document.body.style.overflow = 'hidden';
-            overlay.focus();
+        const edgeInset = 12;
+        const directionThreshold = 8;
+        const navigationThreshold = 42;
+        const mobile = window.matchMedia('(max-width: 768px)');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const viewport = window.visualViewport;
+        const isZoomed = () => viewport?.scale > 1.02;
+        let start = null;
+        let settling = null;
+        let frame = null;
+        const cancelFrame = () => {
+            if (frame === null) return;
+            cancelAnimationFrame(frame);
+            frame = null;
         };
-        const close = () => {
-            if (!overlay.classList.contains('is-open')) return;
-            overlay.classList.remove('is-open');
-            document.body.style.overflow = '';
-            if (opener) { opener.focus(); opener = null; }
+        const reset = () => {
+            cancelFrame();
+            if (start?.paintedOffset) start.main.style.translate = '';
+            start = null;
+            if (!settling) return;
+            clearTimeout(settling.timer);
+            settling.animation?.cancel();
+            if (settling.main) settling.main.style.translate = '';
+            settling = null;
         };
+        const syncZoom = () => {
+            document.documentElement.classList.toggle('swipe-zoomed', isZoomed());
+            if (isZoomed()) reset();
+        };
+        viewport?.addEventListener('resize', syncZoom, { passive: true });
+        syncZoom();
+        window.addEventListener('pagehide', reset);
+        window.addEventListener('popstate', reset);
 
-        overlay.addEventListener('click', close);
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { close(); return; }
-            if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches(SELECTOR) && e.target.tagName === 'IMG') {
-                e.preventDefault();
-                open(e.target);
+        const settle = (gesture, next, direction) => {
+            cancelFrame();
+            const { main, paintedOffset: offset, onTabs } = gesture;
+            const navigate = () => {
+                if (!main.isConnected || !next?.isConnected) return;
+                if (!onTabs) PageSwitch.cancel();
+                next.click();
+            };
+            if (!offset || reducedMotion.matches || !main.animate || (next && Math.sign(offset) !== direction)) {
+                if (offset) main.style.translate = '';
+                navigate();
+                return;
             }
-        });
+            const travel = -direction * gesture.width + offset;
+            const inlineTab = next?.hasAttribute?.('data-switch');
+            if (next && inlineTab && window.PageRevealEvent && document.startViewTransition) {
+                const url = new URL(next.href);
+                const pending = { main, navigating: true, timer: setTimeout(reset, 3500) };
+                settling = pending;
+                const finish = () => { if (settling === pending) reset(); };
+                PageSwitch.go(PageSwitch._file(url.pathname) + url.hash, true, travel).then(finish, finish);
+                return;
+            }
+            if (next && !inlineTab && SwipePageTransition.prepare(next, travel)) {
+                settling = { main, navigating: true, timer: setTimeout(reset, 3500) };
+                navigate();
+                return;
+            }
+            if (next) {
+                main.style.translate = '';
+                navigate();
+                return;
+            }
+            const animation = main.animate(
+                [{ translate: offset + 'px' }, { translate: '0px' }],
+                { duration: 210, easing: 'cubic-bezier(0.2, 0.75, 0.25, 1)', fill: 'forwards' }
+            );
+            main.style.translate = '';
+            settling = { animation };
+            animation.onfinish = () => {
+                if (settling?.animation !== animation) return;
+                reset();
+            };
+        };
 
-        document.addEventListener('click', e => {
-            const el = e.target.closest(SELECTOR);
-            if (el && el.tagName === 'IMG') open(el);
-        });
+        document.addEventListener('touchstart', event => {
+            if (settling?.navigating && event.touches.length === 1) return;
+            reset();
+            if (!mobile.matches || event.touches.length !== 1 || isZoomed()) return;
+            const context = this._context(event.target);
+            if (!context) return;
+            const { clientX, clientY, identifier } = event.touches[0];
+            // 화면 양끝은 브라우저의 뒤로/앞으로 가기 조작 영역으로 남긴다.
+            if (clientX < edgeInset || clientX > window.innerWidth - edgeInset) return;
+            start = {
+                ...context, clientX, clientY, identifier, width: window.innerWidth,
+                horizontal: false, direction: 0, hasDestination: false, offset: 0, paintedOffset: 0,
+            };
+        }, { passive: true });
+
+        document.addEventListener('touchmove', event => {
+            if (!start) return;
+            const point = event.touches[0];
+            if (point?.identifier !== start.identifier) return;
+            if (!start.main.isConnected) {
+                reset();
+                return;
+            }
+            const dx = point.clientX - start.clientX;
+            const dy = Math.abs(point.clientY - start.clientY);
+            if (!start.horizontal) {
+                if (dy >= directionThreshold && dy > Math.abs(dx)) {
+                    reset();
+                    return;
+                }
+                if (Math.abs(dx) < directionThreshold || Math.abs(dx) < dy * 1.6) return;
+                if (window.getSelection()?.isCollapsed === false) {
+                    reset();
+                    return;
+                }
+                start.horizontal = true;
+            }
+            // Safari가 가로 드래그를 브라우저 스크롤로 가져가지 않도록 방향 확정 후에만 막는다.
+            if (event.cancelable) event.preventDefault();
+            if (reducedMotion.matches) return;
+            const direction = Math.sign(dx);
+            if (direction !== start.direction) {
+                start.direction = direction;
+                start.hasDestination = Boolean(this._destination(start, dx));
+            }
+            const limit = start.width * (start.hasDestination ? 0.9 : 0.06);
+            start.offset = direction * Math.min(Math.abs(dx) * (start.hasDestination ? 0.95 : 0.2), limit);
+            if (frame !== null) return;
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                const { main, offset } = start;
+                main.style.translate = offset ? offset + 'px' : '';
+                start.paintedOffset = offset;
+            });
+        }, { passive: false });
+        document.addEventListener('touchcancel', () => {
+            const gesture = start;
+            start = null;
+            if (gesture) settle(gesture);
+        }, { passive: true });
+        document.addEventListener('touchend', event => {
+            const origin = start;
+            if (!origin) return;
+            const end = event.changedTouches[0];
+            if (end?.identifier !== origin.identifier) return;
+            start = null;
+            const dx = end.clientX - origin.clientX;
+            const dy = end.clientY - origin.clientY;
+            const intentional = Math.abs(dx) >= navigationThreshold && Math.abs(dx) >= Math.abs(dy) * 1.6;
+            const next = intentional && window.getSelection()?.isCollapsed !== false
+                ? this._destination(origin, dx)
+                : null;
+
+            // 링크 위에서 시작해도 가로 드래그가 끝날 때 클릭이 따라오지 않게 한다.
+            if ((origin.horizontal || intentional) && event.cancelable) event.preventDefault();
+            settle(origin, next, Math.sign(dx));
+        }, { passive: false });
     }
 };
 
@@ -2313,10 +2491,10 @@ const BulletinRenderer = {
         const labels = CHURCH_DATA.bulletins.labels;
         const badge = this._isThisWeek(item.date) ? labels.thisWeek : (isLatest ? labels.latest : '');
         return `
-            <button class="bulletin-row" aria-expanded="${open ? 'true' : 'false'}" type="button">
+            <button class="bulletin-row" id="bulletin-${item.date}" aria-expanded="${open}" aria-controls="bulletin-panel-${item.date}" type="button">
                 <div class="bulletin-row-info">
                     <div class="bulletin-row-top">
-                        <span class="bulletin-row-date">${item.label}</span>
+                        <time class="bulletin-row-date" datetime="${item.date}">${item.label}</time>
                         ${badge ? `<span class="bulletin-badge-new">${badge}</span>` : ''}
                     </div>
                     <div class="bulletin-row-meta">
@@ -2359,7 +2537,7 @@ const BulletinRenderer = {
         return `${verse}<div class="bulletin-pages">${imgs}</div>${pdfBtn}`;
     },
 
-    _renderPage(el, items, page) {
+    _renderPage(el, items, page, selectedDate) {
         const perPage    = this._PER_PAGE;
         const totalPages = Math.ceil(items.length / perPage);
         const start      = page * perPage;
@@ -2374,11 +2552,11 @@ const BulletinRenderer = {
 
         // 첫 쪽의 최신 주보는 열 때 펼쳐 둔다(사용자 요청 2026-11-22)
         const listHtml = pageItems.map((item, relIdx) => {
-            const open = page === 0 && relIdx === 0;
+            const open = selectedDate ? item.date === selectedDate : page === 0 && relIdx === 0;
             return `
             <div class="bulletin-item">
                 ${this._rowHtml(item, start + relIdx === 0, open)}
-                <div class="bulletin-drawer"${open ? '' : ' hidden'}>
+                <div class="bulletin-drawer" id="bulletin-panel-${item.date}"${open ? '' : ' hidden'}>
                     ${this._drawerHtml(item, false)}
                 </div>
             </div>
@@ -2387,9 +2565,9 @@ const BulletinRenderer = {
 
         const pagHtml = totalPages > 1 ? `
             <nav class="bulletin-pagination" aria-label="주보 목록 페이지">
-                <button class="bulletin-pag-btn" type="button" data-dir="-1"${page === 0 ? ' disabled' : ''}>← 이전</button>
+                <button class="bulletin-pag-btn" type="button" data-dir="-1"${page === 0 ? ' disabled' : ''}>이전</button>
                 <span class="bulletin-pag-info">${page + 1} / ${totalPages}</span>
-                <button class="bulletin-pag-btn" type="button" data-dir="1"${page >= totalPages - 1 ? ' disabled' : ''}>다음 →</button>
+                <button class="bulletin-pag-btn" type="button" data-dir="1"${page >= totalPages - 1 ? ' disabled' : ''}>다음</button>
             </nav>
         ` : '';
 
@@ -2416,13 +2594,17 @@ const BulletinRenderer = {
                 drawer.hidden = isOpen;
                 const shift = btn.getBoundingClientRect().top - before;
                 if (shift) window.scrollBy({ top: shift, behavior: 'instant' });
+                if (!isOpen) history.replaceState(history.state, '', `#${btn.id}`);
+                else if (location.hash === `#${btn.id}`) history.replaceState(history.state, '', location.pathname + location.search);
             });
         });
 
         el.querySelectorAll('.bulletin-pag-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (location.hash.startsWith('#bulletin-')) history.replaceState(history.state, '', location.pathname + location.search);
                 this._renderPage(el, items, page + parseInt(btn.dataset.dir, 10));
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const first = el.querySelector('.bulletin-row');
+                if (first) App._scrollToHash('#' + first.id, { focus: true });
             });
         });
     },
@@ -2444,7 +2626,7 @@ const BulletinRenderer = {
         return dlg;
     },
 
-    render() {
+    render(hash = location.hash) {
         const el = document.getElementById('bulletin-full');
         if (!el) return;
         const { items } = CHURCH_DATA.bulletins;
@@ -2460,7 +2642,9 @@ const BulletinRenderer = {
             dlg.querySelector('.bulletin-lb-img').alt = img.alt;
             dlg.showModal();
         });
-        this._renderPage(el, items, 0);
+        const selected = items.findIndex(item => `#bulletin-${item.date}` === hash);
+        const page = selected < 0 ? 0 : Math.floor(selected / this._PER_PAGE);
+        this._renderPage(el, items, page, items[selected]?.date);
     }
 };
 
@@ -2695,7 +2879,7 @@ const NewsRenderer = {
                     aria-expanded="${isOpen}" aria-controls="news-${item.date}">
                 <div class="bulletin-row-info">
                     <div class="bulletin-row-top">
-                        <span class="bulletin-row-date">${item.label}(${this._weekdayOf(item.date)})</span>
+                        <time class="bulletin-row-date" datetime="${item.date}">${item.label}(${this._weekdayOf(item.date)})</time>
                         ${badge ? `<span class="bulletin-badge-new">${badge}</span>` : ''}
                     </div>
                     <div class="bulletin-row-meta">
@@ -2709,7 +2893,7 @@ const NewsRenderer = {
             </button>`;
     },
 
-    render() {
+    render(hash = location.hash) {
         const el = document.getElementById('news-full');
         if (!el) return;
         const weeks = this._weeks();
@@ -2718,7 +2902,7 @@ const NewsRenderer = {
             return;
         }
         // 공유한 링크(#news-날짜)로 들어오면 그 주를, 아니면 최신 주를 펼친다
-        const wanted = weeks.findIndex(item => `#news-${item.date}` === location.hash);
+        const wanted = weeks.findIndex(item => `#news-${item.date}` === hash);
         const openIdx = wanted === -1 ? 0 : wanted;
 
         el.innerHTML = `
@@ -2918,7 +3102,7 @@ const SundaysRenderer = {
     _refLink(ref) {
         const url = this._bibleUrl(ref);
         if (!url) return `<span class="lectionary-ref">${ref}</span>`;
-        return `<a class="lectionary-ref lectionary-ref-link" href="${url}" target="_blank" rel="noopener noreferrer">${ref}<span class="lectionary-ref-ico" aria-hidden="true">↗</span></a>`;
+        return `<a class="lectionary-ref lectionary-ref-link" href="${url}" target="_blank" rel="noopener noreferrer">${ref}</a>`;
     },
 
     _lectionaryCardHtml(sundays, idx, track) {
@@ -2957,10 +3141,10 @@ const SundaysRenderer = {
         return `
         <div class="lect-nav-row">
             <button class="lect-nav-btn" id="lect-prev"
-                    ${hasPrev ? '' : 'disabled'} aria-label="이전 주일">‹ 이전</button>
+                    ${hasPrev ? '' : 'disabled'} aria-label="이전 주일">이전</button>
             <span class="lect-nav-label">${s.koreanName}</span>
             <button class="lect-nav-btn" id="lect-next"
-                    ${hasNext ? '' : 'disabled'} aria-label="다음 주일">다음 ›</button>
+                    ${hasNext ? '' : 'disabled'} aria-label="다음 주일">다음</button>
         </div>
         <div class="lectionary-card lectionary-card--current" id="lect-card">
             <div class="lectionary-card-head">
@@ -3313,28 +3497,6 @@ const TapFeedback = {
     }
 };
 
-// 메뉴 히어로 좌·우 17% 터치 영역 — 메뉴 순서(CHURCH_DATA.navigation)상 이전/다음 메뉴로 이동한다.
-// 첫 메뉴의 이전은 마지막으로, 마지막의 다음은 첫 메뉴로 이어진다.
-const HeroNav = {
-    // page: 현재 페이지 파일명. 생략하면 주소에서 읽는다. 본문만 바꾸는 전환(PageSwitch) 뒤에는 바뀐 페이지 이름을 넘긴다.
-    init(page = location.pathname.split('/').pop() || 'index.html') {
-        const hero = document.querySelector('.page-hero--photo');
-        if (!hero) return;
-        hero.querySelectorAll('.hero-nav').forEach(el => el.remove());
-        const menu = CHURCH_DATA.navigation;
-        const i = menu.findIndex(m => m.href.split('#')[0] === page);
-        if (i < 0) return;
-        const prev = menu[(i - 1 + menu.length) % menu.length];
-        const next = menu[(i + 1) % menu.length];
-        const chevron = d => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="${d}"/></svg>`;
-        const link = (dir, m, label, points) =>
-            `<a class="hero-nav hero-nav--${dir}" href="${m.href}" aria-label="${label}: ${m.label}">${chevron(points)}</a>`;
-        hero.insertAdjacentHTML('beforeend',
-            link('prev', prev, '이전 메뉴', '15 5 8 12 15 19') +
-            link('next', next, '다음 메뉴', '9 5 16 12 9 19'));
-    }
-};
-
 /* ── TextFit ─────────────────────────────────────────────── */
 // 모바일 본문 줄 끝 맞춤: 글자 단위로 줄을 바꾸는 왼쪽 정렬 문단마다 자간(-0.02~+0.015em)을 줄 끝 편차가 가장 작은 값으로 정한다.
 // 어절 간격은 건드리지 않고, 변화량은 눈에 띄지 않는 범위로 제한한다. 대상 목록은 style.css의 ≤480px 본문 규칙과 같다.
@@ -3466,11 +3628,10 @@ const App = {
         ScrollReveal.init();
         ScrollProgress.init();
         PageSwitch.init();
+        SwipeNavigation.init();
         BackToTop.init();
-        PortraitLightbox.init();
         MenuOverlay.init();
         TapFeedback.init();
-        HeroNav.init();
         TextFit.init();
         document.addEventListener('click', e => {
             if (e.target.matches('.map-copy-btn')) MapHelper.copyAddr(e.target);
