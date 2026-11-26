@@ -626,6 +626,8 @@ main:has(.page-hero) {
     font-size: var(--fs-label);
 }
 
+/* 히어로 높이는 페이지마다 소개 문구의 줄 수에 맞춘다(빈 줄을 미리 잡지 않는다). */
+
 /* ── Page Hero — 이미지와 제목 분리 ──────────────────────── */
 .page-hero--illustrated { padding-inline: 0; }
 .page-hero-layout {
@@ -639,6 +641,8 @@ main:has(.page-hero) {
 }
 @media (min-width: 800px) {
     .page-hero-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    /* 두 칸에서는 그림이 높이를 정하므로 짧은 소개글 옆이 비지 않게 그림을 낮춘다(비율 유지). */
+    .page-hero-layout .hero-illustration { width: auto; max-width: 100%; max-height: 14rem; }
 }
 
 /* ── Scroll Reveal ───────────────────────────────────────── */
@@ -1009,6 +1013,16 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     line-height: 1.25;
     margin-top: 0.15rem;
     word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+.lit-cal-commemoration-dot {
+    display: inline-block;
+    inline-size: 0.35em;
+    block-size: 0.35em;
+    margin-inline-start: 0.25em;
+    border-radius: 50%;
+    background: var(--text-muted);
+    vertical-align: middle;
 }
 /* 범례 */
 .lit-cal-legend {
@@ -1550,9 +1564,10 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     object-position: 58% center;
     z-index: -2;
 }
+.home .hero-background { filter: brightness(1.28) saturate(1.06); }
 .home .hero::before {
     content: '';
-    background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.58) 28% 78%, rgba(0,0,0,0.24));
+    background: radial-gradient(ellipse at 50% 52%, rgba(0,0,0,0.34) 18%, rgba(0,0,0,0.22) 48%, rgba(0,0,0,0.04) 84%);
     z-index: -1;
 }
 .home .hero-content { max-width: 66rem; }
@@ -5222,7 +5237,7 @@ html:active-view-transition-type(menu-swipe)::view-transition-old(swipe-header) 
 html:active-view-transition-type(menu-swipe)::view-transition-old(root),
 html:active-view-transition-type(menu-swipe)::view-transition-new(root) {
     mix-blend-mode: normal;
-    animation: 230ms cubic-bezier(0.2, 0.65, 0.25, 1) both;
+    animation: 270ms cubic-bezier(0.2, 0.65, 0.25, 1) both;
 }
 
 html:active-view-transition-type(menu-swipe)::view-transition-old(root) { animation-name: menu-swipe-out; }
