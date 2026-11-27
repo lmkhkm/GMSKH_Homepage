@@ -5571,7 +5571,7 @@ html:active-view-transition-type(menu-swipe)::view-transition-new(root) { animat
     align-items: flex-start;
     gap: var(--space-3);
     padding: clamp(1rem, 4vw, 1.5rem);
-    background: var(--md-primary);
+    background: color-mix(in srgb, var(--md-primary) 88%, transparent);
     color: var(--md-on-primary);
 }
 .sermon-feature .bulletin-row:is(:hover, [aria-expanded="true"]) {
