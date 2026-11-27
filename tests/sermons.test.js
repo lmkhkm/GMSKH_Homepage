@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import vm from 'node:vm';
+import { sermonPages } from '../scripts/build-sermons.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = p => readFileSync(resolve(root, p), 'utf8');
@@ -61,6 +62,23 @@ describe('설교 말씀 데이터', () => {
     }
   });
 
+  it('모든 설교의 독립 HTML이 최신이며 목차와 각주 링크가 실제 위치를 가리킨다', () => {
+    const pages = sermonPages();
+    expect(pages.size).toBe(sermons.items.length);
+    for (const [file, expected] of pages) {
+      const html = read(file).replaceAll('\r\n', '\n');
+      expect(html, file).toBe(expected);
+      expect(html, file).toContain('<meta name="robots" content="noindex">');
+      const targets = [...html.matchAll(/href="#(sermon-section-[^"]+|fn(?:ref)?-[^"]+)"/g)];
+      expect(targets.some(match => match[1].startsWith('sermon-section-')), file).toBe(true);
+      const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
+      expect(new Set(ids).size, file).toBe(ids.length);
+      for (const [, target] of targets) expect(ids, file).toContain(target);
+    }
+    expect(readdirSync(root).filter(name => /^sermon-\d{4}-\d{2}-\d{2}\.html$/.test(name)).sort())
+      .toEqual([...pages.keys()].sort());
+  });
+
   it('원문 출처 링크가 있으면 https 주소다', () => {
     for (const s of sermons.items) {
       if (s.source) expect(s.source.url).toMatch(/^https:\/\//);
@@ -71,5 +89,29 @@ describe('설교 말씀 데이터', () => {
     const links = navigation.flatMap(g => (g.items || []).map(i => i.href));
     expect(links).toContain('sermons.html');
     expect(read('sermons.html')).toContain('id="sermons-full"');
+  });
+});
+
+describe('사이트 검색에서 설교와 강연 찾기', () => {
+  it('문단에서 찾은 구절과 이동 링크를 글마다 한 번 보여준다', () => {
+    const app = read('app.js');
+    const search = vm.runInNewContext(app.slice(app.indexOf('const MenuOverlay = {')) + '\nMenuOverlay;', {
+      CHURCH_DATA: { navigation: [], sermons }
+    });
+    search._buildIndex();
+    search._results = {};
+    search._sitemap = {};
+    const pages = sermonPages();
+    for (const [date, term] of [
+      ['2026-11-22', '바빌론 유배 시대'],
+      ['2026-11-26', '1988년에 신학과에 입학']
+    ]) {
+      search._search(term);
+      const matches = [...search._results.innerHTML.matchAll(new RegExp('href="(sermon-' + date + '\\.html)#([^"]+)"', 'g'))];
+      expect(matches).toHaveLength(1);
+      const [, file, anchor] = matches[0];
+      expect(pages.get(file)).toContain(`id="${anchor}"`);
+      expect(search._results.innerHTML).toContain(`<mark>${search._escape(term)}</mark>`);
+    }
   });
 });

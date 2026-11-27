@@ -130,6 +130,7 @@ const MapHelper = {
 const NavRenderer = {
     _currentPage() {
         const path = window.location.pathname.split('/').pop();
+        if (/^sermon-\d{4}-\d{2}-\d{2}\.html$/.test(path)) return 'sermons.html';
         return path === '' ? 'index.html' : path;
     },
 
@@ -367,7 +368,7 @@ const FooterRenderer = {
                         <p class="footer-brand-slogan">"${info.slogan}"</p>
                         <p class="footer-brand-meta">${info.subName} · 설립 ${info.established}<br>${clergy[0].name} ${clergy[0].title.split('·')[0].trim()}</p>
                     </div>
-                    <div class="footer-col">
+                    <div class="footer-col footer-practical">
                         <h2>${worshipNavLabel}</h2>
                         ${services.map(s => `
                         <div class="footer-service-row">
@@ -473,8 +474,16 @@ const IndexRenderer = {
         this._hero();
         this._about();
         this._worship();
-        this._thisSunday();
         this._visit();
+        this._header('home-explore-header', CHURCH_DATA.home.explore);
+        const links = document.getElementById('home-end-links');
+        if (links) links.innerHTML = CHURCH_DATA.home.endLinks.map(link => `
+            <li><a href="${link.href}">
+                <span class="home-end-icon">${icon(link.icon)}</span>
+                <span>${link.label}</span>
+                <span class="home-end-arrow">${icon('arrow-right')}</span>
+            </a></li>
+        `).join('');
     },
 
     _header(id, { title, sub }) {
@@ -487,20 +496,23 @@ const IndexRenderer = {
     },
 
     _hero() {
-        const { name, slogan, vision } = CHURCH_DATA.info;
+        const { slogan, vision } = CHURCH_DATA.info;
         const { heroActions } = CHURCH_DATA.home;
 
-        const label = document.getElementById('hero-label');
         const title = document.getElementById('hero-title');
         const sub   = document.getElementById('hero-sub');
         const acts  = document.getElementById('hero-actions');
+        const service = document.getElementById('hero-service');
+        const eucharist = CHURCH_DATA.worship.main.find(item => item.id === 'main');
 
-        if (label) label.textContent = name;
         if (title) title.textContent = slogan;
         if (sub)   sub.textContent   = vision;
+        if (service && eucharist) {
+            service.innerHTML = `<span><strong>${eucharist.time}</strong><small>${eucharist.title}</small></span>${icon('arrow-right')}`;
+        }
 
         if (acts) acts.innerHTML = heroActions.map(a =>
-            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}${a.primary ? ` <span class="home-link-arrow">${icon('arrow-right')}</span>` : ''}</a>`
+            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}</a>`
         ).join('');
     },
 
@@ -508,14 +520,12 @@ const IndexRenderer = {
         const el = document.getElementById('about-brief-content');
         if (!el) return;
         const info = CHURCH_DATA.info;
-        const { aboutLead, aboutDesc, award } = info;
+        const { aboutLead, award } = info;
         const about = CHURCH_DATA.home.about;
         this._header('about-brief-header', about);
         el.innerHTML = `
             <div class="home-about-copy">
                 <p class="about-brief-lead">${aboutLead}</p>
-                <p class="about-brief-desc">${aboutDesc}</p>
-                <a href="clergy.html" class="about-brief-link">${about.more}</a>
             </div>
             <div class="home-about-facts">
                 <ul class="about-brief-facts">
@@ -531,6 +541,8 @@ const IndexRenderer = {
                 </a>` : ''}
             </div>
         `;
+        const more = document.getElementById('about-brief-more');
+        if (more) more.innerHTML = `<a href="clergy.html" class="btn-outline home-detail-link">${about.more} ${icon('arrow-right')}</a>`;
     },
 
     _worship() {
@@ -541,7 +553,7 @@ const IndexRenderer = {
         // 홈 카드는 요약(summary)만 — 전문은 worship.html에서
         el.innerHTML = CHURCH_DATA.worship.main.map(w => `
             <div class="card">
-                <h3>${w.title}${w.en ? ` <span class="term-en" lang="en">${w.en}</span>` : ''}</h3>
+                <h3>${w.title}</h3>
                 <p class="card-time">${w.time}${w.duration ? ` · ${w.duration}` : ''}</p>
                 <p class="card-desc">${w.summary || w.desc}</p>
             </div>
@@ -554,38 +566,6 @@ const IndexRenderer = {
                 guide.hidden = true;
             }
         }
-        const more = document.getElementById('worship-more');
-        if (more) more.innerHTML = `<a href="worship.html" class="about-brief-link">${home.more}</a>`;
-    },
-
-    /* 다가오는 주일(오늘이 주일이면 오늘) 전례 정보 — 독서 파일을 못 불러오면 블록을 숨긴다 */
-    async _thisSunday() {
-        const el = document.getElementById('this-sunday');
-        if (!el) return;
-        const sundays = await SundaysRenderer._loadSundays();
-        const t = CHURCH_DATA.home.thisSunday;
-        const today = new Date();
-        const sun = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (7 - today.getDay()) % 7);
-        const iso = `${sun.getFullYear()}-${String(sun.getMonth() + 1).padStart(2, '0')}-${String(sun.getDate()).padStart(2, '0')}`;
-        const s = sundays.find(x => x.date === iso);
-        if (!s) { el.hidden = true; return; }
-
-        const season = LiturgicalCalendar.compute(sun);
-        const r = s.readings;
-        // 연중 시기 두 트랙 중 어느 것인지는 주보로만 알 수 있으므로, 기록이 없으면 연속 독서(A) 기본
-        const first = (r.firstReadingB && s.bulletinTrack === 'B') ? r.firstReadingB : r.firstReadingA;
-        const rows = [[t.labels.first, first], [t.labels.second, r.secondReading], [t.labels.gospel, r.gospel]]
-            .filter(([, ref]) => ref)
-            .map(([lbl, ref]) => `<div class="info-row"><strong>${lbl}</strong><span>${SundaysRenderer._refLink(ref)}</span></div>`)
-            .join('');
-        const dateStr = `${sun.getMonth() + 1}월 ${sun.getDate()}일`;
-
-        el.innerHTML = `
-            <h3>${t.title} · <span class="nowrap">${dateStr}</span> ${s.koreanName}</h3>
-            <div class="info-row"><strong>${t.labels.season}</strong><span class="liturgy-season-badge this-sunday-season" style="--season:${season.dayColor};--season-ink:${season.dayInk || season.dayColor}"><span class="season-dot"></span>${icon(season.symbol)}&nbsp;${season.name}&nbsp;·&nbsp;<span class="season-name">전례색 ${season.dayColorName}</span></span></div>
-            ${rows}
-        `;
-        el.hidden = false;
     },
 
     /* 홈에서는 주소와 길찾기 링크를 가장 먼저 보여 준다. */
@@ -604,7 +584,7 @@ const IndexRenderer = {
                 </div>
                 <ul class="visit-quick" aria-label="방문 안내 바로가기">
                     ${g.cards.map(c => `
-                        <li><a href="${c.href}"><span>${c.title}${c.en ? ` <span class="term-en" lang="en">${c.en}</span>` : ''}</span></a></li>
+                        <li><a href="${c.href}">${c.title}</a></li>
                     `).join('')}
                 </ul>
             </div>
@@ -2830,13 +2810,12 @@ const SermonsRenderer = {
         return `${y}년 ${m}월 ${d}일${weekday ? `(${weekday})` : ''}`;
     },
 
-    // 최신 설교와 목록이 동일한 본문 및 공유 주소를 사용한다.
+    // 설교 목록은 각 글의 독립 페이지로 연결한다.
     _itemHtml(item, featured = false) {
         return `
             <div class="bulletin-item sermon-item" data-date="${item.date}">
                 <h3 class="sermon-heading" id="sermon-${item.date}">
-                    <button class="bulletin-row" type="button" id="sermon-btn-${item.date}"
-                            aria-expanded="false" aria-controls="sermon-body-${item.date}">
+                    <a class="bulletin-row" href="sermon-${item.pageId}.html">
                         <span class="bulletin-row-info">
                             <span class="sermon-row-title">${item.title}</span>
                             <span class="sermon-byline">
@@ -2846,78 +2825,14 @@ const SermonsRenderer = {
                             </span>
                         </span>
                         <span class="sermon-action">
-                            ${featured ? `<span class="sermon-open-label">${item.kind || '설교'} 읽기</span><span class="sermon-close-label">본문 접기</span>` : ''}
+                            ${featured ? `<span class="sermon-open-label">${item.kind || '설교'} 읽기</span>` : ''}
                             <svg class="bulletin-row-chevron" viewBox="0 0 10 6" width="12" height="12" aria-hidden="true">
                                 <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </span>
-                    </button>
+                    </a>
                 </h3>
-                ${this._bodyHtml(item)}
             </div>`;
-    },
-
-    // 펼쳐지는 본문: 본문 절·설교자, 문단, 저작 표기, 원문 링크
-    _bodyHtml(item) {
-        // 설교자는 목록 줄에 이미 있으므로 펼친 본문에서는 본문 절만 보인다(중복 방지)
-        // 성경 봉독 정보(상자)와 설교문을 구분한다. 날짜는 목록 줄에 이미 있으므로 다시 쓰지 않는다.
-        // 강연은 성경 봉독 대신 강연한 자리(포럼 이름)를 보인다
-        const meta = [
-            ['성경 봉독', item.scripture],
-            ['자리', item.occasion]
-        ].filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-        const source = item.source
-            ? `<p class="news-intro"><a href="${item.source.url}" target="_blank" rel="noopener" aria-label="${item.source.label} (새 창으로 열림)">${item.source.label}</a></p>`
-            : '';
-        const note = item.note ? `<p class="news-intro">※ ${item.note}</p>` : '';
-        return `
-            <div class="bulletin-drawer" id="sermon-body-${item.date}" role="region"
-                 aria-labelledby="sermon-btn-${item.date}" hidden>
-                <article class="news-post">
-                    ${meta ? `<div class="sermon-meta"><dl class="news-post-meta">${meta}</dl></div>` : ''}
-                    <p class="sermon-text-label">${item.kind ? `${item.kind}문` : '설교문'}</p>
-                    <div class="sermon-body">${item.paragraphs.map(p => this._paraHtml(p, item.date)).join('')}</div>
-                    ${note}${source}
-                    ${this._notesHtml(item)}
-                </article>
-            </div>`;
-    },
-
-    // 문단 한 줄. 편집 표시: **강조** → 강조 글씨, [^n] → 각주 위치, "1." 같은 줄 → 절 제목,
-    // "## 제목" → 장 제목(강연의 Ⅰ. Ⅱ. …), "### 제목" → 장 안의 소제목(1. 2. …)
-    _paraHtml(p, date) {
-        if (/^\d+\.$/.test(p.trim())) return `<h4 class="sermon-section">${p.trim().slice(0, -1)}</h4>`;
-        if (p.startsWith('## ')) return `<h4 class="sermon-section sermon-chapter">${p.slice(3)}</h4>`;
-        if (p.startsWith('### ')) return `<h5 class="sermon-subsection">${p.slice(4)}</h5>`;
-        const html = p
-            .replace(/\*\*(.+?)\*\*/g, '<strong class="sermon-em">$1</strong>')
-            .replace(/\[\^(\d+)\]/g, (all, n) =>
-                `<sup class="sermon-fn-ref"><a href="#fn-${date}-${n}" id="fnref-${date}-${n}" aria-label="주석 ${n}">${n}</a></sup>`);
-        return `<p>${html}</p>`;
-    },
-
-    // 편집자 주석(각주) 목록. 각 주석에서 본문으로 돌아가는 링크를 단다
-    _notesHtml(item) {
-        if (!item.footnotes || !item.footnotes.length) return '';
-        const items = item.footnotes.map((text, i) =>
-            `<li id="fn-${item.date}-${i + 1}">${text} <a href="#fnref-${item.date}-${i + 1}" class="sermon-backref" aria-label="본문으로 돌아가기">본문으로</a></li>`).join('');
-        return `
-            <section class="sermon-notes" aria-label="편집자 주석">
-                <p class="sermon-notes-head">편집자 주석</p>
-                <ol>${items}</ol>
-            </section>`;
-    },
-
-    // 펼치기·접기. 드로어는 같은 항목(.sermon-item) 안에 있다(제목이 헤딩으로 감싸져 있어 형제가 아니다)
-    _setOpen(btn, open) {
-        btn.setAttribute('aria-expanded', String(open));
-        btn.closest('.sermon-item').querySelector('.bulletin-drawer').hidden = !open;
-    },
-
-    _bind(list) {
-        list.querySelectorAll('.bulletin-row').forEach(btn => {
-            btn.addEventListener('click', () => this._setOpen(btn, btn.getAttribute('aria-expanded') !== 'true'));
-        });
     },
 
     _sort(list, items, key) {
@@ -2957,8 +2872,6 @@ const SermonsRenderer = {
                     <div class="bulletin-list sermon-list" id="sermon-list">${archive.map(item => this._itemHtml(item)).join('')}</div>
                 </section>` : ''}`;
 
-        this._bind(el);
-
         const list = el.querySelector('#sermon-list');
         const sortBtns = el.querySelectorAll('.sermon-sort-btn');
         sortBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -2966,16 +2879,16 @@ const SermonsRenderer = {
             this._sort(list, archive, btn.dataset.sort);
         }));
 
-        // 공유한 링크(#sermon-날짜)로 들어오면 그 설교를 펼쳐 그 자리로 옮긴다. 같은 페이지에서 주소가 바뀌어도 따라간다.
+        // 예전에 공유한 설교·목차·각주 주소를 새 읽기 페이지로 연결한다.
         const openFromHash = () => {
-            const hash = location.hash.match(/^#sermon-(\d{4}-\d{2}-\d{2})$/);
-            const btn = hash && document.getElementById(`sermon-btn-${hash[1]}`);
-            if (!btn) return;
-            this._setOpen(btn, true);
-            // 제목 줄을 감싼 헤딩으로 옮겨야 scroll-margin-top이 적용되어 고정 머리글에 가리지 않는다
-            const target = btn.closest('.sermon-heading') || btn;
-            // 전체 CSS의 부드러운 스크롤(smooth)은 로드 중 다른 스크롤에 끊기므로 즉시 이동한다
-            target.scrollIntoView({ block: 'start', behavior: 'instant' });
+            const match = location.hash.match(/^#(sermon|sermon-section|fn|fnref)-(\d{4}-\d{2}-\d{2})(-\d+)?$/);
+            if (!match) return;
+            const [, type, date, number] = match;
+            if ((type === 'sermon') === Boolean(number)) return;
+            const item = items.find(entry => entry.pageId === date) || items.find(entry => entry.date === date);
+            if (!item) return;
+            const section = number ? `#${type}-${item.pageId}${number}` : '';
+            location.replace(`sermon-${item.pageId}.html${section}`);
         };
         openFromHash();
         window.addEventListener('hashchange', openFromHash, { signal });
@@ -3199,7 +3112,9 @@ const SundaysRenderer = {
             return;
         }
 
-        const idx = this._lectionaryFindIdx(sundays);
+        const requestedDate = new URLSearchParams(location.search).get('date');
+        const requestedIdx = sundays.findIndex(s => s.date === requestedDate);
+        const idx = requestedIdx >= 0 ? requestedIdx : this._lectionaryFindIdx(sundays);
         el.dataset.lectionaryIdx = idx;
         const track = sundays[idx].bulletinTrack || 'A';  // 주보 확인 트랙, 없으면 연속 독서 기본
         el.dataset.lectionaryTrack = track;
@@ -3873,6 +3788,7 @@ const App = {
         NextStepRenderer.render();
         MoreToggle.render();
         if (animateReveal) ScrollReveal.init(signal);
+        ReadingTools.render(signal);
     },
 
     _scrollToHash(hash, { focus = false } = {}) {
@@ -3904,6 +3820,106 @@ const App = {
             ? document.fonts.ready
             : Promise.resolve();
         ready.then(() => requestAnimationFrame(() => this._scrollToHash(hash)));
+    }
+};
+
+/* 긴 페이지에서 현재 보이는 본문의 목차와 사이트 검색을 연다. */
+const ReadingTools = {
+    render(signal) {
+        const main = document.getElementById('main-content');
+        if (!main) return;
+        const bar = document.createElement('nav');
+        bar.className = 'reading-tools';
+        bar.setAttribute('aria-label', '읽기 도구');
+        bar.hidden = true;
+        bar.innerHTML = `
+            <button type="button" data-reading-action="contents" aria-haspopup="dialog" aria-controls="reading-contents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h12"/></svg><span>목차</span></button>
+            <button type="button" data-reading-action="search" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span>검색</span></button>
+            <button type="button" data-reading-action="top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4M5 11l7-7 7 7"/></svg><span>맨 위</span></button>`;
+        const dialog = document.createElement('dialog');
+        dialog.className = 'reading-contents';
+        dialog.id = 'reading-contents';
+        dialog.setAttribute('aria-labelledby', 'reading-contents-title');
+        dialog.innerHTML = `<div class="reading-contents-head">
+            <div><h2 id="reading-contents-title">목차</h2><p class="reading-contents-source" hidden></p></div>
+            <button type="button" class="reading-contents-close" aria-label="목차 닫기" autofocus>✕</button></div>
+            <div class="reading-contents-list"></div>`;
+        document.body.append(bar, dialog);
+        const list = dialog.querySelector('.reading-contents-list');
+        const source = dialog.querySelector('.reading-contents-source');
+        let lastY = Math.max(0, scrollY);
+        let scrollingUp = false;
+        const refresh = () => {
+            const currentY = Math.max(0, scrollY);
+            if (Math.abs(currentY - lastY) >= 12) {
+                scrollingUp = currentY < lastY;
+                lastY = currentY;
+            }
+            const reading = document.documentElement.scrollHeight > innerHeight * 2 && currentY > innerHeight * 0.6;
+            if (!reading) scrollingUp = false;
+            bar.hidden = !(reading && scrollingUp);
+            document.body.classList.toggle('reading-tools-active', reading);
+        };
+        const openContents = () => {
+            const toc = main.querySelector('[data-article-toc]');
+            const entries = toc
+                ? [...toc.querySelectorAll('a')].flatMap(link => {
+                    const target = document.getElementById(link.hash.slice(1));
+                    return target ? [{ target, label: link.textContent.trim(), sub: link.parentElement.classList.contains('sermon-toc-sub') }] : [];
+                })
+                : [...main.querySelectorAll('h2, h3')]
+                    .filter(el => el.getClientRects().length && el.textContent.trim())
+                    .map(target => ({ target, label: target.textContent.trim(), sub: false }));
+            source.textContent = toc ? main.querySelector('h1')?.textContent.trim() || '' : '';
+            source.hidden = !source.textContent;
+            list.replaceChildren();
+            if (!entries.length) {
+                list.textContent = '현재 화면에 표시할 목차가 없습니다.';
+            } else {
+                entries.forEach(({ target, label, sub }) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.textContent = label;
+                    button.classList.toggle('reading-contents-sub', sub);
+                    button.addEventListener('click', () => {
+                        dialog.close();
+                        target.setAttribute('tabindex', '-1');
+                        target.focus({ preventScroll: true });
+                        target.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
+                    });
+                    list.append(button);
+                });
+            }
+            dialog.showModal();
+            dialog.scrollTop = 0;
+        };
+        bar.addEventListener('click', event => {
+            const action = event.target.closest('button')?.dataset.readingAction;
+            if (action === 'contents') openContents();
+            if (action === 'search') document.getElementById('nav-menu-trigger')?.click();
+            if (action === 'top') window.scrollTo({ top: 0, behavior: scrollBehavior() });
+        }, { signal });
+        dialog.querySelector('.reading-contents-close').addEventListener('click', () => dialog.close(), { signal });
+        let pressedBackdrop = false;
+        const isBackdrop = event => {
+            const rect = dialog.getBoundingClientRect();
+            return event.target === dialog && (event.clientX < rect.left || event.clientX >= rect.right
+                || event.clientY < rect.top || event.clientY >= rect.bottom);
+        };
+        dialog.addEventListener('pointerdown', event => { pressedBackdrop = isBackdrop(event); }, { signal });
+        dialog.addEventListener('click', event => {
+            if (pressedBackdrop && isBackdrop(event)) dialog.close();
+            pressedBackdrop = false;
+        }, { signal });
+        window.addEventListener('scroll', refresh, { passive: true, signal });
+        window.addEventListener('resize', refresh, { passive: true, signal });
+        signal.addEventListener('abort', () => {
+            dialog.close();
+            dialog.remove();
+            bar.remove();
+            document.body.classList.remove('reading-tools-active');
+        }, { once: true });
+        refresh();
     }
 };
 
@@ -3981,7 +3997,7 @@ const MenuOverlay = {
             } else {
                 map.set(key, {
                     label: item.label, href: item.href, group: item.group,
-                    badge: item.badge || null, text: item.text || ''
+                    badge: item.badge || null, text: item.text || '', passages: item.passages
                 });
             }
         };
@@ -4070,6 +4086,18 @@ const MenuOverlay = {
             add(it.q, 'faq.html#faq', '자주 묻는 질문',
                 join(cat.title, (it.a || '').replace(/<[^>]+>/g, ' ')))));
 
+        for (const sermon of d.sermons?.items || []) {
+            out.push({
+                label: sermon.title,
+                href: `sermon-${sermon.pageId}.html`,
+                group: sermon.kind || '설교 말씀',
+                text: join(sermon.preacher, sermon.scripture, sermon.occasion),
+                passages: sermon.paragraphs.map((paragraph, index) => ({
+                    text: paragraph.replace(/^#{2,3} |\*\*|\[\^\d+\]/g, '').replace(/\s+/g, ' ').trim(),
+                    anchor: `#sermon-section-${sermon.pageId}-${index}`
+                }))
+            });
+        }
         return out;
     },
 
@@ -4257,7 +4285,8 @@ const MenuOverlay = {
             const inLabel = item.label.toLowerCase().includes(ql);
             const inGroup = item.group.toLowerCase().includes(ql);
             const inText  = !!item.text && item.text.toLowerCase().includes(ql);
-            if (inLabel || inGroup || inText) hits.push({ item, inLabel, inGroup, inText });
+            const passage = item.passages?.find(entry => entry.text.toLowerCase().includes(ql));
+            if (inLabel || inGroup || inText || passage) hits.push({ item, inLabel, inGroup, passage });
         });
         // 라벨 일치 우선, 다음 그룹 일치, 그다음 본문 일치
         hits.sort((a, b) => (b.inLabel - a.inLabel) || (b.inGroup - a.inGroup));
@@ -4271,11 +4300,13 @@ const MenuOverlay = {
         }
         this._results.innerHTML = `
             <ul class="menu-results-list">
-                ${hits.slice(0, 40).map(({ item, inLabel, inGroup }) => {
-                    const excerpt = (!inLabel && !inGroup) ? this._excerpt(item.text, q) : '';
+                ${hits.slice(0, 40).map(({ item, inLabel, inGroup, passage }) => {
+                    const excerpt = passage ? this._excerpt(passage.text, q)
+                        : (!inLabel && !inGroup) ? this._excerpt(item.text, q) : '';
+                    const href = item.href + (passage?.anchor || '');
                     return `
                     <li>
-                        <a href="${item.href}">
+                        <a href="${this._escape(href)}">
                             <span class="menu-result-head">
                                 <span class="menu-result-label">${this._highlight(item.label, q)}${this._badgeHtml(item.badge)}</span>
                                 <span class="menu-result-group">${this._escape(item.group)}</span>
