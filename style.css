@@ -1578,13 +1578,13 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     line-height: var(--lh-snug);
     word-break: keep-all;
 }
+/* 휴대폰: 예배 안내 아래에 버튼을 사진과 같은 너비로 펼쳐 한 덩어리로 읽히게 한다 */
 .home-hero-visit {
     grid-area: visit;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.25rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.9rem;
 }
 .home-hero-service {
     margin: 0;
@@ -1620,7 +1620,15 @@ button.season-ribbon-seg:not(.is-current)::before { content: ''; position: absol
     }
     .home-hero-copy { align-self: end; }
     .home-hero-image { align-self: center; }
-    .home-hero-visit { align-self: start; justify-content: flex-start; }
+    .home-hero-visit {
+        align-self: start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.75rem 1.25rem;
+    }
+    .home-hero-visit .btn-hero-primary { width: auto; }
     .home .hero h1 { font-size: clamp(3rem, 4.5vw, 3.6rem); }
 }
 
@@ -5979,7 +5987,7 @@ html:active-view-transition-type(menu-swipe)::view-transition-new(root) { animat
 .page-switch-link:hover { color: var(--text); }
 /* 주보·교회 소식 전환: 선택 표시(알약)는 하나의 요소가 두 칸 사이를 미끄러져 옮겨 간다.
    페이지 전환의 뷰 전환이 같은 이름(page-switch-pill)을 따라가므로 새 화면에서도 이어진다. */
-.page-switch { position: relative; isolation: isolate; display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.page-switch { position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .page-switch-pill {
     position: absolute;
     z-index: 0;
