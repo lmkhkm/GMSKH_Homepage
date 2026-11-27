@@ -367,7 +367,7 @@ const FooterRenderer = {
                         <p class="footer-brand-slogan">"${info.slogan}"</p>
                         <p class="footer-brand-meta">${info.subName} · 설립 ${info.established}<br>${clergy[0].name} ${clergy[0].title.split('·')[0].trim()}</p>
                     </div>
-                    <div class="footer-col">
+                    <div class="footer-col footer-practical">
                         <h2>${worshipNavLabel}</h2>
                         ${services.map(s => `
                         <div class="footer-service-row">
@@ -487,20 +487,23 @@ const IndexRenderer = {
     },
 
     _hero() {
-        const { name, slogan, vision } = CHURCH_DATA.info;
+        const { slogan, vision } = CHURCH_DATA.info;
         const { heroActions } = CHURCH_DATA.home;
 
-        const label = document.getElementById('hero-label');
         const title = document.getElementById('hero-title');
         const sub   = document.getElementById('hero-sub');
         const acts  = document.getElementById('hero-actions');
+        const service = document.getElementById('hero-service');
+        const eucharist = CHURCH_DATA.worship.main.find(item => item.id === 'main');
 
-        if (label) label.textContent = name;
         if (title) title.textContent = slogan;
         if (sub)   sub.textContent   = vision;
+        if (service && eucharist) {
+            service.innerHTML = `<span><strong>${eucharist.time}</strong><small>${eucharist.title}</small></span>${icon('arrow-right')}`;
+        }
 
         if (acts) acts.innerHTML = heroActions.map(a =>
-            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}${a.primary ? ` <span class="home-link-arrow">${icon('arrow-right')}</span>` : ''}</a>`
+            `<a href="${a.href}" class="${a.primary ? 'btn-hero-primary' : 'btn-outline'}">${a.label}</a>`
         ).join('');
     },
 
@@ -508,14 +511,12 @@ const IndexRenderer = {
         const el = document.getElementById('about-brief-content');
         if (!el) return;
         const info = CHURCH_DATA.info;
-        const { aboutLead, aboutDesc, award } = info;
+        const { aboutLead, award } = info;
         const about = CHURCH_DATA.home.about;
         this._header('about-brief-header', about);
         el.innerHTML = `
             <div class="home-about-copy">
                 <p class="about-brief-lead">${aboutLead}</p>
-                <p class="about-brief-desc">${aboutDesc}</p>
-                <a href="clergy.html" class="about-brief-link">${about.more}</a>
             </div>
             <div class="home-about-facts">
                 <ul class="about-brief-facts">
@@ -531,6 +532,8 @@ const IndexRenderer = {
                 </a>` : ''}
             </div>
         `;
+        const more = document.getElementById('about-brief-more');
+        if (more) more.innerHTML = `<a href="clergy.html" class="btn-outline home-detail-link">${about.more} ${icon('arrow-right')}</a>`;
     },
 
     _worship() {
@@ -541,7 +544,7 @@ const IndexRenderer = {
         // 홈 카드는 요약(summary)만 — 전문은 worship.html에서
         el.innerHTML = CHURCH_DATA.worship.main.map(w => `
             <div class="card">
-                <h3>${w.title}${w.en ? ` <span class="term-en" lang="en">${w.en}</span>` : ''}</h3>
+                <h3>${w.title}</h3>
                 <p class="card-time">${w.time}${w.duration ? ` · ${w.duration}` : ''}</p>
                 <p class="card-desc">${w.summary || w.desc}</p>
             </div>
@@ -555,7 +558,7 @@ const IndexRenderer = {
             }
         }
         const more = document.getElementById('worship-more');
-        if (more) more.innerHTML = `<a href="worship.html" class="about-brief-link">${home.more}</a>`;
+        if (more) more.innerHTML = `<a href="worship.html" class="btn-outline home-detail-link">${home.more} ${icon('arrow-right')}</a>`;
     },
 
     /* 다가오는 주일(오늘이 주일이면 오늘) 전례 정보 — 독서 파일을 못 불러오면 블록을 숨긴다 */
@@ -581,8 +584,9 @@ const IndexRenderer = {
         const dateStr = `${sun.getMonth() + 1}월 ${sun.getDate()}일`;
 
         el.innerHTML = `
-            <h3>${t.title} · <span class="nowrap">${dateStr}</span> ${s.koreanName}</h3>
-            <div class="info-row"><strong>${t.labels.season}</strong><span class="liturgy-season-badge this-sunday-season" style="--season:${season.dayColor};--season-ink:${season.dayInk || season.dayColor}"><span class="season-dot"></span>${icon(season.symbol)}&nbsp;${season.name}&nbsp;·&nbsp;<span class="season-name">전례색 ${season.dayColorName}</span></span></div>
+            <h3>${t.title}</h3>
+            <p class="this-sunday-date"><time datetime="${iso}">${dateStr}</time><span>${s.koreanName}</span></p>
+            <div class="info-row"><strong>${t.labels.season}</strong><span class="this-sunday-season" style="--season:${season.dayColor};--season-ink:${season.dayInk || season.dayColor}"><span>${season.name}</span><span class="this-sunday-color">전례색 ${season.dayColorName}</span></span></div>
             ${rows}
         `;
         el.hidden = false;
@@ -604,7 +608,7 @@ const IndexRenderer = {
                 </div>
                 <ul class="visit-quick" aria-label="방문 안내 바로가기">
                     ${g.cards.map(c => `
-                        <li><a href="${c.href}"><span>${c.title}${c.en ? ` <span class="term-en" lang="en">${c.en}</span>` : ''}</span></a></li>
+                        <li><a href="${c.href}">${c.title}</a></li>
                     `).join('')}
                 </ul>
             </div>
