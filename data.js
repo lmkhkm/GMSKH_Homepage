@@ -1509,7 +1509,6 @@ const CHURCH_DATA = {
         labels: { thisWeek: "이번 주", latest: "최근 등록" },
         intro: "예배 순서와 공동체 소식을 담은 주간 주보입니다.",
         note: "예배 전에 미리 열어 두시면 도움이 됩니다.",
-        newsIntro: "최근 5주분의 교회소식을 보관합니다.",
         newsEmpty: "등록된 교회소식이 없습니다.",
         // 모바일 주보(jubo/)는 홈페이지에서 연결하지 않는다(교우에게만 주소 안내, 2026-11-01). 다시 연결하려면 mobile: { href, label, desc }
         items: [
@@ -1594,7 +1593,7 @@ const CHURCH_DATA = {
     // 사진 갤러리 (gallery.html)
     photoGallery: {
         intro: "예배, 공동체 모임, 교회 풍경 등 광명교회의 순간들을 모았습니다.",
-        categories: ["전체", "예배", "공동체", "교회 풍경", "섬기는 이들"],
+        categories: ["전체", "예배", "공동체", "교회 풍경"],
         photos: [
             {
                 id: "p01",
@@ -1755,36 +1754,6 @@ const CHURCH_DATA = {
                 "src": "images/hopecenter/handoff.webp",
                 "thumb": "images/hopecenter/handoff-sm.webp",
                 "alt": "봉사자가 이웃에게 반찬 봉투를 건네는 모습"
-            },
-            {
-                "id": "clergy-1",
-                "title": "민숙희(마가렛) 사제",
-                "desc": "",
-                "category": "섬기는 이들",
-                "date": "",
-                "src": "images/clergy/priest-portrait.jpg",
-                "thumb": "images/clergy/priest-portrait-450.jpg",
-                "alt": "민숙희(마가렛) 사제 초상"
-            },
-            {
-                "id": "clergy-2",
-                "title": "이남호(사도요한) 사제",
-                "desc": "",
-                "category": "섬기는 이들",
-                "date": "",
-                "src": "images/clergy/lee-namho-portrait.jpg",
-                "thumb": "images/clergy/lee-namho-portrait-450.jpg",
-                "alt": "이남호(사도요한) 사제 초상"
-            },
-            {
-                "id": "diocesan-bishop",
-                "title": "김장환(엘리야) 주교",
-                "desc": "",
-                "category": "섬기는 이들",
-                "date": "",
-                "src": "images/clergy/bishop-portrait.jpg",
-                "thumb": "images/clergy/bishop-portrait-450.jpg",
-                "alt": "김장환(엘리야) 주교 초상"
             }
         ]
     },
