@@ -47,13 +47,22 @@ export function renderSermon(item) {
     const source = item.source
         ? `<p><a href="${escape(item.source.url)}" target="_blank" rel="noopener">${escape(item.source.label)}</a></p>` : '';
     const meta = [['성경 봉독', item.scripture], ['강연 자리', item.occasion]]
-        .filter(([, value]) => value).map(([label, value]) => `<div><dt>${label}</dt><dd>${escape(value)}</dd></div>`).join('');
+        .filter(([, value]) => value).map(([label, value]) => {
+            const content = label === '성경 봉독'
+                ? value.split(' / ').map(ref => `<span class="sermon-scripture-ref">${escape(ref)}</span>`).join(' / ')
+                : escape(value);
+            return `<div><dt>${label}</dt><dd>${content}</dd></div>`;
+        }).join('');
     const date = item.date.split('-').map(Number);
     const titleText = escape(title);
     const summary = escape(`${item.preacher}의 ${kind} · ${date[0]}년 ${date[1]}월 ${date[2]}일`);
+    // 목록 페이지의 제목·설명 문구가 바뀌어도 치환되도록 템플릿에서 읽는다. 없으면 멈춘다.
+    const listTitle = template.match(/<title>([^<]+)<\/title>/)?.[1];
+    const listSummary = template.match(/<meta name="description" content="([^"]+)"/)?.[1];
+    if (!listTitle || !listSummary) throw new Error('sermons.html의 제목 또는 설명을 찾지 못했습니다.');
     const head = template.slice(0, template.indexOf('<body>'))
-        .replaceAll('설교 말씀 — 대한성공회 광명교회', () => `${titleText} — 대한성공회 광명교회`)
-        .replaceAll('광명교회 주일 설교 말씀을 날짜별로 모았습니다.', () => summary)
+        .replaceAll(listTitle, () => `${titleText} — 대한성공회 광명교회`)
+        .replaceAll(listSummary, () => summary)
         .replaceAll('/sermons.html', `/sermon-${pageId}.html`)
         .replace('og:type" content="website"', 'og:type" content="article"');
     const scripts = template.slice(template.indexOf('    <footer id="main-footer">'));
