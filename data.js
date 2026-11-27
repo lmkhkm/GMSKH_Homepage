@@ -102,8 +102,7 @@ const CHURCH_DATA = {
         slogan: "모든 생명을 환대하는 교회",
         vision: "하느님 나라를 살아가는 사랑의 공동체",
         diocese: "대한성공회 서울교구 서부교무구",
-        aboutLead: "광명교회는 성공회 기도서에 따라 예배합니다. 생태 보전을 신앙의 과제로 삼아 실천하는 녹색교회입니다.",
-        aboutDesc: "주일 예배 뒤에는 함께 식사하는 애찬이 있습니다. 비건 음식도 마련합니다.",
+        aboutLead: "성공회 기도서로 예배하는 녹색교회입니다. 주일 예배를 마치면 비건 음식을 곁들인 애찬을 함께합니다.",
         award: { year: "2023", title: "녹색교회 선정", org: "기독교환경운동연대", href: "greenchurch.html#press", newsUrl: "https://www.newsis.com/view/NISX20230515_0002303502" },
         established: "1990년 2월 11일",
         address: "경기도 광명시 아방리 2길 10",
@@ -249,8 +248,20 @@ const CHURCH_DATA = {
 
     // 홈(index.html) 전용 문구 — 예배 시간·위치 등 사실 정보는 info/worship에서 파생
     home: {
+        explore: { title: "둘러보기" },
+        endLinks: [
+            { label: "교회 소식", href: "news.html", icon: "pen" },
+            { label: "설교·강연", href: "sermons.html", icon: "book" },
+            { label: "교회력", href: "sundays.html", icon: "calendar" },
+            { label: "어린이 예배", href: "children.html", icon: "dove" },
+            { label: "공동체", href: "community.html", icon: "people" },
+            { label: "녹색교회", href: "greenchurch.html", icon: "leaf" },
+            { label: "사진 갤러리", href: "gallery.html", icon: "camera" },
+            { label: "미디어·자료", href: "media.html", icon: "film" }
+        ],
         heroActions: [
-            { label: "처음 오셨나요?", href: "newcomer.html", primary: true }
+            { label: "처음 오셨나요?", href: "newcomer.html", primary: true },
+            { label: "오시는 길", href: "visit.html" }
         ],
         about: {
             title: "광명교회",
@@ -262,12 +273,7 @@ const CHURCH_DATA = {
         },
         worship: {
             title: "예배 안내",
-            sub: "주일에는 감사성찬례와 어린이 예배를 드립니다.",
-            more: "예배 안내 보기"
-        },
-        thisSunday: {
-            title: "다가오는 주일",
-            labels: { season: "절기", first: "제1독서", second: "제2독서", gospel: "복음" }
+            sub: "주일에는 감사성찬례와 어린이 예배를 드립니다."
         },
         guide: {
             eyebrow: "Welcome",
@@ -621,7 +627,7 @@ const CHURCH_DATA = {
                 time: "매주 일요일 오전 11:00",
                 duration: "약 1시간 소요",
                 desc: "성공회 전례의 중심인 감사성찬례(Eucharist)입니다. 말씀과 성찬 안에서 예수 그리스도를 만납니다. 세례받은 그리스도인은 누구나 성체를 모실 수 있습니다. 반려동물과 함께 오셨다면 예배 후 신부님께 강복(축복 기도)을 청하셔도 됩니다.",
-                summary: "말씀과 성찬 안에서 예수 그리스도를 만나는 성공회 전례의 중심 예배입니다. 세례받은 그리스도인은 누구나 성체를 모실 수 있습니다. 반려동물과 함께 오셨다면 예배 후 강복(축복 기도)을 청하셔도 됩니다."
+                summary: "말씀과 성찬을 나누는 성공회의 주일 예배입니다."
             },
             {
                 id: "children",
@@ -1803,6 +1809,7 @@ const CHURCH_DATA = {
         items: [
             {
                 date: "2026-11-26",
+                pageId: "2026-11-26",
                 kind: "강연",
                 title: "너는 이 무지개떡을 받아먹어라 - 경계를 가로지르며 만난 낯선 하느님",
                 occasion: "퀴어와 함께하는 성공회 무지개숲 네트워크 창립 포럼",
@@ -1920,7 +1927,9 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-11-22",
+                pageId: "2026-11-22",
                 title: "왕이신 그리스도는 어디에 계시는가?",
+                toc: [{ index: 0, label: "왕이신 그리스도 주일" }, { index: 2, label: "세상의 왕과 다른 그리스도의 왕권" }, { index: 3, label: "에제키엘이 전하는 목자와 양" }, { index: 5, label: "가장 작은 이들 가운데 계신 왕" }, { index: 7, label: "외면하지 않는 신앙" }, { index: 9, label: "그리스도의 통치를 드러내는 교회" }],
                 scripture: "에제 34:11-16,20-24 / 에페 1:15-23 / 마태 25:31-46",
                 preacher: "민숙희(마가렛) 사제",
                 footnotes: [
@@ -1945,6 +1954,7 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-06-14",
+                pageId: "2026-06-14",
                 title: "어떻게 믿음의 사람이 되는가?",
                 scripture: "창세 18:1-15 / 시편 116 / 로마 5:1-8 / 마태 9:35-10:8",
                 preacher: "이남호(사도요한) 사제",
@@ -1976,6 +1986,7 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-08-09",
+                pageId: "2026-08-09",
                 title: "주님이십니까 그러시다면",
                 scripture: "열왕상 19:9-18 / 시편 85편 / 로마 10:5-15 / 마태 14:22-33",
                 preacher: "이남호(사도요한) 사제",
@@ -2006,6 +2017,7 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-07-12",
+                pageId: "2026-07-12",
                 title: "하느님의 섭리를 돌아보는 맥추절",
                 scripture: "신명 8:1-4 / 시편 119편 / 히브 11:32-40 / 마태 6:25-34",
                 preacher: "이남호(사도요한) 사제",
@@ -2033,6 +2045,7 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-05-31",
+                pageId: "2026-05-31",
                 title: "우리 안에서의 삼위의 움직임",
                 scripture: "창세 1:1-2:4상 / 시편 8 / 2고린 13:11-13 / 마태 28:16-22",
                 preacher: "이남호(사도요한) 사제",
@@ -2057,7 +2070,9 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-05-10",
+                pageId: "2026-05-10",
                 title: "예루살렘과 아테네가 무슨 상관이 있는가?",
+                toc: [{ index: 0, label: "아테네에서 복음을 전한 바울" }, { index: 3, label: "에피쿠로스학파와 마음의 평정" }, { index: 5, label: "스토아학파와 로고스" }, { index: 6, label: "그리스 철학과 기독교의 만남" }, { index: 7, label: "양심과 구원의 가능성" }, { index: 9, label: "양심과 성령이 이끄는 삶" }],
                 scripture: "사도 17:22-31 / 시편 66편 / 1베드 3:13-22 / 요한 14:15-21",
                 preacher: "이남호(사도요한) 사제",
                 source: { label: "원문 보기(네이버 블로그)", url: "https://m.blog.naver.com/brave9955/224288238997" },
@@ -2085,6 +2100,7 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-04-12",
+                pageId: "2026-04-12",
                 title: "순수한 믿음을 얻기 위해",
                 scripture: "사도 2:14, 22-32 / 시편 16편 / 1베드 1:3-9 / 요한 20:19-31",
                 preacher: "이남호(사도요한) 사제",
@@ -2117,6 +2133,7 @@ const CHURCH_DATA = {
             },
             {
                 "date": "2026-11-08",
+                "pageId": "2026-11-08",
                 "title": "추수감사절의 의미를 되새기며",
                 "scripture": "신명 8:1-10 / 시편 65편 / 야고 1:17-18, 21-27 / 마태 6:25-33",
                 "preacher": "이남호(사도요한) 사제",
@@ -2150,6 +2167,7 @@ const CHURCH_DATA = {
             },
             {
                 "date": "2026-10-11",
+                "pageId": "2026-10-11",
                 "title": "초대에 감사할 줄 아는 마음",
                 "scripture": "이사 25:1-9 / 시편 23편 / 필립 4:1-9 / 마태 22:1-14",
                 "preacher": "이남호(사도요한) 사제",
@@ -2183,7 +2201,9 @@ const CHURCH_DATA = {
             },
             {
                 date: "2026-09-20",
+                pageId: "2026-09-20",
                 title: "물질을 넘어서는 가치",
+                toc: [{ index: 0, label: "재물과 인간의 갈등" }, { index: 2, label: "물질이 우리의 마음에 미치는 영향" }, { index: 5, label: "돈으로 환산할 수 없는 가치" }, { index: 7, label: "먼저 하느님의 나라를 구하는 삶" }, { index: 9, label: "현재를 충실히 살아가기" }],
                 scripture: "신명 28:1-14 / 시편 65편 / 2고린 9:6-15 / 루가 12:16-30",
                 preacher: "이남호(사도요한) 사제",
                 "footnotes": [
