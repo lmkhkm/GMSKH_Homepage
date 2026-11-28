@@ -125,7 +125,6 @@ const CHURCH_DATA = {
     childrenWorship: {
         "eyebrow": "광명교회 어린이 예배",
         "heroEyebrow": "Children's Worship",
-        "intro": "광명교회 어린이 예배는 선생님들과 함께 드립니다. 말씀을 듣고, 찬양하고, 기도합니다.",
         "heroAlt": "팔을 벌린 예수님 곁에 모인 어린이들을 그린 그림",
         "welcomeLabel": "시간·장소 보기",
         "visitLabel": "오시는 길",
@@ -146,7 +145,7 @@ const CHURCH_DATA = {
         ],
         "storyEyebrow": "활동 모습",
         "storyTitle": "아이들이 벽에 그린 그림",
-        "storyIntro": "아이들이 직접 색을 골라 붓으로 벽에 그림을 그렸습니다.",
+        "storyIntro": "아이들이 직접 색을 고르고 붓으로 그렸습니다.",
         "photos": [
             {
                 "src": "painting-joy",
@@ -170,7 +169,7 @@ const CHURCH_DATA = {
             }
         ],
         "cardTitle": "사제님께 드린 카드",
-        "cardIntro": "어린이 예배 아이들이 직접 쓰고 그린 카드를 민숙희 사제님께 전했습니다.",
+        "cardIntro": "어린이 예배에 참여하는 아이들이 직접 쓰고 그린 카드를 민숙희 사제님께 전했습니다.",
         "cardPhotos": [
             {
                 "src": "card-presenting",
@@ -187,10 +186,10 @@ const CHURCH_DATA = {
         "placeLabel": "장소",
         "place": "교육관",
         "timeLabel": "시간",
-        "joinIntro": "처음 오시는 가족도 환영합니다. 궁금한 점은 교회로 문의해 주세요.",
+        "joinIntro": "궁금한 점은 교회로 문의해 주세요.",
         "contactLabel": "어린이 예배 문의",
         "backLabel": "전체 예배 안내",
-        "parentsIntro": "아이를 신앙 안에서 키우는 일은 부모 혼자 감당하기 어렵습니다. 어린이 예배에 자녀를 보내는 양육자들이 매달 모여 가정의 신앙 교육을 이야기하고 서로를 위해 기도합니다.",
+        "parentsIntro": "아이를 신앙 안에서 키우는 일은 부모 혼자 감당하기 어렵습니다. 어린이 예배에 자녀를 보내는 양육자들이 매달 모여 가정의 신앙 교육에 관해 이야기하고 서로를 위해 기도합니다.",
         "parentsScheduleLabel": "일정",
         "parentsPlaceLabel": "장소",
         "parentsPlace": "교회 내 소모임 공간",
