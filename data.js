@@ -127,7 +127,6 @@ const CHURCH_DATA = {
         "heroEyebrow": "Children's Worship",
         "intro": "광명교회 어린이 예배는 선생님들과 함께 드립니다. 말씀을 듣고, 찬양하고, 기도합니다.",
         "heroAlt": "팔을 벌린 예수님 곁에 모인 어린이들을 그린 그림",
-        "heroCredit": "출처: 바오로딸 콘텐츠 오혜정",
         "welcomeLabel": "시간·장소 보기",
         "visitLabel": "오시는 길",
         "rhythmTitle": "예배에서 하는 일",
@@ -891,6 +890,8 @@ const CHURCH_DATA = {
     nextStep: {
         eyebrow: "다음 걸음",
         links: {
+            bulletin:    { label: "주일 주보",       icon: "book",        href: "bulletin.html" },
+            news:        { label: "교회 소식",       icon: "book",        href: "news.html" },
             worship:     { label: "예배 안내",       icon: "church",      href: "worship.html" },
             eucharist:   { label: "감사성찬례 순서", icon: "book",        href: "worship.html#eucharist-order" },
             newcomer:    { label: "처음 오신 분",    icon: "dove",        href: "newcomer.html" },
@@ -904,7 +905,7 @@ const CHURCH_DATA = {
             smallgroup:  { label: "소그룹 모임",     icon: "footsteps",   href: "smallgroup.html" }
         },
         pages: {
-            bulletin:    { title: "주보를 보며 예배를 준비하세요",     actions: ["eucharist", "calendar"] },
+            bulletin:    { title: "교회 소식도 살펴보세요",             actions: ["news", "eucharist", "calendar"] },
             clergy:      { title: "주일 예배에서 뵙겠습니다",          actions: ["worship", "newcomer", "visit"] },
             community:   { title: "마음이 가는 모임을 찾아보세요",              actions: ["worship", "smallgroup", "greenchurch"] },
             emmaus:      { title: "다른 모임과 예배도 둘러보세요",       actions: ["community", "newcomer", "worship"] },
@@ -914,6 +915,7 @@ const CHURCH_DATA = {
             greenchurch: { title: "작은 실천으로 창조세계를 돌봅니다", actions: ["worship", "contact"] },
             links:       { title: "광명교회의 활동도 살펴보세요",      actions: ["greenchurch", "worship"] },
             media:       { title: "예배에서 직접 뵙겠습니다",     actions: ["newcomer", "community", "worship"] },
+            news:        { title: "주일 주보도 살펴보세요",             actions: ["bulletin"] },
             newcomer:    { title: "예배에서 뵙겠습니다",               actions: ["worship", "visit"] },
             smallgroup:  { title: "소그룹 모임에 함께해 보세요",               actions: ["contact", "community"] },
             sundays:     { title: "교회력을 따라 함께 예배합니다",     actions: ["worship", "newcomer", "visit"] },
