@@ -125,7 +125,6 @@ const CHURCH_DATA = {
     childrenWorship: {
         "eyebrow": "광명교회 어린이 예배",
         "heroEyebrow": "Children's Worship",
-        "intro": "광명교회 어린이 예배는 선생님들과 함께 드립니다. 말씀을 듣고, 찬양하고, 기도합니다.",
         "heroAlt": "팔을 벌린 예수님 곁에 모인 어린이들을 그린 그림",
         "welcomeLabel": "시간·장소 보기",
         "visitLabel": "오시는 길",
@@ -146,7 +145,7 @@ const CHURCH_DATA = {
         ],
         "storyEyebrow": "활동 모습",
         "storyTitle": "아이들이 벽에 그린 그림",
-        "storyIntro": "아이들이 직접 색을 골라 붓으로 벽에 그림을 그렸습니다.",
+        "storyIntro": "아이들이 직접 색을 고르고 붓으로 그렸습니다.",
         "photos": [
             {
                 "src": "painting-joy",
@@ -170,7 +169,7 @@ const CHURCH_DATA = {
             }
         ],
         "cardTitle": "사제님께 드린 카드",
-        "cardIntro": "어린이 예배 아이들이 직접 쓰고 그린 카드를 민숙희 사제님께 전했습니다.",
+        "cardIntro": "어린이 예배에 참여하는 아이들이 직접 쓰고 그린 카드를 민숙희 사제님께 전했습니다.",
         "cardPhotos": [
             {
                 "src": "card-presenting",
@@ -187,10 +186,10 @@ const CHURCH_DATA = {
         "placeLabel": "장소",
         "place": "교육관",
         "timeLabel": "시간",
-        "joinIntro": "처음 오시는 가족도 환영합니다. 궁금한 점은 교회로 문의해 주세요.",
+        "joinIntro": "궁금한 점은 교회로 문의해 주세요.",
         "contactLabel": "어린이 예배 문의",
         "backLabel": "전체 예배 안내",
-        "parentsIntro": "아이를 신앙 안에서 키우는 일은 부모 혼자 감당하기 어렵습니다. 어린이 예배에 자녀를 보내는 양육자들이 매달 모여 가정의 신앙 교육을 이야기하고 서로를 위해 기도합니다.",
+        "parentsIntro": "아이를 신앙 안에서 키우는 일은 부모 혼자 감당하기 어렵습니다. 어린이 예배에 자녀를 보내는 양육자들이 매달 모여 가정의 신앙 교육에 관해 이야기하고 서로를 위해 기도합니다.",
         "parentsScheduleLabel": "일정",
         "parentsPlaceLabel": "장소",
         "parentsPlace": "교회 내 소모임 공간",
@@ -268,15 +267,13 @@ const CHURCH_DATA = {
             sameTime: "감사성찬례와 같은 시간"
         },
         visit: {
-            title: "방문 안내",
+            title: "예배당은 광명시 아방리 2길 10에 있습니다",
             phoneLabel: "전화하기",
             more: "오시는 길"
         }
     },
 
     anglican: {
-        welcome: "광명교회를 찾아 주셔서 감사합니다.",
-        welcomeSub: "성공회의 역사와 신앙, 광명교회가 걸어온 길을 차례로 담았습니다.",
         what: {
             eyebrow: "Anglican Church",
             title: "성공회란?",
@@ -569,7 +566,7 @@ const CHURCH_DATA = {
 
     // 교회 소개 페이지 — 섹션 둘러보기 내비
     aboutJourney: {
-        navLabel: "교회 소개 둘러보기"
+        navLabel: "교회 소개 목차"
     },
 
     worship: {
@@ -615,7 +612,7 @@ const CHURCH_DATA = {
                 id: "children",
                 href: "children.html",
                 summary: "함께 놀고 기도하며 하느님의 사랑을 배웁니다.",
-                linkLabel: "어린이 예배 만나보기",
+                linkLabel: "어린이 예배 안내",
                 title: "어린이 예배",
                 time: "매주 일요일 오전 11:00",
                 desc: "교육관에서 드리는 어린이 예배입니다. 성공회 전례를 어린이 눈높이에 맞게 풀어서 드립니다."
@@ -718,7 +715,7 @@ const CHURCH_DATA = {
             dailyOfficeIntro: [
                 "성무일과(매일기도)는 정해진 시간에 드리는 교회의 공적 기도입니다. \"늘 기도하십시오\"(1데살 5:17)라는 말씀을 따라 초대교회와 수도원 전통에서 이어져 온 기도의 리듬입니다.",
                 "성공회 기도서에는 하루의 흐름을 따르는 네 가지 기도가 있습니다. 시편과 성서 봉독, 송가와 기도로 이루어집니다. 공동체나 개인이 날마다 같은 기도문으로 하느님 앞에서 하루를 열고 닫습니다.",
-                "날마다 같은 기도문을 되풀이하면 단조롭게 느껴질 수 있습니다. 그러나 같은 말씀을 거듭 새기며 하루의 때를 거룩하게 구별하는 데 그 뜻이 있습니다. 아래 기도서를 따라 누구나 지금 바로 함께 기도할 수 있습니다."
+                "날마다 같은 기도문을 되풀이하는 뜻은 같은 말씀을 거듭 새기며 하루의 때를 거룩하게 구별하는 데 있습니다. 아래 기도서를 따라 함께 기도할 수 있습니다."
             ],
             dailyOffice: [
                 {
@@ -905,23 +902,23 @@ const CHURCH_DATA = {
             smallgroup:  { label: "소그룹 모임",     icon: "footsteps",   href: "smallgroup.html" }
         },
         pages: {
-            bulletin:    { title: "교회 소식도 살펴보세요",             actions: ["news", "eucharist", "calendar"] },
-            clergy:      { title: "주일 예배에서 뵙겠습니다",          actions: ["worship", "newcomer", "visit"] },
-            community:   { title: "마음이 가는 모임을 찾아보세요",              actions: ["worship", "smallgroup", "greenchurch"] },
-            emmaus:      { title: "다른 모임과 예배도 둘러보세요",       actions: ["community", "newcomer", "worship"] },
-            faq:         { title: "더 궁금한 점이 있으신가요?",           actions: ["contact", "about"] },
-            gallery:     { title: "주일 예배에 직접 와 보세요",         actions: ["newcomer", "worship", "visit"] },
+            bulletin:    { title: "예배는 교회력과 기도서 순서를 따릅니다",             actions: ["news", "eucharist", "calendar"] },
+            clergy:      { title: "주일 오전 11시에 감사성찬례를 드립니다",          actions: ["worship", "newcomer", "visit"] },
+            community:   { title: "소그룹은 함께 기도하고 삶을 나눕니다",              actions: ["worship", "smallgroup", "greenchurch"] },
+            emmaus:      { title: "엠마우스 코스는 소그룹으로 운영합니다",       actions: ["community", "newcomer", "worship"] },
+            faq:         { title: "궁금한 내용은 교회로 문의해 주세요",           actions: ["contact", "about"] },
+            gallery:     { title: "주일 예배는 약 1시간 소요됩니다",         actions: ["newcomer", "worship", "visit"] },
             giving:      { title: "헌금은 예배와 이웃을 돌보는 데 쓰입니다", actions: ["worship", "community"] },
             greenchurch: { title: "작은 실천으로 창조세계를 돌봅니다", actions: ["worship", "contact"] },
-            links:       { title: "광명교회의 활동도 살펴보세요",      actions: ["greenchurch", "worship"] },
-            media:       { title: "예배에서 직접 뵙겠습니다",     actions: ["newcomer", "community", "worship"] },
-            news:        { title: "주일 주보도 살펴보세요",             actions: ["bulletin"] },
-            newcomer:    { title: "예배에서 뵙겠습니다",               actions: ["worship", "visit"] },
-            smallgroup:  { title: "소그룹 모임에 함께해 보세요",               actions: ["contact", "community"] },
+            links:       { title: "2023년 녹색교회로 선정되었습니다",      actions: ["greenchurch", "worship"] },
+            media:       { title: "주일 예배를 마치면 애찬을 함께합니다",     actions: ["newcomer", "community", "worship"] },
+            news:        { title: "예배 순서는 주일 주보에 있습니다",             actions: ["bulletin"] },
+            newcomer:    { title: "예배당은 광명시 아방리에 있습니다",               actions: ["worship", "visit"] },
+            smallgroup:  { title: "소그룹 참여는 교회로 문의해 주세요",               actions: ["contact", "community"] },
             sundays:     { title: "교회력을 따라 함께 예배합니다",     actions: ["worship", "newcomer", "visit"] },
-            videos:      { title: "예배에 직접 참여해 보세요", actions: ["newcomer", "community", "worship"] },
-            visit:       { title: "주일에 반갑게 맞이하겠습니다",      actions: ["newcomer", "worship"] },
-            worship:     { title: "오시기 전에 살펴보세요",              actions: ["visit", "newcomer"] }
+            videos:      { title: "주일 애찬에는 비건 음식도 마련합니다", actions: ["newcomer", "community", "worship"] },
+            visit:       { title: "응답은 기도서를 펴고 함께 읽습니다",      actions: ["newcomer", "worship"] },
+            worship:     { title: "교회 근처에 무료로 주차할 수 있습니다",              actions: ["visit", "newcomer"] }
         }
     },
     sns: {
@@ -1201,7 +1198,7 @@ const CHURCH_DATA = {
     faq: {
         eyebrow: "Frequently Asked Questions",
         title: "자주 묻는 질문",
-        lead: "성공회를 처음 접하는 분들이 흔히 하는 오해와 궁금증을 모았습니다. 각 답변에는 확인할 수 있는 출처를 함께 달았습니다.",
+        lead: "성공회에 관해 자주 받는 질문과 답입니다. 답변마다 확인할 수 있는 출처를 달았습니다.",
         note: "아래 답변은 대한성공회의 공식 자료와 세계성공회 문헌을 바탕으로 광명교회가 정리한 안내입니다. 신학의 세부 내용과 공식 입장은 교단 문헌을 따릅니다.",
         categories: [
             {
@@ -1338,7 +1335,7 @@ const CHURCH_DATA = {
                     },
                     {
                         q: "성공회 예배(전례)는 천주교 미사처럼 어렵지 않나요?",
-                        a: "낯설 수 있지만, 순서가 정해져 있어 <strong>오히려 따라가기 쉽습니다</strong>.\n\n주보와 기도서에 모든 순서가 나와 있고 옆자리 교우들도 도와드립니다. 미리 <a href='newcomer.html#worship-space'>전례 공간 안내</a>와 <a href='worship.html#eucharist-order'>감사성찬례 순서</a>를 보시면 한결 편안합니다.",
+                        a: "처음에는 낯설 수 있지만 순서가 정해져 있어 <strong>따라가기 쉽습니다</strong>.\n\n주보와 기도서에 모든 순서가 나와 있고 옆자리 교우들도 도와드립니다. <a href='newcomer.html#worship-space'>전례 공간 안내</a>와 <a href='worship.html#eucharist-order'>감사성찬례 순서</a>에서 미리 볼 수 있습니다.",
                         refs: []
                     }
                 ]
@@ -1506,7 +1503,6 @@ const CHURCH_DATA = {
     bulletins: {
         labels: { thisWeek: "이번 주", latest: "최근 등록" },
         intro: "예배 순서와 공동체 소식을 담은 주간 주보입니다.",
-        note: "예배 전에 미리 열어 두시면 도움이 됩니다.",
         newsEmpty: "등록된 교회소식이 없습니다.",
         // 모바일 주보(jubo/)는 홈페이지에서 연결하지 않는다(교우에게만 주소 안내, 2026-11-01). 다시 연결하려면 mobile: { href, label, desc }
         items: [
